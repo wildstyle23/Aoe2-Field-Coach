@@ -1,6 +1,6 @@
 {
-  "name": "AoE2 · Field Coach",
-  "short_name": "AoE2 Rappels",
+  "name": "AoE2 Field Coach",
+  "short_name": "AoE2 Coach",
   "description": "Rappels visuels autonomes pour Age of Empires II",
   "start_url": "./index.html",
   "scope": "./",
