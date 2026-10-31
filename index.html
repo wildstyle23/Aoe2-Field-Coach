@@ -2,271 +2,351 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AoE2 Coach">
-<meta name="description" content="Rappels autonomes et personnalisables pour Age of Empires II, par âge et sans connexion au jeu.">
+<meta name="description" content="AoE2 Field Coach : rappels visuels autonomes, transitions d'âge et vérifications stratégiques.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>AoE2 · Field Coach</title>
+<title>AoE2 Field Coach · v1.4</title>
 <style>
-:root{color-scheme:dark;--page:#0b111b;--panel:#172131;--panel2:#222e41;--line:#34435a;--text:#f2f5f9;--muted:#a5b4c8;--gold:#e6b66d;--safe-bottom:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;background:var(--page);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #91cffe;outline-offset:2px}
-[hidden]{display:none!important}
-.app{max-width:1140px;margin:auto;min-height:100dvh;padding:calc(15px + env(safe-area-inset-top,0px)) 18px calc(19px + var(--safe-bottom))}
-.page{display:none}.page.active{display:block}
-.topline,.brand,.top-actions,.session-line,.controls,.mode-choice,.toolbar,.action-row,.age-bar,.age-buttons,.age-card-actions,.setting-heading,.interval-line,.color-line,.setting-head,.setting-columns,.age-table-head,.age-table-row,.oneoff-row{display:flex;align-items:center}
-.topline,.session-line,.setting-heading,.setting-head{justify-content:space-between;gap:12px}
-.brand{gap:10px}.emblem{width:37px;height:37px;display:grid;place-items:center;border:1px solid #947541;background:#28261e;border-radius:11px;color:#f1d099;font:700 23px Georgia,serif}.brand small{color:#c6a66e;letter-spacing:.15em;font-weight:700;font-size:9px}.brand strong{display:block;font-size:15px;letter-spacing:.02em}
-.top-actions{gap:7px}.top-btn,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:11px;min-height:40px;padding:0 12px;font-size:13px;font-weight:700}.top-btn{min-width:42px}.top-btn svg{vertical-align:middle;width:17px;height:17px}.btn.primary{color:#1b1b1d;background:var(--gold);border-color:#efc887}.btn.danger{border-color:#8e5a59;color:#ffb5aa}.btn[aria-pressed="true"],.top-btn[aria-pressed="true"]{background:#3b5a78;border-color:#80aacb}
-h1{font-size:clamp(24px,5.5vw,31px);letter-spacing:-.04em;margin:24px 0 6px}.sub{font-size:13px;color:var(--muted);line-height:1.45;margin:0 0 15px}
-.session-line{margin:13px 0}.state{font-size:11px;font-weight:800;letter-spacing:.09em;color:var(--muted)}.state::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:#74849b;margin-right:7px}.state.running::before{background:#7bddae;box-shadow:0 0 7px #7bddae}.session-t{font-size:13px;color:#aebcce;font-variant-numeric:tabular-nums}.session-t b{color:#fff;margin-left:5px}
-.controls{gap:9px;flex-wrap:wrap;justify-content:space-between}.mode-choice{gap:4px;padding:4px;background:#0e1723;border:1px solid #2c394d;border-radius:13px}.mode-choice button{border:none;background:transparent;color:#a3b2c4;border-radius:9px;min-height:35px;padding:0 13px;font-size:12px;font-weight:750}.mode-choice button[aria-pressed="true"]{background:#374d66;color:white}.mode-help{margin:10px 2px 14px;color:#92a3b9;font-size:11px;line-height:1.4}
-.section-line{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#a9bacd;margin:18px 0 10px;text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.12em}
-.cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:12px}
-.reminder{--task:#89c9ff;--glow:#89c9ff;position:relative;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:13px 7px 14px;border:2px solid #283648;border-radius:18px;background:#111b29;text-align:center;isolation:isolate;overflow:hidden;transition:border-color .15s,opacity .15s}
-.reminder.overdue{border-color:var(--glow);background:#14202d}.reminder.pulsing{animation:tilePulse 1.12s ease-in-out infinite}.reminder.pulsing::after{content:"";inset:0;border:2px solid var(--glow);border-radius:inherit;position:absolute;pointer-events:none;animation:borderPulse 1.12s ease-in-out infinite}
-@keyframes tilePulse{0%,100%{box-shadow:0 0 0 transparent;border-color:#3a4758}50%{box-shadow:0 0 22px -3px var(--glow),inset 0 0 20px -10px var(--glow);border-color:var(--glow)}}
-@keyframes borderPulse{0%,100%{opacity:.1;box-shadow:none}50%{opacity:1;box-shadow:0 0 14px -1px var(--glow),inset 0 0 14px -5px var(--glow)}}
-.task-name{font-size:13px;font-weight:780;letter-spacing:-.01em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dial{--size:83px;width:var(--size);height:var(--size);flex:none;border:0;background:transparent;padding:0;position:relative;display:grid;place-items:center;color:var(--task)}
-.dial .ring{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}.ring circle{fill:none;stroke-width:5}.ring .track{stroke:#3b495c}.ring .fill{stroke:var(--task);stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;transition:stroke-dashoffset .14s linear}.symbol{position:absolute;display:grid;place-items:center;width:45%;height:45%;filter:drop-shadow(0 0 1px #000b)}.symbol svg{display:block;width:100%;height:100%;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.dial:active{transform:scale(.96)}.reminder.pulsing .dial{animation:iconPulse 1.12s ease-in-out infinite}@keyframes iconPulse{0%,100%{filter:none}50%{filter:drop-shadow(0 0 13px var(--glow))}}
-.timer{color:#f4f7fb;font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:800}.reminder.overdue .timer{color:var(--task)}.timer-note{font-size:10px;color:#9eafc3;min-height:13px}.empty{border:1px dashed #48566a;color:#b7c7da;padding:20px;text-align:center;border-radius:14px}
-.toolbar{flex-wrap:wrap;gap:9px;justify-content:center;margin-top:17px}.toolbar .btn{min-height:44px}.toolbar .btn.primary{min-width:175px}
-.age-bar{justify-content:center;gap:12px;margin-top:17px;padding:9px 11px;border:1px solid var(--line);border-radius:15px;background:#141d2a}.age-caption{color:#9eadc1;font-size:11px;font-weight:700;white-space:nowrap}.age-buttons{gap:5px;flex:1;max-width:430px}.age-buttons button{flex:1;min-width:0;min-height:41px;border-radius:10px;border:1px solid #38485d;background:#1d2a39;color:#b9c6d6;font-size:14px;font-weight:800}.age-buttons button[aria-pressed="true"]{background:#d8a95f;color:#202021;border-color:#f5d59d}.age-combat{min-height:41px;border:1px solid #566379;background:#243046;color:#dce7f3;border-radius:10px;padding:0 10px;font-size:11px;font-weight:800;white-space:nowrap}.age-combat[aria-pressed="true"]{background:#8c423f;border-color:#e89c86;color:#fff}
-.event-flash{border:1px solid #b78b50;background:#3b2e1d;color:#ffe0a3;border-radius:11px;font-size:12px;font-weight:750;padding:9px 13px;margin:11px 0 0;text-align:center}.event-flash.live{animation:eventBlink 1s ease-in-out 4}@keyframes eventBlink{50%{box-shadow:0 0 17px #d59e5b77}}
-.context-controls{border:1px solid #324359;border-radius:15px;padding:13px;background:#101927;margin-top:15px}.context-controls p{font-size:11px;color:#9aabc1;margin:8px 0 0}.age-card-actions{gap:8px;flex-wrap:wrap}.age-card-actions .btn{min-height:36px}.age-research{color:#e7cb9d;font-size:12px;font-variant-numeric:tabular-nums}.footer{text-align:center;font-size:10px;color:#738398;margin-top:19px}.notice{font-size:11px;line-height:1.5;color:#8293aa;text-align:center;margin:12px 2px}
-.settings-page{padding-bottom:45px}.back{margin-bottom:6px}.settings-page h1{margin:17px 0 5px}.settings-section{margin:21px 0 10px;color:#b4c3d6;text-transform:uppercase;font-size:11px;letter-spacing:.12em;font-weight:800}
-.setting-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin:0 0 11px;padding:14px}.setting-head{gap:12px}.setting-title{font-size:15px;font-weight:770}.setting-descr{font-size:11px;color:#91a5bd;line-height:1.45;margin:4px 0 0}.task-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--task);margin-right:8px}.toggle{appearance:none;-webkit-appearance:none;width:46px;height:29px;background:#3f5066;border:1px solid #738099;border-radius:20px;position:relative;flex:none;cursor:pointer}.toggle:before{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;background:#fff;border-radius:50%;transition:transform .15s}.toggle:checked{background:#bc9252;border-color:#e3bf7b}.toggle:checked:before{transform:translateX(17px)}
-.setting-columns{align-items:center;flex-wrap:wrap;justify-content:space-between;gap:9px;margin-top:12px}.field-label{display:block;color:#b8c7d9;font-size:11px;font-weight:700;margin-bottom:6px}.interval-line{gap:7px}.interval-line .step{height:36px;width:36px;border:1px solid #4e607a;background:#28394f;color:#fff;border-radius:9px;font-size:20px}.interval-line input{max-width:69px;height:36px;color:#fff;border:1px solid #465a75;background:#0d1724;border-radius:8px;padding:0 4px;font-size:15px;font-weight:800;text-align:center}.interval-line select,.speed-input,select{height:36px;border:1px solid #465a75;background:#0d1724;color:#fff;border-radius:8px;padding:0 8px;font-size:13px}
-.color-line{gap:10px;margin-top:10px}.color-cell{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.color-cell label{font-size:11px;color:#c1cfdd}.color-cell input[type="color"]{appearance:none;-webkit-appearance:none;width:41px;height:33px;border:1px solid #4d5d70;background:transparent;padding:2px;border-radius:8px;cursor:pointer}
-.age-config-label{font-size:11px;color:#bac9dc;margin:13px 0 7px;font-weight:750}.age-table-head{gap:5px;padding:0 0 4px}.age-checkboxes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}.age-check{display:flex;gap:5px;align-items:center;justify-content:center;border:1px solid #41536a;border-radius:9px;min-height:39px;background:#121d2b;font-size:12px;font-weight:750}.age-check input{width:17px;height:17px;accent-color:#d8ab68;margin:0}.age-check.off{opacity:.4}
-.setting-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0}.setting-row .setting-descr{max-width:430px}.speed-input{width:83px;text-align:center}.oneoff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}.oneoff-grid .setting-card{margin:0}.oneoff-row{justify-content:space-between;gap:9px}
-.all-help{color:#a5b5c9;font-size:12px;line-height:1.6;margin:12px 0}.setting-cta{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}.setting-cta .btn{min-height:42px}
-@media (orientation:portrait){.app{padding:calc(16px + env(safe-area-inset-top)) 15px calc(15px + var(--safe-bottom));max-width:560px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.reminder{min-height:156px}.dial{--size:72px}.task-name{font-size:12px}.timer{font-size:20px}.age-bar{gap:6px;padding:7px}.age-caption{display:none}.age-combat{padding:0 7px}.mode-choice{flex:1;justify-content:space-around}.mode-choice button{flex:1;padding:0 8px}}
-@media (orientation:landscape){html,body,.app{background:#000}.app{padding:calc(8px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(8px + var(--safe-bottom)) max(12px,env(safe-area-inset-left));max-width:none}.settings-page{max-width:1100px;margin:auto}.settings-page .setting-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.settings-page .setting-group .setting-card{margin:0}.cards{gap:10px}.reminder{background:#070b11}.reminder.overdue{background:#111b24}.age-bar{background:#080a0e;border-color:#252d39}}
-/* Vue jeu : seulement les cadrans + commandes d'âge et combat. */
-@media (orientation:landscape){
-body.zen{overflow:hidden}
-body.zen .app{height:100dvh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
-body.zen .topline,body.zen h1,body.zen .sub,body.zen .session-line,body.zen .controls,body.zen .mode-help,body.zen .section-line,body.zen .toolbar,body.zen .context-controls,body.zen .notice,body.zen .footer{display:none!important}
-body.zen #playPage.active{height:100%;min-height:0;display:flex;flex-direction:column}
-body.zen .cards{flex:1;min-height:0;align-content:center;align-items:stretch;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));grid-template-rows:repeat(var(--rows,1),minmax(0,1fr));gap:clamp(6px,1.7vw,17px);width:min(100%,1120px);max-height:calc(100% - 54px);margin:auto auto 0}
-body.zen .reminder{min-height:0;height:auto;max-height:100%;gap:clamp(3px,1.2dvh,13px);padding:5px 4px;border-radius:clamp(11px,1.7vw,23px);border-width:2px}
-body.zen .reminder .task-name,body.zen .reminder .timer-note{display:none!important}
-body.zen .dial{--size:clamp(40px,27dvh,127px)}
-body.zen .cards[data-rows="2"] .dial{--size:clamp(37px,11.2dvh,69px)}
-body.zen .timer{font-size:clamp(13px,calc(6dvh / var(--rows)),29px)}
-body.zen .age-bar{flex:none;margin:7px auto 0;padding:4px 7px;min-height:40px;width:min(100%,540px);border:1px solid #1e2936;border-radius:12px}
-body.zen .age-caption{display:none}
-body.zen .age-buttons button{min-height:32px;font-size:12px}
-body.zen .age-combat{min-height:32px}
-body.zen .event-flash{position:fixed;z-index:5;left:50%;bottom:calc(52px + var(--safe-bottom));transform:translateX(-50%);margin:0;width:min(92vw,600px);font-size:12px;box-shadow:0 0 28px #000b}
-body.zen .empty{align-self:center;justify-self:center;grid-column:1/-1}
-}
-@media (orientation:landscape) and (max-height:340px){body.zen .age-bar{min-height:34px;margin-top:4px;padding:2px 6px}body.zen .age-buttons button,body.zen .age-combat{min-height:28px}body.zen .dial{--size:clamp(37px,26dvh,96px)}body.zen .cards[data-rows="2"] .dial{--size:clamp(34px,11dvh,62px)}body.zen .timer{font-size:clamp(12px,calc(5.5dvh / var(--rows)),24px)}}
-@media (prefers-reduced-motion:reduce){.reminder.pulsing,.reminder.pulsing:after,.reminder.pulsing .dial,.event-flash.live{animation:none!important}.reminder.pulsing{border-color:var(--glow);box-shadow:0 0 15px -4px var(--glow)}}
+:root{color-scheme:dark;--bg:#0b111b;--panel:#172131;--panel2:#222e41;--line:#34435a;--fg:#f4f6fa;--muted:#abb9cb;--gold:#e6bd73;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100%}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #81cbf7;outline-offset:2px}[hidden]{display:none!important}
+.app{max-width:1120px;margin:auto;padding:calc(14px + var(--safe-top)) 16px calc(24px + var(--safe-bottom));min-height:100dvh}.page{display:none}.page.active{display:block}
+.header,.brand,.header-actions,.session,.controls,.modes,.card-zone,.age-strip,.age-options,.toolbar,.settings-top,.setting-head,.setting-main,.setting-line,.inline-fields,.age-picker,.notification-content,.quick-actions,.settings-grid{display:flex;align-items:center}.header,.session,.settings-top{justify-content:space-between;gap:12px}.brand{gap:10px}.badge-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#2b281f;border:1px solid #9b7c50;font:700 23px Georgia,serif;color:var(--gold)}.brand small{display:block;font-size:9px;letter-spacing:.15em;color:#c4a46d;font-weight:800}.brand strong{font-size:15px}.version{font-size:11px;color:#a5b2c4;font-weight:500}.header-actions{gap:7px}
+.btn,.icon-btn{border:1px solid #475870;background:#1a2738;color:#f5f6f9;border-radius:11px;min-height:40px;padding:0 12px;font-size:12px;font-weight:750}.icon-btn{min-width:40px}.btn.gold{background:var(--gold);border-color:#ffdf9f;color:#181b20}.btn.ghost{background:transparent}.btn.danger{color:#ffc3bc;border-color:#814443}.btn:disabled,.icon-btn:disabled{opacity:.35;cursor:default}
+h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 12px}.session{font-size:12px;color:var(--muted);margin:13px 0}.session strong{color:#fff}.session-state{font-weight:750;letter-spacing:.08em}.session-state:before{content:'';display:inline-block;width:8px;height:8px;background:#718298;border-radius:50%;margin-right:7px}.session-state.running:before{background:#71e5ab;box-shadow:0 0 7px #71e5ab}
+.controls{justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0}.modes{gap:3px;border:1px solid #344457;background:#0e1724;padding:4px;border-radius:11px}.modes button{border:0;background:transparent;color:#a7b5c8;padding:8px 12px;border-radius:8px;min-height:32px;font-weight:760;font-size:12px}.modes button[aria-pressed="true"]{background:#3a526d;color:#fff}.explain{font-size:11px;color:#91a2b8;line-height:1.4;margin:8px 0 13px}.section-label{font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#9fafc3;margin:17px 0 9px}
+.cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:10px;align-items:stretch}.timer-card{--task:#66c9ff;--glow:#66c9ff;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:155px;padding:12px 6px;border:2px solid #283648;background:#101b2a;border-radius:17px;overflow:hidden;isolation:isolate;text-align:center}.timer-card.alert{border-color:var(--glow);background:#14212e}.timer-card.pulsing{animation:cardGlow 1.15s ease-in-out infinite}.timer-card.pulsing:after{content:'';position:absolute;inset:0;pointer-events:none;border:2px solid var(--glow);border-radius:inherit;animation:frameGlow 1.15s ease-in-out infinite}@keyframes cardGlow{0%,100%{box-shadow:none;border-color:#3b4758}50%{box-shadow:0 0 22px -2px var(--glow),inset 0 0 20px -10px var(--glow);border-color:var(--glow)}}@keyframes frameGlow{0%,100%{opacity:.1}50%{opacity:1;box-shadow:inset 0 0 17px -7px var(--glow)}}
+.timer-name{font-size:clamp(10px,1.8vw,14px);line-height:1.1;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dial{--dial:86px;border:0;background:none;display:grid;place-items:center;width:var(--dial);height:var(--dial);padding:0;position:relative;color:var(--task)}.dial:active{transform:scale(.96)}.dial .ring{width:100%;height:100%;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:5}.ring .track{stroke:#3a495c}.ring .fill{stroke:var(--task);stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;transition:stroke-dashoffset .2s linear}.symbol{position:absolute;width:45%;height:45%;display:grid;place-items:center}.symbol svg{width:100%;height:100%;display:block;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.timer-card.pulsing .dial{animation:dialGlow 1.15s ease-in-out infinite}@keyframes dialGlow{50%{filter:drop-shadow(0 0 13px var(--glow))}}.count{font-size:21px;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:840}.alert .count{color:var(--task)}.count-hint{font-size:10px;color:#9badc3;min-height:11px}.no-cards{border:1px dashed #455772;padding:20px;text-align:center;border-radius:12px;color:#b4c5dc;grid-column:1/-1}
+.age-strip{gap:8px;margin:14px auto 0;border:1px solid #354458;background:#121d2a;padding:8px;border-radius:13px;max-width:620px;justify-content:space-between}.age-options{gap:5px;flex:1}.age-options button{min-width:0;flex:1;min-height:41px;border:1px solid #45566a;border-radius:9px;background:#1c2a39;color:#c4cbd6;font-weight:800}.age-options button[aria-pressed="true"]{background:var(--gold);border-color:#f7d79e;color:#10151c}.next-age{font-size:20px;min-width:50px;min-height:41px;border-radius:9px;background:#e6bd73;color:#101419;border:1px solid #ffe2ac;font-weight:850}.next-age[disabled]{opacity:.3}.next-age.active{background:#524225;color:#ffe4a9}.transition-state{color:#e5c587;font-weight:750;font-size:11px;text-align:center;white-space:nowrap;min-height:16px;max-width:250px;overflow:hidden;text-overflow:ellipsis}.age-caption{font-size:10px;color:#b3c0d2;font-weight:850}.toolbar{margin:15px 0;justify-content:center;gap:10px;flex-wrap:wrap}.toolbar .btn{min-height:43px}.toolbar .gold{min-width:160px}.under-note{text-align:center;color:#8c9eb5;font-size:11px;line-height:1.5;margin:10px auto;max-width:700px}.quick-actions{gap:9px;justify-content:center;flex-wrap:wrap;margin-top:6px}.quick-actions button{font-size:11px}
+.notification{position:fixed;z-index:20;left:50%;bottom:calc(68px + var(--safe-bottom));transform:translateX(-50%);width:min(92vw,640px);background:#2a2015;border:1px solid #c39853;border-radius:13px;box-shadow:0 0 32px #000e;padding:10px 13px;pointer-events:none}.notification-content{gap:10px}.notification-icon{font-size:18px;color:#f7ce8c}.notification-text{color:#ffe7b6;font-size:12px;line-height:1.4;font-weight:770;flex:1}.notification-progress{height:2px;background:#6b5231;overflow:hidden;border-radius:3px;margin-top:7px}.notification-progress span{height:100%;background:#edbd73;display:block;transform-origin:left}.notification.urgent{border-color:#f5ca8b;box-shadow:0 0 22px #c7944c44}.notification.flash{animation:messageIn .25s ease-out}@keyframes messageIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+.settings-top{align-items:flex-start}.settings-page{padding-bottom:30px}.settings-page h1{margin:12px 0 4px}.settings-description{color:#aab9ce;font-size:12px;line-height:1.55}.settings-section{color:#bac9d9;font-size:11px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;margin:20px 0 10px}.setting-card,.category{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:13px;margin-bottom:10px}.setting-head{justify-content:space-between;gap:10px}.setting-title{font-size:13px;font-weight:800}.setting-descr{font-size:11px;color:#a4b5c8;line-height:1.45;margin:4px 0}.setting-line{justify-content:space-between;gap:10px;margin:8px 0}.setting-line label{font-size:12px;color:#bfccdb}.setting-line input[type="number"],.setting-line select,.field-number{background:#0e1927;color:white;border:1px solid #52647d;border-radius:8px;padding:7px;font-size:13px;width:86px}.setting-line select{width:auto;max-width:145px}.toggle{appearance:none;-webkit-appearance:none;width:43px;height:27px;border-radius:16px;flex:none;background:#46566a;border:1px solid #78889a;position:relative;cursor:pointer}.toggle:before{content:'';width:19px;height:19px;background:white;border-radius:50%;position:absolute;left:3px;top:3px;transition:transform .15s}.toggle:checked{background:#c49c59}.toggle:checked:before{transform:translateX(16px)}.settings-grid{align-items:flex-start;gap:11px;flex-wrap:wrap}.settings-grid>*{min-width:230px;flex:1}
+.category{padding:0;overflow:hidden}.category summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px;font-size:14px;font-weight:800}.category summary::-webkit-details-marker{display:none}.category summary:after{content:'⌄';color:#dbb875;font-size:19px}.category[open] summary:after{transform:rotate(180deg)}.category-content{padding:0 12px 12px}.reminder-setting{background:#111c2a;border:1px solid #34445a;border-radius:12px;padding:11px;margin:9px 0}.reminder-setting .head-info{display:flex;align-items:center;gap:8px}.colored-dot{width:9px;height:9px;border-radius:50%;background:var(--task);display:inline-block;flex:none}.reminder-setting .setting-head .setting-title{line-height:1.2}.reminder-setting .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:8px;margin-top:11px}.field{min-width:0}.field label{font-size:10px;color:#c2cfdf;font-weight:700;display:block;margin-bottom:5px}.field input[type="number"],.field select{width:100%;height:34px;background:#0c1623;color:#f6f6f6;border:1px solid #50627a;border-radius:8px;padding:5px 7px;font-size:12px}.colorpair{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}.colorpair label{font-size:10px;color:#aabbcf;display:flex;gap:5px;align-items:center}.colorpair input{width:38px;height:30px;background:transparent;padding:1px;border-radius:6px;border:1px solid #566980}.age-picker{gap:6px;margin-top:8px}.age-picker label{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;border:1px solid #475a73;background:#0d1825;border-radius:7px;padding:6px 3px}.age-picker input{accent-color:#d3a968;width:15px;height:15px;margin:0}.settings-help{font-size:11px;color:#9eafc1;line-height:1.5;padding:5px 0}.warning{color:#f8ce88;font-size:11px;line-height:1.4;border:1px solid #735d3a;border-radius:9px;padding:9px 10px;margin-top:10px}.settings-end{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}.settings-end .btn{min-height:42px}.footer{text-align:center;color:#8290a1;font-size:10px;margin:20px auto 3px}
+@media (orientation:portrait){.app{max-width:580px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.timer-card{min-height:147px}.dial{--dial:72px}.age-strip{gap:5px;padding:6px}.transition-state,.age-caption{display:none}.age-options button,.next-age{min-height:40px}.modes{flex:1}.modes button{flex:1}.notification{bottom:calc(18px + var(--safe-bottom))}}
+@media (orientation:landscape){html,body,.app{background:#000}.app{max-width:none;padding:calc(8px + var(--safe-top)) max(10px,env(safe-area-inset-right,0px)) calc(8px + var(--safe-bottom)) max(10px,env(safe-area-inset-left,0px))}.settings-page{max-width:1120px;margin:auto}.settings-page .category-content{display:block}.settings-page .reminder-settings-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.settings-page .reminder-setting{margin:0}.timer-card{background:#06090e}.age-strip{background:#07090e;border-color:#263243}}
+@media (orientation:landscape){body.zen{overflow:hidden}body.zen .app{height:100dvh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}body.zen #playPage.active{display:flex;flex-direction:column;min-height:0;height:100%}body.zen .header,body.zen h1,body.zen .lead,body.zen .session,body.zen .controls,body.zen .explain,body.zen .section-label,body.zen .toolbar,body.zen .under-note,body.zen .quick-actions,body.zen .footer{display:none!important}body.zen .cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));grid-template-rows:1fr;align-items:stretch;align-content:center;flex:1;min-height:0;max-height:calc(100% - 55px);width:min(100%,1100px);margin:auto auto 0;gap:clamp(7px,1.6vw,16px)}body.zen .timer-card{height:100%;min-height:0;gap:clamp(4px,1.2dvh,12px);padding:clamp(4px,1.2dvh,12px);border-radius:clamp(11px,1.8vw,23px)}body.zen .timer-name{font-size:clamp(11px,2.8dvh,18px);white-space:normal;max-height:2.2em;overflow:hidden;line-height:1.1}body.zen .dial{--dial:clamp(42px,25dvh,117px)}body.zen .count{font-size:clamp(16px,5.3dvh,28px)}body.zen .count-hint{display:none}body.zen .age-strip{flex:none;min-height:41px;margin:7px auto 0;padding:4px 7px;width:min(100%,650px);border:1px solid #253143;border-radius:11px}body.zen .age-options button,body.zen .next-age{min-height:32px}body.zen .age-caption{display:none}body.zen .transition-state{font-size:10px;max-width:150px}body.zen .notification{bottom:calc(55px + var(--safe-bottom));font-size:12px}}
+@media (orientation:landscape) and (max-height:340px){body.zen .cards{max-height:calc(100% - 40px)}body.zen .timer-card{gap:3px;padding:3px 6px}body.zen .dial{--dial:clamp(35px,22dvh,82px)}body.zen .timer-name{font-size:clamp(10px,2.8dvh,13px)}body.zen .count{font-size:clamp(13px,4.7dvh,20px)}body.zen .age-strip{min-height:35px;margin-top:4px;padding:2px 5px}body.zen .age-options button,body.zen .next-age{min-height:27px}.age-strip{gap:4px}}
+@media (prefers-reduced-motion:reduce){.timer-card.pulsing,.timer-card.pulsing:after,.timer-card.pulsing .dial,.notification.flash{animation:none!important}.timer-card.pulsing{border-color:var(--glow);box-shadow:0 0 15px -4px var(--glow)}}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <header class="topline">
-    <div class="brand"><div class="emblem">II</div><div><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span style="font-weight:500;color:#99aabe">v1.3</span></strong></div></div>
-    <div class="top-actions"><button class="top-btn" id="hideControls" type="button" hidden>Masquer</button><button class="top-btn" id="settingsBtn" type="button" aria-label="Réglages" title="Réglages">⚙</button></div>
+<div class="app">
+  <header class="header">
+    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.4</span></strong></span></div>
+    <div class="header-actions"><button class="icon-btn" type="button" id="hideControls" hidden>Masquer</button><button class="icon-btn" type="button" id="settingsBtn" aria-label="Ouvrir les paramètres" title="Paramètres">⚙</button></div>
   </header>
   <main id="playPage" class="page active">
-    <h1>Garde le rythme.</h1>
-    <p class="sub">Des rappels adaptés à ton âge et à ton plan de jeu, sans connexion à AoE2.</p>
-    <div class="session-line"><span class="state" id="runLabel">PRÊT</span><span class="session-t">SESSION <b id="sessionTime">00:00</b></span></div>
-    <div class="controls"><div class="mode-choice" role="group" aria-label="Mode des rappels"><button data-mode="auto" type="button">Auto</button><button data-mode="manual" type="button">Manuel</button><button data-mode="hybrid" type="button">Hybride</button></div><button class="btn" id="battleBtn" type="button">Après un combat</button></div>
-    <p class="mode-help" id="modeHelp"></p>
-    <div class="section-line"><span>Rappels actifs</span><span id="taskCount"></span></div>
-    <div class="cards" id="cards"></div>
-    <div class="age-bar" aria-label="Âge actuel"><span class="age-caption">ÂGE</span><div class="age-buttons" id="ageButtons"><button type="button" data-age="I">I</button><button type="button" data-age="II">II</button><button type="button" data-age="III">III</button><button type="button" data-age="IV">IV</button></div><button class="age-combat" type="button" id="combatBtn" aria-pressed="false" title="Suspendre les rappels secondaires pendant un combat">⚔ Combat</button></div>
-    <div id="eventFlash" class="event-flash" role="status" hidden></div>
-    <div class="toolbar"><button id="playPause" class="btn primary" type="button">Démarrer</button><button id="resetAll" class="btn" type="button">Relancer les timers</button></div>
-    <div class="context-controls"><div class="age-card-actions"><button id="ageResearchBtn" class="btn" type="button">Lancer passage à II</button><button id="cancelAgeResearch" class="btn danger" type="button" hidden>Annuler la recherche</button><span id="ageResearchStatus" class="age-research"></span></div><p>Le changement d'âge reste manuel via I–IV. Le chronomètre de recherche est facultatif et n'avance jamais l'âge automatiquement.</p></div>
-    <p class="notice">Touchez un cadran pour relancer son rappel. En paysage, touchez le fond noir pour afficher ou masquer les commandes. Les boutons I–IV fonctionnent en un appui.</p>
+    <h1>Garde le rythme.</h1><p class="lead">Les couleurs pour les réflexes. Les messages pour les décisions.</p>
+    <div class="session"><span class="session-state" id="runLabel">PRÊT</span><span>SESSION <strong id="sessionTime">00:00</strong></span></div>
+    <div class="controls"><div class="modes" role="group" aria-label="Mode des timers"><button type="button" data-mode="auto">Auto</button><button type="button" data-mode="manual">Manuel</button><button type="button" data-mode="hybrid">Hybride</button></div><button class="btn" id="settingsShortcut" type="button">⚙ Rappels</button></div>
+    <p class="explain" id="modeHelp">Les compteurs repartent automatiquement.</p>
+    <div class="section-label">Cadrans permanents · <span id="cardCount">0</span>/4</div>
+    <div class="cards" id="cards" aria-label="Rappels permanents"></div>
+    <div class="age-strip" aria-label="Âge et transitions">
+      <span class="age-caption">ÂGE</span>
+      <div class="age-options"><button type="button" data-age="I">I</button><button type="button" data-age="II">II</button><button type="button" data-age="III">III</button><button type="button" data-age="IV">IV</button></div>
+      <span class="transition-state" id="transitionState"></span>
+      <button class="next-age" type="button" id="nextAge" aria-label="Lancer le passage à l'âge suivant" title="Démarrer la transition vers l'âge suivant">›</button>
+    </div>
+    <div class="toolbar"><button id="playPause" type="button" class="btn gold">Démarrer</button><button id="resetTimers" type="button" class="btn">Relancer les cadrans</button><button id="cancelTransition" type="button" class="btn danger" hidden>Annuler transition</button></div>
+    <div class="quick-actions"><button id="newGame" class="btn ghost" type="button">Nouvelle partie (âge I)</button></div>
+    <p class="under-note">Un appui sur › démarre la recherche estimée et fera passer automatiquement au profil d'âge suivant. Les boutons I–IV permettent de corriger l'âge manuellement. Touchez un cadran pour relancer son compteur.</p>
   </main>
   <section id="settingsPage" class="page settings-page" aria-label="Paramètres">
-    <button id="backBtn" class="top-btn back" type="button">← Retour</button>
-    <h1>Personnaliser</h1><p class="sub">Chaque rappel possède ses âges d'affichage, sa durée et ses couleurs. Les changements sont enregistrés sur cet appareil.</p>
-    <div class="settings-section">Timers et affichage par âge</div>
-    <div id="settingsTasks" class="setting-group"></div>
-    <div class="settings-section">Rappels contextuels</div>
-    <div class="oneoff-grid" id="oneoffSettings"></div>
-    <div class="settings-section">Temps et confort</div>
-    <div class="setting-card">
-      <div class="setting-row"><div><div class="setting-title">Vitesse du jeu</div><p class="setting-descr">Utilisée uniquement pour convertir les durées définies en secondes de jeu et pour les recherches d'âge.</p></div><div><input class="speed-input" id="gameSpeed" type="number" min="0.25" max="4" step="0.1" inputmode="decimal" aria-label="Vitesse du jeu"></div></div>
-      <div class="setting-row"><div><div class="setting-title">Écran toujours allumé</div><p class="setting-descr">Demande un verrouillage d'écran désactivé au navigateur pendant la session.</p></div><input type="checkbox" class="toggle" id="wakeToggle"></div>
-      <div class="setting-row"><div><div class="setting-title">Signal sonore</div><p class="setting-descr">Bip discret si le navigateur autorise l'audio.</p></div><input type="checkbox" class="toggle" id="soundToggle"></div>
-      <div class="setting-row"><div><div class="setting-title">Glow animé</div><p class="setting-descr">Anime les icônes et les rectangles lors des alertes.</p></div><input type="checkbox" class="toggle" id="pulseToggle"></div>
+    <div class="settings-top"><div><button id="backBtn" class="btn ghost" type="button">← Retour</button><h1>Bibliothèque de rappels</h1><p class="settings-description">Choisis les timers, les messages et les événements pour chaque âge. Tous les réglages sont conservés sur cet appareil.</p></div><button id="saveBack" class="btn gold" type="button">Terminé</button></div>
+    <div class="settings-section">Confort et rythme des messages</div>
+    <div class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-line"><label for="gapSec">Intervalle minimal entre deux messages</label><select id="gapSec"><option value="20">20 s</option><option value="30">30 s</option><option value="45">45 s</option><option value="60">60 s</option><option value="90">90 s</option><option value="120">120 s</option></select></div>
+        <div class="setting-line"><label for="showSec">Affichage d'un message</label><select id="showSec"><option value="3">3 s</option><option value="4">4 s</option><option value="5">5 s</option><option value="6">6 s</option><option value="8">8 s</option><option value="10">10 s</option></select></div>
+        <div class="setting-line"><label for="mergeToggle">Regrouper les rappels proches</label><input class="toggle" id="mergeToggle" type="checkbox"></div>
+        <p class="setting-descr">Jamais deux messages à la fois ; les messages trop anciens sont ignorés. Les alertes des quatre cadrans restent indépendantes.</p>
+      </div>
+      <div class="setting-card">
+        <div class="setting-line"><label for="gameSpeed">Vitesse du jeu</label><input id="gameSpeed" class="field-number" type="number" min="0.25" max="4" step="0.05" inputmode="decimal"></div>
+        <div class="setting-line"><label for="earlySec">Avance du profil d'âge (estimation)</label><select id="earlySec"><option value="0">0 s</option><option value="3">3 s</option><option value="5">5 s</option><option value="8">8 s</option><option value="10">10 s</option><option value="15">15 s</option></select></div>
+        <p class="setting-descr">À 1,7×, les passages standards durent environ 76, 94 et 112 s réelles. Le profil peut basculer un peu avant la fin estimée.</p>
+      </div>
+      <div class="setting-card">
+        <div class="setting-line"><label for="wakeToggle">Maintenir l'écran allumé</label><input class="toggle" id="wakeToggle" type="checkbox"></div>
+        <div class="setting-line"><label for="pulseToggle">Clignotement et glow</label><input class="toggle" id="pulseToggle" type="checkbox"></div>
+        <div class="setting-line"><label for="soundToggle">Bip discret (facultatif)</label><input class="toggle" id="soundToggle" type="checkbox"></div>
+        <p class="setting-descr">Le maintien d'écran dépend du navigateur iOS ; les rappels restent visuels par défaut.</p>
+      </div>
     </div>
-    <p class="all-help">Les rappels périodiques sont des invitations à vérifier, pas des actions détectées dans le jeu. Les événements de changement d'âge ne se déclenchent que lorsque tu choisis manuellement un autre âge. Les données restent dans ce navigateur. Si iOS met l'application en veille, les compteurs sont recalculés au retour, mais aucune alerte passée n'est rejouée en rafale.</p>
-    <div class="setting-cta"><button id="resetDefaults" type="button" class="btn danger">Réglages par défaut</button><button id="saveBack" type="button" class="btn primary">Terminé</button></div>
+    <div id="limitWarning" class="warning" hidden></div>
+    <div class="settings-section">32 vérifications et rappels, personnalisables</div>
+    <p class="settings-help">Pour chaque rappel périodique : choisir « Cadran » ou « Message », puis les âges d'activation. Les événements d'arrivée et de transition ne prennent jamais de place parmi les quatre cadrans. Cliquer sur une catégorie pour ouvrir sa liste.</p>
+    <div id="settingsCatalog"></div>
+    <p class="settings-help">L'outil ne connaît pas les événements du jeu. Les rappels de bâtiments sont des questions (« En ai-je besoin ? »), pas des ordres de construction. Les changements d'âge et les pauses restent des estimations si tu ne corriges pas manuellement.</p>
+    <div class="settings-end"><button id="defaultsBtn" class="btn danger" type="button">Réglages par défaut</button><button id="doneBtn" class="btn gold" type="button">Terminé</button></div>
   </section>
-  <div class="footer">AoE2 FIELD COACH · v1.3 · Outil indépendant · Aucun accès au jeu</div>
+  <div id="notice" class="notification" role="status" aria-live="polite" hidden><div class="notification-content"><span class="notification-icon" aria-hidden="true">◆</span><span id="noticeText" class="notification-text"></span></div><div class="notification-progress"><span id="noticeProgress"></span></div></div>
+  <footer class="footer">AOE2 FIELD COACH · v1.4 · Aucune connexion ni action sur le jeu</footer>
 </div>
 <script>
 (()=>{'use strict';
-const KEY='aoe2-field-coach-v13',OLD_KEY='aoe2-field-coach-v1';
-const AGES=['I','II','III','IV'];
-const MODES={auto:'Auto : les compteurs repartent tout seuls après chaque rappel.',manual:'Manuel : le rappel reste visible jusqu’à un appui sur son cadran.',hybrid:'Hybride : comme Manuel, avec pulsation du cadran et de sa bordure.'};
-const DEF=[
- {id:'tc',name:'TCs et villageois',hint:'Files, inactifs, logements',icon:'house',color:'#62c9ff',glow:'#62c9ff',seconds:25,ages:['I','II','III','IV'],enabled:true,essential:true},
- {id:'scout',name:'Scouting',hint:'Scout, bâtiments, menaces',icon:'compass',color:'#e3c36a',glow:'#e3c36a',seconds:50,ages:['I','II','III'],enabled:true},
- {id:'eco',name:'Économie et fermes',hint:'Répartition, réserves, fermes',icon:'wheat',color:'#7ddb96',glow:'#7ddb96',seconds:70,ages:['I','II','III','IV'],enabled:true},
- {id:'army',name:'Production militaire',hint:'Files, renforts, rassemblement',icon:'swords',color:'#f28a74',glow:'#f28a74',seconds:40,ages:['II','III','IV'],enabled:true,essential:true},
- {id:'mission',name:'Mission et prochain âge',hint:'Mission → Composition → Financement',icon:'flag',color:'#bca5fb',glow:'#bca5fb',seconds:110,ages:['II','III','IV'],enabled:false},
- {id:'wall',name:'Sécurité et murs',hint:'Ressources exposées, accès',icon:'shield',color:'#8bd8cf',glow:'#8bd8cf',seconds:55,ages:['II','III'],enabled:false},
- {id:'relic',name:'Reliques et carte',hint:'Monastère, reliques, contrôle',icon:'landmark',color:'#dfb882',glow:'#dfb882',seconds:105,ages:['III','IV'],enabled:false},
- {id:'pop',name:'Population et maisons',hint:'Marge de population, constructeurs',icon:'users',color:'#dfa1d6',glow:'#dfa1d6',seconds:45,ages:['I','II','III','IV'],enabled:false}
+const KEY='aoe2-field-coach-v14', PREV_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
+const AGE_NAME={I:'Sombre',II:'Féodal',III:'Castle',IV:'Impérial'};
+const AGE_SECONDS={II:130,III:160,IV:190};
+const MODE_HELP={auto:'Auto : les cadrans se réinitialisent à chaque échéance.',manual:'Manuel : chaque cadran reste allumé jusqu’à ce que tu le touches.',hybrid:'Hybride : comme Manuel, avec glow et pulsation.'};
+const CATEGORIES=[
+ ['core','01 · Rythme et automatismes'],['buildings','02 · Infrastructure et bâtiments'],['economy','03 · Économie et développement'],['map','04 · Reconnaissance et contrôle de carte'],['strategy','05 · Stratégie et transitions']
 ];
-const EVENTS=[
- {id:'wallsII',name:'Murs après Féodal',desc:'45 s après le passage manuel à II : ressources et accès exposés ?',delay:45,on:true},
- {id:'tc2III',name:'TC2 après Castle',desc:'75 s après le passage manuel à III : TC2 ou pression militaire ?',delay:75,on:true},
- {id:'relicIII',name:'Reliques après Castle',desc:'90 s après le passage manuel à III : reliques et contrôle de carte ?',delay:90,on:false},
- {id:'siegeIV',name:'Siège à l’Impérial',desc:'À l’arrivée en IV : composition, améliorations, trébuchets ?',delay:0,on:true},
- {id:'postCombat',name:'Économie après combat',desc:'30 s après la sortie du mode Combat ou l’action « Après un combat ».',delay:30,on:true},
- {id:'preAge',name:'Préparer la fin du passage',desc:'Alerte 20 s réelles avant la fin du timer manuel de recherche d’âge.',delay:20,on:true}
-];
+const LIB=[];
+function add(id,cat,name,short,message,props){LIB.push({id,cat,name,short:short||name,message,kind:'periodic',seconds:180,ages:['II','III','IV'],on:false,view:'message',base:'real',color:'#c5a677',glow:'#c5a677',icon:'flag',priority:1,...props});}
+// Quatre réflexes de base : les seules cartes affichées par défaut.
+add('tc','core','TCs et villageois','TCs','TCs actifs ? Villageois inactifs ? Logements ?', {seconds:25,ages:AGES,on:true,view:'timer',color:'#62c9ff',glow:'#62c9ff',icon:'house',priority:3});
+add('scout','core','Scouting','Scout','Où est mon scout ? Bâtiments ennemis ? Nouvelle menace ?', {seconds:50,ages:['I','II','III'],on:true,view:'timer',color:'#e3c36a',glow:'#e3c36a',icon:'compass',priority:2});
+add('eco','core','Économie et fermes','Économie','Fermes ? Répartition ? Réserves ?', {seconds:70,ages:AGES,on:true,view:'timer',color:'#7ddb96',glow:'#7ddb96',icon:'wheat',priority:2});
+add('army','core','Production militaire','Armée','Files militaires ? Renforts ? Points de rassemblement ?', {seconds:40,ages:['II','III','IV'],on:true,view:'timer',color:'#f28a74',glow:'#f28a74',icon:'swords',priority:3});
+// Infrastructure (9)
+add('prod2II','buildings','2e bâtiment militaire','2e bâtiment','Deuxième bâtiment militaire nécessaire ?', {kind:'arrival',target:'II',delay:20,on:true,priority:3,group:'infraII',icon:'house'});
+add('forgeII','buildings','Forge au Féodal','Forge','Forge nécessaire à mon ouverture ?', {kind:'arrival',target:'II',delay:40,on:true,priority:3,group:'infraII',icon:'house'});
+add('wallsII','buildings','Murs et ressources','Murs','Murs ? Ressources exposées ? Accès ennemis ?', {kind:'arrival',target:'II',delay:60,on:false,priority:2,group:'securityII',icon:'shield'});
+add('tc2III','buildings','Deuxième TC au Castle','TC2','Deuxième TC, ou priorité à la pression militaire ?', {kind:'arrival',target:'III',delay:35,on:true,priority:3,group:'infraTCIII',icon:'house'});
+add('monasteryIII','buildings','Monastère au Castle','Monastère','Monastère utile ? Reliques à sécuriser ?', {kind:'arrival',target:'III',delay:65,on:true,priority:3,group:'infraIII',icon:'landmark'});
+add('workshopIII','buildings','Atelier de siège au Castle','Atelier de siège','Atelier de siège nécessaire pour ma mission ?', {kind:'arrival',target:'III',delay:90,on:true,priority:3,group:'infraIII',icon:'swords'});
+add('universityIII','buildings','Université au Castle','Université','Université ou technologies utiles maintenant ?', {kind:'arrival',target:'III',delay:110,on:true,priority:2,group:'infraIII',icon:'landmark'});
+add('extraProd','buildings','Assez de bâtiments militaires ?','Bâtiments','Mes bâtiments militaires suffisent-ils à maintenir la production ?', {seconds:180,ages:['III','IV'],on:false,priority:1,icon:'house'});
+add('siegeIV','buildings','Siège à l’Impérial','Siège','Quel siège pour terminer la partie ? Trébuchets ?',{kind:'arrival',target:'IV',delay:0,on:true,priority:3,group:'arrivalIV',icon:'swords'});
+// Économie (6)
+add('foodEarly','economy','Nourriture pour la suite','Nourriture','Assez de nourriture pour mon prochain objectif ?', {seconds:120,ages:['I','II'],icon:'wheat'});
+add('farms','economy','Nouvelles fermes','Fermes','Assez de fermes pour maintenir ma production ?', {seconds:120,ages:['II','III'],icon:'wheat'});
+add('stock','economy','Ressources inutilisées','Ressources','Ressources accumulées ? Rééquilibrer l’économie ?', {seconds:180,ages:['II','III','IV'],icon:'wheat'});
+add('ecoUp','economy','Améliorations économiques','Technologies','Améliorations économiques pertinentes maintenant ?', {seconds:180,ages:['II','III','IV'],icon:'wheat'});
+add('villagerEfficiency','economy','Efficacité des villageois','Efficacité','Villageois bloqués, inactifs ou mal répartis ?', {seconds:180,ages:['III','IV'],icon:'wheat'});
+add('postFight','economy','Économie après combat','Après combat','Après un combat ? Reprendre TCs, fermes et renforts.', {seconds:180,ages:['II','III','IV'],on:false,priority:1,icon:'wheat'});
+// Carte, défense et reconnaissance (6)
+add('enemyBuildings','map','Bâtiments militaires adverses','Bâtiments ennemis','Quels bâtiments militaires possède l’adversaire ?', {seconds:120,ages:['I','II'],icon:'compass'});
+add('enemyThreat','map','Nouvelle menace','Menaces','Quelle nouvelle menace adverse dois-je anticiper ?', {seconds:150,ages:['II','III'],icon:'compass'});
+add('exposed','map','Ressources exposées','Sécurité','Mes ressources et mes villageois sont-ils protégés ?', {seconds:150,ages:['II','III'],icon:'shield'});
+add('relicMap','map','Reliques et carte','Reliques','Reliques et contrôle de carte : une occasion à saisir ?', {seconds:180,ages:['III','IV'],icon:'landmark'});
+add('mapControl','map','Prise de contrôle','Contrôle carte','Quelle zone ou ressource puis-je contrôler ?', {seconds:180,ages:['III','IV'],icon:'compass'});
+add('fortify','map','Position à défendre','Fortification','Quelle position faut-il défendre ou fortifier ?', {seconds:210,ages:['III','IV'],icon:'shield'});
+// Mission et transitions (7)
+add('openFeudal','strategy','Préparer l’ouverture Féodale','Ouverture','Transition Féodale : ouverture, bâtiments, répartition du bois ?', {kind:'transition',target:'II',phase:'start',lead:0,on:true,priority:3,group:'transitionII',icon:'flag'});
+add('castlePlan','strategy','Plan de passage Castle','Plan Castle','Quel est mon plan Castle ? Économie ou pression ?', {seconds:180,ages:['II'],on:true,priority:2,icon:'flag'});
+add('castlePrep','strategy','Préparer les améliorations Castle','Améliorations','Castle imminent : améliorations, bâtiments et mission de l’armée ?', {kind:'transition',target:'III',phase:'before',lead:17,on:true,priority:3,group:'transitionIII',icon:'flag'});
+add('mission','strategy','Mission → Composition → Financement','Mission','Mission ? Composition adaptée ? Comment la financer ?', {seconds:180,ages:['III'],on:true,priority:2,icon:'flag'});
+add('consolidate','strategy','Attaquer ou consolider ?','Consolidation','Attaquer, consolider ou développer l’économie ?', {seconds:240,ages:['III'],on:false,priority:1,icon:'flag'});
+add('imperialPrep','strategy','Préparer l’Impérial','Plan Impérial','Impérial imminent : composition, technologies et siège ?', {kind:'transition',target:'IV',phase:'before',lead:17,on:true,priority:3,group:'transitionIV',icon:'flag'});
+add('victory','strategy','Condition de victoire','Victoire','Comment vais-je gagner cette partie ? Siège et objectifs ?', {seconds:180,ages:['IV'],on:true,priority:2,icon:'flag'});
+const BY_ID=Object.fromEntries(LIB.map(d=>[d.id,d]));
 const $=id=>document.getElementById(id), now=()=>Date.now();
-const clamp=(v,min,max,fallback)=>{const x=Number(v);return Number.isFinite(x)?Math.max(min,Math.min(max,x)):fallback};
-const validColor=(c,def)=>/^#[0-9a-f]{6}$/i.test(c||'')?c:def;
-const msFormat=(ms)=>{const x=Math.ceil(Math.max(ms,0)/1000);return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0')};
-function symbol(type){const common='viewBox="0 0 48 48" aria-hidden="true"';const icons={
- house:`<svg ${common}><path d="M7 22 24 8l17 14M12 20v20h24V20M19 40V28h10v12"/></svg>`,
- compass:`<svg ${common}><circle cx="24" cy="24" r="18"/><path d="M24 6v6m0 24v6M6 24h6m24 0h6M31 17l-4 10-10 4 4-10 10-4Z"/></svg>`,
- wheat:`<svg ${common}><path d="M24 43V11M24 10l-3-5m3 5 3-5M23 18c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 27c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 36c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM16 43h16"/></svg>`,
- swords:`<svg ${common}><path d="m7 7 16 16m-2-12 9-4 4 9-9 9M7 7l1 10 10 1m-7 9 10 10m-13 4 10-10M41 7 25 23m8 4-10 10m7 4L20 31"/></svg>`,
- flag:`<svg ${common}><path d="M12 43V7m0 3c9-7 16 7 27 0v20c-11 7-18-7-27 0"/></svg>`,
- shield:`<svg ${common}><path d="M24 5 39 11v12c0 12-7 17-15 20C16 40 9 35 9 23V11L24 5Z"/><path d="m17 24 5 5 10-11"/></svg>`,
- landmark:`<svg ${common}><path d="M5 18 24 7l19 11H5Zm5 5v14m9-14v14m10-14v14m9-14v14M6 41h36M8 37h32"/></svg>`,
- users:`<svg ${common}><circle cx="17" cy="16" r="6"/><circle cx="34" cy="18" r="5"/><path d="M5 38v-5c0-7 5-11 12-11s12 4 12 11v5H5Zm27-12c6-1 11 3 11 9v3h-8"/></svg>`};return icons[type]||icons.house}
-function taskDefault(d){return {enabled:d.enabled,ages:[...d.ages],seconds:d.seconds,timeBase:'real',color:d.color,glow:d.glow,remaining:d.seconds*1000,dueAt:null,lastAlertAt:0,notified:false}}
-function defaults(){return {version:13,age:'I',mode:'auto',running:false,sessionElapsed:0,sessionResumedAt:null,combat:false,wake:true,sound:false,pulse:true,gameSpeed:1.7,tasks:Object.fromEntries(DEF.map(d=>[d.id,taskDefault(d)])),eventOpts:Object.fromEntries(EVENTS.map(x=>[x.id,x.on])),events:[],research:null}}
-function mergeSaved(raw){const result=defaults();if(!raw||typeof raw!=='object')return result;
- result.age=AGES.includes(raw.age)?raw.age:'I';result.mode=MODES[raw.mode]?raw.mode:'auto';result.wake=raw.wake!==false;result.sound=raw.sound===true;result.pulse=raw.pulse!==false;result.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);result.combat=raw.combat===true;
- result.running=raw.running===true;result.sessionElapsed=clamp(raw.sessionElapsed,0,1e10,0);result.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();
- for(const d of DEF){const s=raw.tasks&&raw.tasks[d.id];if(!s)continue;const t=result.tasks[d.id];t.enabled=s.enabled!==false;t.ages=Array.isArray(s.ages)?AGES.filter(a=>s.ages.includes(a)):[...t.ages];t.seconds=clamp(s.seconds,5,1800,d.seconds);t.timeBase=s.timeBase==='game'?'game':'real';t.color=validColor(s.color,d.color);t.glow=validColor(s.glow,d.glow);t.remaining=clamp(s.remaining,-2e9,2e9,t.seconds*1000);t.dueAt=Number.isFinite(s.dueAt)?s.dueAt:null;t.lastAlertAt=clamp(s.lastAlertAt,0,2e13,0);t.notified=s.notified===true;}
- for(const e of EVENTS){if(raw.eventOpts&&typeof raw.eventOpts[e.id]==='boolean')result.eventOpts[e.id]=raw.eventOpts[e.id]}
- if(Array.isArray(raw.events))result.events=raw.events.filter(e=>typeof e.label==='string'&&((Number.isFinite(e.dueAt)&&e.dueAt>now()-600000)||(!result.running&&e.dueAt===null&&Number.isFinite(e.remaining)))).slice(-20).map(e=>({label:e.label,dueAt:Number.isFinite(e.dueAt)?e.dueAt:null,remaining:clamp(e.remaining,0,600000,0),shown:Boolean(e.shown)}));
- if(raw.research&&AGES.includes(raw.research.target)&&(Number.isFinite(raw.research.dueAt)||(!result.running&&raw.research.dueAt===null)))result.research={target:raw.research.target,dueAt:Number.isFinite(raw.research.dueAt)?raw.research.dueAt:null,remaining:clamp(raw.research.remaining,0,1e7,0),preShown:Boolean(raw.research.preShown),completed:Boolean(raw.research.completed)};
- return result;
+const clamp=(v,min,max,fallback)=>{const x=Number(v);return Number.isFinite(x)?Math.max(min,Math.min(max,x)):fallback;};
+const color=(v, fallback)=>/^#[\da-f]{6}$/i.test(v||'')?v:fallback;
+const format=(ms)=>{const x=Math.ceil(Math.max(0,ms)/1000);return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');};
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+function symbol(type){const prefix='viewBox="0 0 48 48" aria-hidden="true"', shapes={
+ house:'<path d="M7 22 24 8l17 14M12 20v20h24V20M19 40V28h10v12"/>',
+ compass:'<circle cx="24" cy="24" r="18"/><path d="M24 6v6m0 24v6M6 24h6m24 0h6M31 17l-4 10-10 4 4-10 10-4Z"/>',
+ wheat:'<path d="M24 43V11M24 10l-3-5m3 5 3-5M23 18c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 27c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 36c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM16 43h16"/>',
+ swords:'<path d="m7 7 16 16m-2-12 9-4 4 9-9 9M7 7l1 10 10 1m-7 9 10 10M41 7 25 23m8 4-10 10m7 4L20 31"/>',
+ flag:'<path d="M12 43V7m0 3c9-7 16 7 27 0v20c-11 7-18-7-27 0"/>',
+ shield:'<path d="M24 5 39 11v12c0 12-7 17-15 20C16 40 9 35 9 23V11L24 5Z"/><path d="m17 24 5 5 10-11"/>',
+ landmark:'<path d="M5 18 24 7l19 11H5Zm5 5v14m9-14v14m10-14v14m9-14v14M6 41h36M8 37h32"/>'};return `<svg ${prefix}>${shapes[type]||shapes.flag}</svg>`;}
+function defaultTask(d){return {enabled:d.on,view:d.view,ages:[...d.ages],seconds:d.seconds,base:d.base,color:d.color,glow:d.glow,priority:d.priority,delay:d.delay??0,lead:d.lead??0,dueAt:null,remainingMs:null,lastAlertAt:0,notified:false};}
+function defaults(){return {v:14,mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
+function sanitizeTask(d, raw){const t=defaultTask(d);if(!raw||typeof raw!=='object')return t;
+ t.enabled=raw.enabled===true;t.view=raw.view==='timer'?'timer':'message';t.ages=Array.isArray(raw.ages)?AGES.filter(a=>raw.ages.includes(a)):[...d.ages];t.seconds=clamp(raw.seconds,10,3600,d.seconds);t.base=raw.base==='game'?'game':'real';t.color=color(raw.color,d.color);t.glow=color(raw.glow,d.glow);t.priority=clamp(raw.priority,1,3,d.priority);t.delay=clamp(raw.delay,0,600,d.delay??0);t.lead=clamp(raw.lead,0,120,d.lead??0);
+ t.dueAt=Number.isFinite(raw.dueAt)?raw.dueAt:null;t.remainingMs=Number.isFinite(raw.remainingMs)?clamp(raw.remainingMs,-3600000,7200000,0):null;t.lastAlertAt=clamp(raw.lastAlertAt,0,2e13,0);t.notified=raw.notified===true;
+ return t;}
+function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode=MODE_HELP[raw.mode]?raw.mode:'auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;
+ for(const d of LIB){if(raw.tasks?.[d.id])s.tasks[d.id]=sanitizeTask(d,raw.tasks[d.id]);}
+ if(raw.transition&&AGES.includes(raw.transition.target)&&AGES.includes(raw.transition.from)){
+ const r=raw.transition;s.transition={from:r.from,target:r.target,dueAt:Number.isFinite(r.dueAt)?r.dueAt:null,remainingMs:clamp(r.remainingMs,0,2e7,0)};
+ }
+ if(Array.isArray(raw.events)){s.events=raw.events.filter(e=>BY_ID[e.id]&&Number.isFinite(e.dueAt)||BY_ID[e.id]&&Number.isFinite(e.remainingMs)).slice(0,30).map(e=>({id:e.id,dueAt:Number.isFinite(e.dueAt)?e.dueAt:null,remainingMs:Number.isFinite(e.remainingMs)?clamp(e.remainingMs,-3e5,1e7,0):null,age:e.age}));}
+ if(s.running&&s.sessionResumedAt>now())s.sessionResumedAt=now();return s;}
+function migrate(){const s=defaults();try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(!old||typeof old!=='object')return s;
+ s.age=AGES.includes(old.age)?old.age:'I';s.mode=MODE_HELP[old.mode]?old.mode:'auto';s.wake=old.wake!==false;s.pulse=old.pulse!==false;s.sound=old.sound===true;s.gameSpeed=clamp(old.gameSpeed,.25,4,1.7);
+ const map={tc:'tc',scout:'scout',eco:'eco',army:'army',mission:'mission',wall:'exposed',relic:'relicMap'};
+ for(const [oldId,newId] of Object.entries(map)){const src=old.tasks?.[oldId];if(!src)continue;const d=BY_ID[newId],t=s.tasks[newId];t.enabled=src.enabled===true;t.ages=Array.isArray(src.ages)?AGES.filter(a=>src.ages.includes(a)):t.ages;t.seconds=clamp(src.seconds,10,3600,t.seconds);t.base=src.timeBase==='game'?'game':'real';t.color=color(src.color,d.color);t.glow=color(src.glow,d.glow);t.view=oldId==='mission'||oldId==='wall'||oldId==='relic'?'message':'timer';}
+ // L'ancienne case Population est déjà couverte par le cadran TCs/villageois.
+ if(old.eventOpts){if(typeof old.eventOpts.wallsII==='boolean')s.tasks.wallsII.enabled=old.eventOpts.wallsII;if(typeof old.eventOpts.tc2III==='boolean')s.tasks.tc2III.enabled=old.eventOpts.tc2III;if(typeof old.eventOpts.relicIII==='boolean'&&old.eventOpts.relicIII===true)s.tasks.relicMap.enabled=true;if(typeof old.eventOpts.siegeIV==='boolean')s.tasks.siegeIV.enabled=old.eventOpts.siegeIV;}
+ return s;}catch(_){return s;}}
+let state;try{const raw=localStorage.getItem(KEY);state=raw?restore(JSON.parse(raw)):migrate();}catch(_){state=defaults();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){}}
+const visible=()=>!document.hidden;
+const periodMs=(t)=>Math.max(1000,1000*t.seconds/(t.base==='game'?state.gameSpeed:1));
+const active=d=>state.tasks[d.id].enabled&&(d.kind!=='periodic'||state.tasks[d.id].ages.includes(state.age));
+const periodic=d=>d.kind==='periodic'&&active(d);
+function activeDials(age=state.age){return LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].ages.includes(age)&&state.tasks[d.id].view==='timer').sort((a,b)=>state.tasks[b.id].priority-state.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b));}
+function isDial(d){return activeDials().some(x=>x.id===d.id);}
+function remaining(t,n=now()){return Number.isFinite(t.dueAt)?t.dueAt-n:Number.isFinite(t.remainingMs)?t.remainingMs:periodMs(t);}
+const landscape=matchMedia('(orientation:landscape)');let settingsOpen=false,controlsOpen=false,lastCardSignature='',audioCtx=null,wakeSentinel=null,wakeWarned=false,lastStore=0;
+let queue=[],notice=null,lastNoticeAt=-1e15,backFromHidden=false;
+function syncLayout(){document.body.classList.toggle('zen',landscape.matches&&!settingsOpen&&!controlsOpen);$('hideControls').hidden=!landscape.matches||settingsOpen;$('settingsBtn').hidden=settingsOpen;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b';}
+function setControls(v){controlsOpen=Boolean(v);syncLayout();}
+function showSettings(v){settingsOpen=Boolean(v);$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
+async function wake(){if(!state.wake||!state.running||!visible()||wakeSentinel)return;if(!('wakeLock' in navigator)||!isSecureContext){if(!wakeWarned){console.info('Screen Wake Lock non disponible');wakeWarned=true;}return;}
+ try{wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null;});}catch(_){if(!wakeWarned){console.info('Screen Wake Lock refusé');wakeWarned=true;}}}
+async function releaseWake(){if(wakeSentinel){try{await wakeSentinel.release();}catch(_){}wakeSentinel=null;}}
+function audioUnlock(){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(A){audioCtx??=new A();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});}}catch(_){}}
+function beep(){if(!state.sound||!audioCtx||audioCtx.state!=='running'||!visible())return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=710;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.042,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.19);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.2);}catch(_){}}
+function stopClock(){if(!state.running)return;const n=now();state.sessionElapsed+=Math.max(0,n-state.sessionResumedAt);state.running=false;state.sessionResumedAt=null;
+ for(const d of LIB){if(d.kind==='periodic'){const t=state.tasks[d.id];t.remainingMs=remaining(t,n);t.dueAt=null;}}
+ for(const ev of state.events){ev.remainingMs=Number.isFinite(ev.dueAt)?ev.dueAt-n:ev.remainingMs;ev.dueAt=null;}
+ if(state.transition){state.transition.remainingMs=Math.max(0,state.transition.dueAt-n);state.transition.dueAt=null;}
+ notice=null;releaseWake();save();}
+function startClock(){if(state.running)return;const n=now();state.running=true;state.sessionResumedAt=n;
+ for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];const ms=Number.isFinite(t.remainingMs)?t.remainingMs:periodMs(t);t.dueAt=n+ms;t.remainingMs=null;}
+ for(const ev of state.events){ev.dueAt=n+(Number.isFinite(ev.remainingMs)?ev.remainingMs:0);ev.remainingMs=null;}
+ if(state.transition){state.transition.dueAt=n+(Number.isFinite(state.transition.remainingMs)?state.transition.remainingMs:0);state.transition.remainingMs=null;}
+ wake();save();}
+function resetTask(id){const d=BY_ID[id];if(!d||d.kind!=='periodic')return;const t=state.tasks[id];t.remainingMs=periodMs(t);t.dueAt=state.running?now()+t.remainingMs:null;t.lastAlertAt=0;t.notified=false;save();draw();}
+function resetTimers(){for(const d of LIB)if(d.kind==='periodic')resetTask(d.id);save();draw();}
+function newGame(){if(!confirm('Commencer une nouvelle partie à l’âge I ? Les réglages seront conservés.'))return;stopClock();state.age='I';state.sessionElapsed=0;state.sessionResumedAt=null;state.events=[];state.transition=null;notice=null;queue=[];lastNoticeAt=-1e15;for(const d of LIB)if(d.kind==='periodic'){const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.lastAlertAt=0;t.notified=false;}startClock();setControls(false);drawCards(true);draw();save();}
+function modeChange(m){if(!MODE_HELP[m])return;state.mode=m;for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];let r=remaining(t);if(r<=0)r=periodMs(t);t.remainingMs=r;t.dueAt=state.running?now()+r:null;t.lastAlertAt=0;t.notified=false;}draw();save();}
+function eventSchedule(d,delaySec,age){if(!state.running)return;const ms=Math.max(0,delaySec*1000);state.events.push({id:d.id,age,dueAt:now()+ms,remainingMs:null});state.events=state.events.slice(-30);}
+function scheduleArrival(age){if(!state.running)return;for(const d of LIB){if(d.kind!=='arrival'||d.target!==age||!state.tasks[d.id].enabled)continue;eventSchedule(d,state.tasks[d.id].delay,age);}}
+function queueReminder(d,at=now()){queue.push({id:d.id,text:d.message,group:d.group||d.id,priority:state.tasks[d.id].priority,age:state.age,at,expireAt:at+100000});queue=queue.slice(-20);}
+function immediateMessage(text,priority=3){queue.push({id:'manual',text,group:'manual',priority,age:state.age,at:now(),expireAt:now()+55000});}
+function setAge(next,{automatic=false}={}){if(!AGES.includes(next)||next===state.age){if(!automatic)state.transition=null;return;}
+ state.age=next;state.transition=null;state.events=[];queue=[];notice=null;
+ const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];t.remainingMs=periodMs(t);t.dueAt=state.running?n+t.remainingMs:null;t.notified=false;t.lastAlertAt=0;}
+ scheduleArrival(next);drawCards(true);
+ save();draw();}
+function cancelTransition(){if(!state.transition)return;const target=state.transition.target;state.transition=null;state.events=state.events.filter(e=>e.age!==`transition-${target}`);queue=queue.filter(q=>!q.group.startsWith('transition'));notice=null;save();draw();}
+function beginTransition(){const index=AGES.indexOf(state.age);if(index>=3)return;if(state.transition){return;}if(!state.running)startClock();
+ const target=AGES[index+1],base=AGE_SECONDS[target]*1000/state.gameSpeed;const adjusted=Math.max(5000,base-state.earlySec*1000);const n=now();state.transition={from:state.age,target,dueAt:n+adjusted,remainingMs:null};
+ for(const d of LIB){if(d.kind!=='transition'||d.target!==target||!state.tasks[d.id].enabled)continue;const phase=d.phase==='start';const remainingMs=phase?0:Math.max(0,adjusted-state.tasks[d.id].lead*1000);state.events.push({id:d.id,age:`transition-${target}`,dueAt:n+remainingMs,remainingMs:null});}
+ // Un check de préparation au clic, puis un autre près de l'arrivée. Ces deux
+ // messages suivent l'activation du rappel de transition correspondant.
+ if(target==='III'&&state.tasks.castlePrep.enabled)immediateMessage('Transition Castle : répartition des villageois et prochain plan ?',3);
+ if(target==='IV'&&state.tasks.imperialPrep.enabled)immediateMessage('Transition Impérial : production, ressources et préparation du siège ?',3);
+ save();draw();}
+function updateTask(id,patch){const d=BY_ID[id];if(!d)return;const t=state.tasks[id],newT={...t,...patch};newT.enabled=Boolean(newT.enabled);newT.view=newT.view==='timer'?'timer':'message';newT.ages=AGES.filter(a=>newT.ages.includes(a));newT.seconds=clamp(newT.seconds,10,3600,d.seconds);newT.delay=clamp(newT.delay,0,600,d.delay??0);newT.lead=clamp(newT.lead,0,120,d.lead??0);newT.priority=clamp(newT.priority,1,3,d.priority);newT.color=color(newT.color,d.color);newT.glow=color(newT.glow,d.glow);newT.base=newT.base==='game'?'game':'real';
+ state.tasks[id]=newT;
+ if(d.kind==='periodic'&&('seconds' in patch||'base' in patch||'enabled' in patch||'view' in patch||'ages' in patch)){const length=periodMs(newT);newT.remainingMs=length;newT.dueAt=state.running?now()+length:null;newT.notified=false;newT.lastAlertAt=0;}
+ if(!newT.enabled){state.events=state.events.filter(e=>e.id!==id);queue=queue.filter(x=>x.id!==id);}
+ drawCards(true);draw();save();}
+function elapsedTime(){return state.sessionElapsed+(state.running?Math.max(0,now()-state.sessionResumedAt):0);}
+function tick(n){if(!state.running)return;let dirty=false;
+ // Les cadrans et les messages périodiques ont des échéances indépendantes.
+ for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(!Number.isFinite(t.dueAt)||n<t.dueAt)continue;
+ const p=periodMs(t),cycles=Math.floor(Math.max(0,n-t.dueAt)/p)+1,lastDue=t.dueAt+(cycles-1)*p,late=n-lastDue;
+ if(!periodic(d)){t.dueAt=n+p;t.lastAlertAt=0;t.notified=false;dirty=true;continue;}
+ if(isDial(d)){
+   if(state.mode==='auto'){t.dueAt+=cycles*p;t.lastAlertAt=visible()&&late<2200?n:0;if(t.lastAlertAt)beep();dirty=true;}
+   else if(!t.notified){t.notified=true;if(visible()&&n-t.dueAt<2500)beep();dirty=true;}
+ }else{
+   t.dueAt+=cycles*p;
+   if(visible()&&late<2500)queueReminder(d,lastDue);
+   dirty=true;
+ }
+ }
+ // Une échéance d'arrivée ou de transition est montrée une seule fois.
+ const remainingEvents=[];
+ for(const ev of state.events){if(!Number.isFinite(ev.dueAt)){remainingEvents.push(ev);continue;}
+ if(n<ev.dueAt){remainingEvents.push(ev);continue;}
+ const d=BY_ID[ev.id];if(d&&state.tasks[d.id].enabled&&visible()&&n-ev.dueAt<12000&&(ev.age===state.age||ev.age===`transition-${state.transition?.target}`))queueReminder(d,ev.dueAt);
+ dirty=true;
+ }
+ state.events=remainingEvents;
+ // Le changement d'âge automatique n'est qu'une estimation : aucune détection du jeu.
+ if(state.transition&&Number.isFinite(state.transition.dueAt)&&n>=state.transition.dueAt){const r=state.transition;setAge(r.target,{automatic:true});dirty=true;}
+ if(dirty)save();}
+function pump(n){queue=queue.filter(x=>x.age===state.age&&n<x.expireAt);if(!visible()||!state.running)return;
+ if(notice&&n<notice.until)return;
+ if(notice&&n>=notice.until)notice=null;
+ if(n-lastNoticeAt<state.gapSec*1000||!queue.length)return;
+ queue.sort((a,b)=>b.priority-a.priority||a.at-b.at);
+ const selected=queue.shift();let texts=[selected.text];
+ if(state.merge){
+  const same=queue.filter(x=>x.group===selected.group&&Math.abs(x.at-selected.at)<=35000);
+  for(const x of same){texts.push(x.text);queue.splice(queue.indexOf(x),1);}
+  // On regroupe aussi un événement du même thème prévu dans les 30 prochaines secondes.
+  for(const ev of [...state.events]){const d=BY_ID[ev.id];if(!d||!d.group||d.group!==selected.group||ev.age!==state.age||!state.tasks[d.id].enabled||!Number.isFinite(ev.dueAt)||ev.dueAt>n+30000||ev.dueAt<n-10000)continue;
+   texts.push(d.message);state.events.splice(state.events.indexOf(ev),1);
+  }
+ }
+ const final=texts.filter((t,i)=>texts.indexOf(t)===i).join(' · ');
+ notice={text:final,until:n+state.showSec*1000,at:n,priority:selected.priority};lastNoticeAt=n;beep();save();
 }
-function migrateOld(){try{const old=JSON.parse(localStorage.getItem(OLD_KEY));if(!old||!old.tasks)return defaults();const out=defaults();out.mode=MODES[old.mode]?old.mode:'auto';out.wake=old.wake!==false;out.sound=old.sound===true;out.pulse=old.pulse!==false;
- for(const [oldId,newId,oldDefault] of [['scout','scout',60],['eco','eco',45],['prod','army',25]]){const src=old.tasks[oldId];if(!src)continue;const dest=out.tasks[newId];if(src.enabled===false)dest.enabled=false;if(Number(src.interval)!==oldDefault&&Number.isFinite(Number(src.interval)))dest.seconds=clamp(src.interval,5,1800,dest.seconds);dest.remaining=effectiveMs(dest,out)}
- // Nouveau modèle par âge : les sessions anciennes ne sont pas restaurées en cours de mise à jour.
- return out;}catch(_){return defaults()}}
-let state;try{const saved=localStorage.getItem(KEY);state=saved?mergeSaved(JSON.parse(saved)):migrateOld()}catch(_){state=defaults()}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){}}
-function effectiveMs(t,s=state){return t.seconds*1000/(t.timeBase==='game'?s.gameSpeed:1)}
-function remaining(t,n){return Number.isFinite(t.dueAt)?t.dueAt-n:t.remaining}
-function active(d,a=state.age){const t=state.tasks[d.id];return t.enabled&&t.ages.includes(a)}
-function visibleDefs(a=state.age){return DEF.filter(d=>active(d,a))}
-let inSettings=false,controlsOpen=false,latestEvent=null,wakeSentinel=null,wakeWarned=false,audioCtx=null,lastSave=0,lastRenderAge='';
-const landscape=matchMedia('(orientation: landscape)');
-function syncLayout(){const zen=landscape.matches&&!controlsOpen&&!inSettings;document.body.classList.toggle('zen',zen);$('hideControls').hidden=!landscape.matches||inSettings;$('settingsBtn').hidden=inSettings;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b'}
-function setControls(open){controlsOpen=Boolean(open);syncLayout()}
-function showSettings(open){inSettings=Boolean(open);$('playPage').classList.toggle('active',!open);$('settingsPage').classList.toggle('active',open);if(open)syncSettingsValues();syncLayout();window.scrollTo(0,0)}
-function pauseOrResume(){const n=now();if(state.running){state.sessionElapsed+=(n-state.sessionResumedAt);state.running=false;state.sessionResumedAt=null;for(const d of DEF){const t=state.tasks[d.id];t.remaining=remaining(t,n);t.dueAt=null;}for(const e of state.events){e.remaining=e.dueAt-n;e.dueAt=null;}if(state.research){state.research.remaining=state.research.dueAt-n;state.research.dueAt=null;}releaseWake();}
-else{state.running=true;state.sessionResumedAt=n;for(const d of DEF){const t=state.tasks[d.id];t.dueAt=(state.combat&&!d.essential)?null:n+(Number.isFinite(t.remaining)?t.remaining:effectiveMs(t));}for(const e of state.events)e.dueAt=state.combat?null:n+Math.max(0,e.remaining||0);if(state.research)state.research.dueAt=n+Math.max(0,state.research.remaining||0);requestWake()}
- save();render()}
-function resetTask(id){const t=state.tasks[id];if(!t)return;const length=effectiveMs(t);t.remaining=length;t.dueAt=state.running&&!(state.combat&&!DEF.find(d=>d.id===id)?.essential)?now()+length:null;t.lastAlertAt=0;t.notified=false;save();render()}
-function resetAll(){const n=now();for(const d of DEF){const t=state.tasks[d.id];t.remaining=effectiveMs(t);t.dueAt=state.running&&!(state.combat&&!d.essential)?n+t.remaining:null;t.lastAlertAt=0;t.notified=false;}state.sessionElapsed=0;state.sessionResumedAt=state.running?n:null;state.events=[];state.research=null;latestEvent=null;render();save()}
-function setMode(mode){if(!MODES[mode])return;state.mode=mode;const n=now();for(const d of DEF){const t=state.tasks[d.id];let left=remaining(t,n);if(mode==='auto'&&left<=0)left=effectiveMs(t);t.remaining=left;t.dueAt=state.running&&!(state.combat&&!d.essential)?n+left:null;t.notified=false;t.lastAlertAt=0;}save();render()}
-function schedule(label,delaySec){if(!state.running)return;const n=now();state.events.push({label,dueAt:state.combat?null:n+delaySec*1000,remaining:delaySec*1000,shown:false});state.events=state.events.slice(-20);save()}
-function notify(label){latestEvent={label,at:now()};if(state.sound&&!document.hidden)beep();}
-function setAge(age){if(!AGES.includes(age)||state.age===age)return;const wasActive=Object.fromEntries(DEF.map(d=>[d.id,active(d)]));latestEvent=null;state.events=[];state.age=age;const n=now();for(const d of DEF){if(active(d)&&!wasActive[d.id]){const t=state.tasks[d.id];t.remaining=effectiveMs(t);t.dueAt=state.running&&!(state.combat&&!d.essential)?n+t.remaining:null;t.lastAlertAt=0;t.notified=false;}}
- state.research=null;
- if(age==='II'&&state.eventOpts.wallsII)schedule('Féodal : vérifier murs et ressources exposées',45);
- if(age==='III'){if(state.eventOpts.tc2III)schedule('Castle : TC2 ou pression militaire ?',75);if(state.eventOpts.relicIII)schedule('Castle : reliques et contrôle de carte ?',90)}
- if(age==='IV'&&state.eventOpts.siegeIV&&state.running)notify('Impérial : améliorations, composition et siège !');
- createCards();render();save();}
-function setCombat(on){if(state.combat===on)return;const n=now();
- if(on){for(const d of DEF){if(d.essential)continue;const t=state.tasks[d.id];t.remaining=remaining(t,n);t.dueAt=null;}for(const e of state.events){e.remaining=Number.isFinite(e.dueAt)?Math.max(0,e.dueAt-n):e.remaining;e.dueAt=null;}}
- state.combat=on;
- if(!on){for(const d of DEF){if(d.essential)continue;const t=state.tasks[d.id];t.dueAt=state.running?n+(Number.isFinite(t.remaining)?t.remaining:effectiveMs(t)):null;}for(const e of state.events)e.dueAt=state.running?n+Math.max(0,e.remaining||0):null;if(state.eventOpts.postCombat)schedule('Après combat : reprendre TCs, fermes et économie',30);}save();render()}
-function startResearch(){const i=AGES.indexOf(state.age);if(i===3||!state.running)return;const target=AGES[i+1],gameTimes={II:130,III:160,IV:190};const duration=gameTimes[target]*1000/state.gameSpeed;
- state.research={target,remaining:duration,dueAt:now()+duration,preShown:false,completed:false};save();render()}
-function cancelResearch(){state.research=null;save();render()}
-function changeTask(id,patch){const t=state.tasks[id],d=DEF.find(x=>x.id===id);if(!t||!d)return;const reset=('seconds' in patch)||('timeBase' in patch)||('enabled' in patch && patch.enabled===true && !t.enabled)||('ages' in patch && !t.ages.includes(state.age) && patch.ages.includes(state.age));Object.assign(t,patch);t.seconds=clamp(t.seconds,5,1800,d.seconds);t.timeBase=t.timeBase==='game'?'game':'real';t.color=validColor(t.color,d.color);t.glow=validColor(t.glow,d.glow);t.ages=AGES.filter(a=>t.ages.includes(a));if(reset)resetTask(id);createCards();render();save();}
-function changeSpeed(value){const old=state.gameSpeed;state.gameSpeed=clamp(value,.25,4,1.7);if(old!==state.gameSpeed){for(const d of DEF){const t=state.tasks[d.id];if(t.timeBase==='game')resetTask(d.id)}if(state.research){state.research=null;notify('Vitesse modifiée : recherche d’âge annulée')}}save();render()}
-function cardsGridSize(n){if(n<=4)return {cols:Math.max(1,n),rows:1};if(n<=6)return{cols:3,rows:2};return{cols:4,rows:2}}
-function createCards(){const defs=visibleDefs(),shape=cardsGridSize(defs.length);const box=$('cards');box.style.setProperty('--cols',shape.cols);box.style.setProperty('--rows',shape.rows);box.dataset.rows=String(shape.rows);
- box.innerHTML=defs.map(d=>{const t=state.tasks[d.id];return `<article class="reminder" id="card-${d.id}" style="--task:${t.color};--glow:${t.glow}" aria-label="${d.name}">
- <div class="task-name">${d.name}</div><button class="dial" type="button" data-reset="${d.id}" aria-label="Relancer ${d.name}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="30"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="30"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
- <div class="timer" id="count-${d.id}">--:--</div><div class="timer-note" id="note-${d.id}">Prochain rappel</div></article>`}).join('')||'<div class="empty">Aucun rappel sélectionné pour cet âge. Touchez le fond noir puis ouvrez les réglages.</div>';
- $('taskCount').textContent=defs.length+' rappel'+(defs.length>1?'s':'');lastRenderAge=state.age;}
-function settingsMarkup(){const box=$('settingsTasks');box.innerHTML=DEF.map(d=>{const t=state.tasks[d.id];return `<div class="setting-card" style="--task:${t.color}" data-settings="${d.id}">
- <div class="setting-head"><div><div class="setting-title"><span class="task-dot"></span>${d.name}</div><p class="setting-descr">${d.hint}</p></div><input class="toggle" type="checkbox" data-enable="${d.id}" aria-label="Activer ${d.name}"></div>
- <div class="setting-columns"><div><label class="field-label" for="seconds-${d.id}">Intervalle</label><div class="interval-line"><button type="button" class="step" data-step="-5" data-task="${d.id}" aria-label="Réduire la durée de ${d.name}">−</button><input type="number" min="5" max="1800" step="5" id="seconds-${d.id}" data-seconds="${d.id}" inputmode="numeric"><button type="button" class="step" data-step="5" data-task="${d.id}" aria-label="Augmenter la durée de ${d.name}">+</button><select data-base="${d.id}" id="base-${d.id}" aria-label="Type de secondes pour ${d.name}"><option value="real">s réelles</option><option value="game">s jeu</option></select></div></div></div>
- <div class="color-line"><div class="color-cell"><label for="color-${d.id}">Icône</label><input type="color" id="color-${d.id}" data-color="${d.id}" aria-label="Couleur de l'icône ${d.name}"></div><div class="color-cell"><label for="glow-${d.id}">Glow et cadre</label><input type="color" id="glow-${d.id}" data-glow="${d.id}" aria-label="Couleur du glow de ${d.name}"></div></div>
- <div class="age-config-label">Afficher pendant les âges :</div><div class="age-checkboxes">${AGES.map(age=>`<label class="age-check" id="label-${d.id}-${age}"><input type="checkbox" data-taskage="${d.id}" data-agevalue="${age}" aria-label="Afficher ${d.name} à l'âge ${age}">${age}</label>`).join('')}</div></div>`}).join('');
- $('oneoffSettings').innerHTML=EVENTS.map(e=>`<div class="setting-card"><div class="oneoff-row"><div><div class="setting-title">${e.name}</div><p class="setting-descr">${e.desc}</p></div><input class="toggle" type="checkbox" data-eventopt="${e.id}" aria-label="Activer ${e.name}"></div></div>`).join('')}
-function syncSettingsValues(){for(const d of DEF){const t=state.tasks[d.id];$(`seconds-${d.id}`).value=t.seconds;$(`base-${d.id}`).value=t.timeBase;$(`color-${d.id}`).value=t.color;$(`glow-${d.id}`).value=t.glow;document.querySelector(`[data-enable="${d.id}"]`).checked=t.enabled;
- for(const age of AGES){const input=document.querySelector(`[data-taskage="${d.id}"][data-agevalue="${age}"]`);input.checked=t.ages.includes(age);$(`label-${d.id}-${age}`).classList.toggle('off',!t.enabled)} }
- for(const e of EVENTS)document.querySelector(`[data-eventopt="${e.id}"]`).checked=state.eventOpts[e.id];
- $('gameSpeed').value=state.gameSpeed;$('wakeToggle').checked=state.wake;$('soundToggle').checked=state.sound;$('pulseToggle').checked=state.pulse;}
-async function requestWake(){if(!state.wake||!state.running||document.hidden||wakeSentinel)return;if(!('wakeLock' in navigator)||!isSecureContext){if(!wakeWarned){wakeWarned=true;console.info('Wake Lock indisponible dans ce navigateur.')}return}try{wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null})}catch(_){if(!wakeWarned){wakeWarned=true;console.info('Wake Lock refusé ou indisponible.')}}}
-async function releaseWake(){if(wakeSentinel){try{await wakeSentinel.release()}catch(_){}wakeSentinel=null}}
-function unlockAudio(){if(!state.sound)return;try{const C=window.AudioContext||window.webkitAudioContext;if(C){audioCtx??=new C();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{})}}catch(_){}}
-function beep(){try{if(!state.sound||!audioCtx||audioCtx.state!=='running'||document.hidden)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=740;o.type='sine';g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.045,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.23);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.24)}catch(_){}}
-function tick(n){if(!state.running)return;let changed=false;
- for(const d of DEF){const t=state.tasks[d.id];if(!active(d)||!Number.isFinite(t.dueAt))continue;const muted=state.combat&&!d.essential;
- if(state.mode==='auto'&&n>=t.dueAt){const period=Math.max(1000,effectiveMs(t));const cycles=Math.floor((n-t.dueAt)/period)+1;const lastDue=t.dueAt+(cycles-1)*period;t.dueAt+=cycles*period;
- t.lastAlertAt=(!muted&&!document.hidden&&n-lastDue<1700)?n:0;changed=true;if(t.lastAlertAt)beep()}
- else if(state.mode!=='auto'&&n>=t.dueAt&&!t.notified){t.notified=true;changed=true;if(!muted)beep()}
- else if(state.mode!=='auto'&&n<t.dueAt)t.notified=false;
- }
- for(const e of state.events){if(!e.shown&&Number.isFinite(e.dueAt)&&n>=e.dueAt){e.shown=true;changed=true;if(!document.hidden&&n-e.dueAt<12000)notify(e.label)}}
- state.events=state.events.filter(e=>!e.shown);
- if(state.research&&!state.research.completed&&Number.isFinite(state.research.dueAt)){
- const remaining=state.research.dueAt-n;
- if(state.eventOpts.preAge&&!state.research.preShown&&remaining<=20000&&remaining>0){state.research.preShown=true;if(!document.hidden)notify('Préparer les améliorations : passage à '+state.research.target+' imminent');changed=true}
- if(remaining<=0){state.research.completed=true;if(!document.hidden&&remaining>-15000)notify('Recherche d’âge '+state.research.target+' terminée ? Confirmer via les boutons I–IV');changed=true}
- }
- if(changed)save();}
-function render(){const n=now();tick(n);if(lastRenderAge!==state.age)createCards();const elapsed=state.sessionElapsed+(state.running?Math.max(0,n-state.sessionResumedAt):0);
- $('sessionTime').textContent=msFormat(elapsed);$('runLabel').textContent=state.running?'EN COURS':elapsed>0?'EN PAUSE':'PRÊT';$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?'Pause':elapsed>0?'Reprendre':'Démarrer';
- document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('modeHelp').textContent=MODES[state.mode];
- document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.age===state.age)));$('combatBtn').setAttribute('aria-pressed',String(state.combat));$('combatBtn').textContent=state.combat?'⚔ Combat ON':'⚔ Combat';
- for(const d of visibleDefs()){const t=state.tasks[d.id],card=$(`card-${d.id}`);if(!card)continue;const left=remaining(t,n);const overdue=state.running&&left<=0&&state.mode!=='auto';const flashing=state.running&&state.mode==='auto'&&t.lastAlertAt>0&&n-t.lastAlertAt<4700;const muted=state.combat&&!d.essential;const alert=(overdue||flashing)&&!muted;
- card.classList.toggle('overdue',alert);card.classList.toggle('pulsing',alert&&state.pulse&&(state.mode==='auto'||state.mode==='hybrid'));
- let shown=msFormat(left),note=state.running?'Prochain rappel':'En pause';if(overdue&&!muted){shown='À vérifier';note='Touchez le cercle'}else if(flashing&&!muted)note='Vérifiez !';if(muted){shown=msFormat(left);note='Reporté (combat)';}
- $(`count-${d.id}`).textContent=shown;$(`note-${d.id}`).textContent=note;$(`ring-${d.id}`).style.strokeDashoffset=String(188.5*(1-(overdue?1:1-Math.min(1,Math.max(0,left)/effectiveMs(t)))));}
- const idx=AGES.indexOf(state.age),next=AGES[idx+1];$('ageResearchBtn').textContent=next?'Lancer passage à '+next:'Âge IV atteint';$('ageResearchBtn').disabled=!next||!state.running||Boolean(state.research&&!state.research.completed);
- $('cancelAgeResearch').hidden=!state.research;if(state.research){const r=state.research;const time=state.running?r.dueAt-n:r.remaining;$('ageResearchStatus').textContent=r.completed?`Recherche ${r.target} terminée — confirmer l’âge`:`Vers ${r.target} · ${msFormat(time)}`;}else $('ageResearchStatus').textContent='';
- const notice=latestEvent&&!document.hidden&&n-latestEvent.at<11000?latestEvent.label:null;$('eventFlash').hidden=!notice;if(notice){$('eventFlash').textContent=notice;$('eventFlash').classList.add('live')}else $('eventFlash').classList.remove('live');
- }
-function bind(){
- $('cards').addEventListener('click',e=>{const b=e.target.closest('[data-reset]');if(b){resetTask(b.dataset.reset);return;}if(landscape.matches&&!inSettings){setControls(!controlsOpen)}});
- document.addEventListener('click',e=>{if(inSettings||!landscape.matches)return;if(e.target.closest('button,input,select,label,.cards,.age-bar,.topline,.context-controls,.toolbar,.controls'))return;setControls(!controlsOpen)});
- $('hideControls').addEventListener('click',()=>setControls(false));$('settingsBtn').addEventListener('click',()=>showSettings(true));$('backBtn').addEventListener('click',()=>showSettings(false));$('saveBack').addEventListener('click',()=>showSettings(false));
- $('playPause').addEventListener('click',()=>{unlockAudio();pauseOrResume()});$('resetAll').addEventListener('click',resetAll);
- document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{unlockAudio();setMode(b.dataset.mode)}));
- document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>setAge(b.dataset.age)));
- $('combatBtn').addEventListener('click',()=>setCombat(!state.combat));$('battleBtn').addEventListener('click',()=>{if(!state.running){notify('Démarre une session pour programmer un rappel après combat');return;}if(state.eventOpts.postCombat){schedule('Après combat : reprendre les TCs, fermes et villageois',30);notify('Vérification économique prévue dans 30 secondes')}else notify('Active le rappel Après combat dans les réglages')});
- $('ageResearchBtn').addEventListener('click',startResearch);$('cancelAgeResearch').addEventListener('click',cancelResearch);
- $('settingsTasks').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)changeTask(b.dataset.task,{seconds:state.tasks[b.dataset.task].seconds+Number(b.dataset.step)})});
- $('settingsTasks').addEventListener('change',e=>{const target=e.target,id=target.dataset.enable||target.dataset.seconds||target.dataset.base||target.dataset.color||target.dataset.glow||target.dataset.taskage;if(!id)return;const t=state.tasks[id];
- if(target.dataset.enable)changeTask(id,{enabled:target.checked});else if(target.dataset.seconds)changeTask(id,{seconds:target.value});else if(target.dataset.base)changeTask(id,{timeBase:target.value});else if(target.dataset.color)changeTask(id,{color:target.value});else if(target.dataset.glow)changeTask(id,{glow:target.value});else if(target.dataset.taskage){const ages=new Set(t.ages);if(target.checked)ages.add(target.dataset.agevalue);else ages.delete(target.dataset.agevalue);changeTask(id,{ages:Array.from(ages)})}syncSettingsValues()});
- $('oneoffSettings').addEventListener('change',e=>{const id=e.target.dataset.eventopt;if(id){state.eventOpts[id]=e.target.checked;save()}});
- $('gameSpeed').addEventListener('change',e=>{changeSpeed(e.target.value);syncSettingsValues()});
- $('wakeToggle').addEventListener('change',e=>{state.wake=e.target.checked;save();if(state.wake)requestWake();else releaseWake()});
- $('soundToggle').addEventListener('change',e=>{state.sound=e.target.checked;unlockAudio();save()});$('pulseToggle').addEventListener('change',e=>{state.pulse=e.target.checked;save();render()});
- $('resetDefaults').addEventListener('click',()=>{if(!confirm('Réinitialiser tous les réglages, les profils d’âge et les compteurs ?'))return;state=defaults();latestEvent=null;releaseWake();createCards();syncSettingsValues();render();save()});
- const onOrientation=()=>{controlsOpen=false;syncLayout()};if(landscape.addEventListener)landscape.addEventListener('change',onOrientation);else landscape.addListener(onOrientation);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestWake();render();save()});window.addEventListener('pagehide',save);
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(inSettings)showSettings(false);else if(landscape.matches)setControls(false)}});
+function drawCards(force=false){const defs=activeDials();const ids=defs.map(d=>[d.id,state.tasks[d.id].color,state.tasks[d.id].glow,state.tasks[d.id].view].join(':')).join('|');if(!force&&ids===lastCardSignature)return;lastCardSignature=ids;
+ const container=$('cards');container.style.setProperty('--cols',String(Math.max(1,defs.length)));container.innerHTML=defs.map(d=>{const t=state.tasks[d.id];return `<article class="timer-card" id="card-${d.id}" aria-label="${escapeHTML(d.name)}" style="--task:${t.color};--glow:${t.glow}">
+  <div class="timer-name" title="${escapeHTML(d.name)}">${escapeHTML(d.short)}</div>
+  <button class="dial" type="button" data-reset="${d.id}" aria-label="Relancer ${escapeHTML(d.name)}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="30"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="30"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
+  <div class="count" id="count-${d.id}">--:--</div><div class="count-hint" id="hint-${d.id}">Prochain check</div>
+ </article>`;}).join('')||'<div class="no-cards">Aucun cadran actif pour cet âge. Ouvre les paramètres pour en ajouter.</div>';
+ $('cardCount').textContent=String(defs.length);
 }
-settingsMarkup();createCards();bind();syncLayout();render();save();if(state.running)requestWake();
-setInterval(()=>{render();const n=now();if(n-lastSave>5000){save();lastSave=n}},200);
+function draw(){const n=now();tick(n);pump(n);drawCards();const elapsed=elapsedTime();$('sessionTime').textContent=format(elapsed);$('runLabel').textContent=state.running?'EN COURS':elapsed>0?'EN PAUSE':'PRÊT';$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?'Pause':elapsed>0?'Reprendre':'Démarrer';
+ document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('modeHelp').textContent=MODE_HELP[state.mode];
+ document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.age===state.age)));
+ for(const d of activeDials()){const t=state.tasks[d.id],card=$(`card-${d.id}`);if(!card)continue;const left=remaining(t,n),overdue=state.running&&left<=0&&state.mode!=='auto',flashing=state.running&&state.mode==='auto'&&t.lastAlertAt>0&&n-t.lastAlertAt<4800,alert=overdue||flashing;
+ card.classList.toggle('alert',alert);card.classList.toggle('pulsing',alert&&state.pulse&&(state.mode==='auto'||state.mode==='hybrid'));
+ $(`count-${d.id}`).textContent=overdue?'CHECK':format(left);$(`hint-${d.id}`).textContent=!state.running?'En pause':overdue?'Touchez le cercle':flashing?'Vérifiez !':'Prochain check';
+ const fraction=overdue?1:1-Math.min(1,Math.max(0,left)/periodMs(t));$(`ring-${d.id}`).style.strokeDashoffset=String(188.5*(1-fraction));
+ }
+ const index=AGES.indexOf(state.age);$('nextAge').disabled=index>=3||Boolean(state.transition);$('nextAge').classList.toggle('active',Boolean(state.transition));$('nextAge').title=state.transition?`Transition en cours vers ${state.transition.target}`:'Lancer le passage à l’âge suivant';$('cancelTransition').hidden=!state.transition;
+ $('transitionState').textContent=state.transition?`${state.age}→${state.transition.target} · ${format(Number.isFinite(state.transition.dueAt)?state.transition.dueAt-n:state.transition.remainingMs)}`:`Âge ${state.age} · ${AGE_NAME[state.age]}`;
+ if(notice&&n<notice.until&&visible()){const box=$('notice');box.hidden=false;box.classList.toggle('urgent',notice.priority>=3);$('noticeText').textContent=notice.text;$('noticeProgress').style.transform=`scaleX(${Math.max(0,(notice.until-n)/(state.showSec*1000))})`;}else $('notice').hidden=true;
+}
+function drawSettings(){const opened=new Set(Array.from(document.querySelectorAll('#settingsCatalog details[open]')).map(el=>el.dataset.category));if(!$('settingsCatalog').children.length)opened.add('core');
+ $('settingsCatalog').innerHTML=CATEGORIES.map(([id,title])=>{
+  const items=LIB.filter(x=>x.cat===id).map(d=>{
+    const t=state.tasks[d.id],periodic=d.kind==='periodic',arrival=d.kind==='arrival',transition=d.kind==='transition';
+    let fields='';if(periodic){fields=`<div class="field"><label for="view-${d.id}">Affichage</label><select id="view-${d.id}" data-field="view" data-id="${d.id}"><option value="timer">Cadran permanent</option><option value="message">Message temporaire</option></select></div>
+      <div class="field"><label for="seconds-${d.id}">Fréquence (secondes)</label><input id="seconds-${d.id}" data-field="seconds" data-id="${d.id}" type="number" min="10" max="3600" step="5" inputmode="numeric"></div>
+      <div class="field"><label for="base-${d.id}">Base de temps</label><select id="base-${d.id}" data-field="base" data-id="${d.id}"><option value="real">Secondes réelles</option><option value="game">Secondes du jeu</option></select></div>`;
+    }else if(arrival){fields=`<div class="field"><label for="delay-${d.id}">Après arrivée à l'âge ${d.target} (s réelles)</label><input type="number" id="delay-${d.id}" data-field="delay" data-id="${d.id}" min="0" max="600" step="5" inputmode="numeric"></div>`;
+    }else if(transition){fields=d.phase==='before'?`<div class="field"><label for="lead-${d.id}">Avant la fin estimée (s réelles)</label><input id="lead-${d.id}" data-field="lead" data-id="${d.id}" type="number" min="0" max="120" step="1" inputmode="numeric"></div>`:'<div class="field"><label>Déclenchement</label><div class="settings-help">Dès le clic sur ›</div></div>';}
+    fields+=`<div class="field"><label for="priority-${d.id}">Priorité</label><select id="priority-${d.id}" data-field="priority" data-id="${d.id}"><option value="1">Secondaire</option><option value="2">Importante</option><option value="3">Prioritaire</option></select></div>`;
+    const ageSection=periodic?`<div class="settings-help">Âges d'activation :</div><div class="age-picker">${AGES.map(age=>`<label><input data-agefield="${d.id}" data-agevalue="${age}" type="checkbox">${age}</label>`).join('')}</div>`:`<div class="settings-help">${arrival?'Déclenchement à l’arrivée en '+AGE_NAME[d.target]:'Déclenchement pendant la transition vers '+AGE_NAME[d.target]} · sans cadran permanent.</div>`;
+    const colorSection=periodic?`<div class="colorpair" id="colors-${d.id}"><label>Icône <input type="color" data-field="color" data-id="${d.id}" aria-label="Couleur icône ${escapeHTML(d.name)}"></label><label>Glow et bordure <input type="color" data-field="glow" data-id="${d.id}" aria-label="Glow ${escapeHTML(d.name)}"></label></div>`:'';
+    return `<div class="reminder-setting" data-card-settings="${d.id}" style="--task:${t.color}"><div class="setting-head"><div><div class="head-info"><span class="colored-dot"></span><span class="setting-title">${escapeHTML(d.name)}</span></div><p class="setting-descr">${escapeHTML(d.message)}</p></div><input class="toggle" type="checkbox" data-field="enabled" data-id="${d.id}" aria-label="Activer ${escapeHTML(d.name)}"></div><div class="fields">${fields}</div>${colorSection}${ageSection}</div>`;
+  }).join('');return `<details class="category" data-category="${id}" ${opened.has(id)?'open':''}><summary>${escapeHTML(title)} <span class="version">${LIB.filter(d=>d.cat===id).length} entrées</span></summary><div class="category-content"><div class="reminder-settings-list">${items}</div></div></details>`;
+ }).join('');syncInputs();}
+function syncInputs(){for(const d of LIB){const t=state.tasks[d.id],card=document.querySelector(`[data-card-settings="${d.id}"]`);if(!card)continue;card.style.setProperty('--task',t.color);
+ card.querySelectorAll('[data-field]').forEach(input=>{const k=input.dataset.field;if(input.type==='checkbox')input.checked=Boolean(t[k]);else input.value=String(t[k]);});
+ card.querySelectorAll('[data-agefield]').forEach(input=>input.checked=t.ages.includes(input.dataset.agevalue));
+ const colorSection=$(`colors-${d.id}`);if(colorSection)colorSection.hidden=t.view!=='timer';
+ }
+ $('gapSec').value=String(state.gapSec);$('showSec').value=String(state.showSec);$('mergeToggle').checked=state.merge;$('gameSpeed').value=String(state.gameSpeed);$('earlySec').value=String(state.earlySec);$('wakeToggle').checked=state.wake;$('pulseToggle').checked=state.pulse;$('soundToggle').checked=state.sound;
+ const excess=AGES.map(age=>{const count=LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].view==='timer'&&state.tasks[d.id].ages.includes(age)).length;return count>4?`${age} : ${count} cadrans demandés`:null;}).filter(Boolean);
+ $('limitWarning').hidden=!excess.length;if(excess.length)$('limitWarning').textContent=`4 cadrans maximum pour garder les icônes grandes. ${excess.join(' · ')}. Les cadrans supplémentaires seront automatiquement traités comme des messages temporaires.`;
+}
+function saveSettingsField(target){const id=target.dataset.id,d=BY_ID[id];if(!d)return;
+ let patch={};if(target.dataset.agefield){const ages=new Set(state.tasks[id].ages);if(target.checked)ages.add(target.dataset.agevalue);else ages.delete(target.dataset.agevalue);patch.ages=[...ages];}
+ else{const field=target.dataset.field;if(!field)return;patch[field]=target.type==='checkbox'?target.checked:target.value;}
+ updateTask(id,patch);syncInputs();}
+function wire(){
+ $('cards').addEventListener('click',e=>{const reset=e.target.closest('[data-reset]');if(reset){resetTask(reset.dataset.reset);return;}if(landscape.matches&&!settingsOpen)setControls(!controlsOpen);});
+ document.addEventListener('click',e=>{if(settingsOpen||!landscape.matches)return;if(e.target.closest('button,input,select,label,.cards,.age-strip,.header,.toolbar,.controls,.quick-actions,.notification'))return;setControls(!controlsOpen);});
+ $('settingsBtn').addEventListener('click',()=>showSettings(true));$('settingsShortcut').addEventListener('click',()=>showSettings(true));$('backBtn').addEventListener('click',()=>showSettings(false));$('saveBack').addEventListener('click',()=>showSettings(false));$('doneBtn').addEventListener('click',()=>showSettings(false));$('hideControls').addEventListener('click',()=>setControls(false));
+ $('playPause').addEventListener('click',()=>{audioUnlock();if(state.running)stopClock();else startClock();draw();});$('resetTimers').addEventListener('click',resetTimers);$('newGame').addEventListener('click',newGame);
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{audioUnlock();modeChange(b.dataset.mode); }));
+ document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>{if(state.transition&&b.dataset.age===state.age){cancelTransition();return;}setAge(b.dataset.age);draw();}));
+ $('nextAge').addEventListener('click',()=>{audioUnlock();beginTransition();});$('cancelTransition').addEventListener('click',cancelTransition);
+ $('settingsCatalog').addEventListener('change',e=>saveSettingsField(e.target));
+ $('settingsCatalog').addEventListener('input',e=>{if(e.target.dataset.field==='color'||e.target.dataset.field==='glow')saveSettingsField(e.target);});
+ $('gapSec').addEventListener('change',e=>{state.gapSec=clamp(e.target.value,20,120,45);save();syncInputs();});
+ $('showSec').addEventListener('change',e=>{state.showSec=clamp(e.target.value,3,10,5);save();syncInputs();});
+ $('mergeToggle').addEventListener('change',e=>{state.merge=e.target.checked;save();});
+ $('gameSpeed').addEventListener('change',e=>{const old=state.gameSpeed;state.gameSpeed=clamp(e.target.value,.25,4,1.7);if(old!==state.gameSpeed){for(const d of LIB)if(d.kind==='periodic'&&state.tasks[d.id].base==='game')resetTask(d.id);if(state.transition){cancelTransition();immediateMessage('Vitesse modifiée : transition annulée.');}}save();syncInputs();draw();});
+ $('earlySec').addEventListener('change',e=>{state.earlySec=clamp(e.target.value,0,15,5);save();syncInputs();});
+ $('wakeToggle').addEventListener('change',e=>{state.wake=e.target.checked;save();if(state.wake)wake();else releaseWake();});
+ $('pulseToggle').addEventListener('change',e=>{state.pulse=e.target.checked;save();draw();});
+ $('soundToggle').addEventListener('change',e=>{state.sound=e.target.checked;audioUnlock();save();});
+ $('defaultsBtn').addEventListener('click',()=>{if(!confirm('Réinitialiser tous les réglages, rappels et compteurs ?'))return;stopClock();state=defaults();queue=[];notice=null;lastNoticeAt=-1e15;lastCardSignature='';drawSettings();drawCards(true);draw();save();});
+ const rotation=()=>{controlsOpen=false;syncLayout();draw();};if(landscape.addEventListener)landscape.addEventListener('change',rotation);else landscape.addListener(rotation);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){backFromHidden=true;notice=null;queue=[];}else{if(backFromHidden&&state.running){const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(Number.isFinite(t.dueAt)&&t.dueAt<n&&state.mode==='auto'){t.dueAt=n+periodMs(t);t.lastAlertAt=0;}else if(Number.isFinite(t.dueAt)&&t.dueAt<n&&!isDial(d)){t.dueAt=n+periodMs(t);}}
+  // Les événements manqués en arrière-plan sont abandonnés, sans rafale.
+  state.events=state.events.filter(e=>!Number.isFinite(e.dueAt)||e.dueAt>n);backFromHidden=false;
+ }wake();}draw();save();});
+ window.addEventListener('pagehide',save);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(settingsOpen)showSettings(false);else if(landscape.matches)setControls(false);}});
+}
+// Initialisation : les configurations de v1.3 sont reprises, les anciennes sessions ne sont pas poursuivies après migration.
+if(!localStorage.getItem(KEY)){state.running=false;state.sessionElapsed=0;state.sessionResumedAt=null;}
+drawCards(true);wire();syncLayout();draw();save();if(state.running)wake();
+setInterval(()=>{draw();const n=now();if(n-lastStore>4000){save();lastStore=n;}},200);
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
 })();
 </script>

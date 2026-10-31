@@ -1,75 +1,58 @@
-# AoE2 Field Coach — v1.3
+# AoE2 Field Coach — v1.4
 
-Application web autonome (iPhone en paysage ou portrait), sans connexion au processus d'Age of Empires II.
+Application web autonome pour iPhone en paysage, pensée pour entraîner les vérifications et décisions dans **Age of Empires II: Definitive Edition**. Elle ne communique pas avec le jeu, ne lit pas sa mémoire et n'automatise aucune action.
 
-## Nouveautés de cette version
+## Ce qui change depuis la v1.3
 
-- **Changement d'âge en un appui** : les boutons **I, II, III, IV** restent visibles en bas, même dans la vue minimaliste paysage.
-- **Profils d'âge modifiables** : pour chacun des huit rappels, sélectionner individuellement les âges où il doit apparaître. Le nombre de cadrans affichés ajuste automatiquement la grille (une ligne de 1 à 4, deux lignes de 5 à 8).
-- **Couleurs personnalisées** : choix indépendant de la couleur du symbole et de celle du glow/bordure, enregistré localement.
-- **Icônes minimalistes** : maison (TCs), compas (scouting), épi de blé (économie), épées (armée), ainsi que quatre autres symboles pour les rappels facultatifs.
-- **Huit rappels périodiques** : TCs/villageois, reconnaissance, économie/fermes, production militaire, mission/prochain âge, sécurité/murs, reliques/carte et population/maisons.
-- **Mode Auto par défaut** pour une nouvelle installation ; les choix déjà sauvegardés sont respectés.
-- **Mode Combat** : suspend les rappels secondaires (et leur décompte) tout en conservant les rappels TCs et production militaire. La sortie du mode Combat peut déclencher un rappel économique 30 s plus tard.
-- **Rappels ponctuels configurables** : murs au Féodal (+45 s), deuxième TC au Castle (+75 s), reliques au Castle (+90 s, désactivé par défaut), siège à l'Impérial (immédiat), retour à l'économie après un combat (+30 s).
-- **Timer de recherche d'âge facultatif** : « Lancer passage à II/III/IV » depuis les commandes. Durées indicatives paramétrées à 130/160/190 secondes *de jeu*, converties avec la vitesse définie (1,7× par défaut). Alerte facultative 20 secondes réelles avant la fin. Le changement d'âge affiché demeure **manuel**.
-- **Temps réel ou temps de jeu** : pour chaque rappel périodique, choisir la base de la durée. Le coefficient de vitesse est ajustable de 0,25 à 4.
-- Les réglages précédents connus sont repris lorsque c'est possible : mode, confort, et intervalles personnalisés pour scouting, économie et ancienne production.
+- **Quatre grands cadrans maximum**, même si davantage de rappels sont configurés : l'excédent est automatiquement traité comme des messages. Le nom figure **à l'intérieur du cadre et au-dessus de l'icône**, comme demandé.
+- **32 rappels/vérifications personnalisables** en cinq catégories : automatismes (4), bâtiments/infrastructure (9), économie (6), carte/défense (6), stratégie/transitions (7).
+- Chacun des rappels **périodiques** peut être affiché en **cadran** ou sous forme de **message temporaire**, avec son intervalle, sa base de temps, ses âges d'activation et sa priorité.
+- **Bouton `›` toujours visible en paysage** : dès que tu cliques le passage d'âge *dans le jeu*, touche `›` sur l'iPhone. Le coach programme la transition, propose des checks de préparation et passe **automatiquement** au profil d'âge suivant à la fin *estimée*. Les boutons I–IV restent disponibles pour corriger l'âge manuellement. Cliquer sur `›` démarre également la session si elle était arrêtée.
+- **Légère anticipation du changement de profil**, de 5 secondes réelles par défaut, modifiable de 0 à 15 secondes. Le temps de recherche de référence est 130 / 160 / 190 secondes **de jeu** pour les passages II / III / IV, converti selon la vitesse configurée (1,7× par défaut). Les civilisations ayant un bonus de recherche et les pauses du jeu nécessitent une correction manuelle.
+- Les **événements d'arrivée** en Féodal/Castle/Impérial comprennent notamment : deuxième bâtiment militaire, forge, TC2, monastère, atelier de siège, université, siège de fin de partie. Ils sont désactivables séparément et leurs délais sont personnalisables.
+- **Un seul message contextuel à la fois**, affiché 5 s par défaut, avec au minimum 45 s entre les débuts des messages. Regroupement des messages du même thème prévus à moins de 30 s, et abandon des alertes trop anciennes. Durées et regroupement configurables.
+- **Mode Combat supprimé** : l'option « Économie après combat ? » existe désormais comme rappel périodique facultatif, sans aucun geste en pleine bataille.
+- Les icônes minimalistes et leurs couleurs/glows configurables sont conservés. Le mode **Auto** demeure le défaut des nouvelles installations ; un mode déjà enregistré est respecté.
+- Les réglages de v1.3 sont migrés quand un équivalent existe : TCs, scouting, économie, armée, mission, sécurité, reliques, les options d'événements correspondantes, couleurs, modes, etc. L'ancien rappel séparé « Population et maisons » est désormais couvert par le message du cadran « TCs et villageois » (logements), et non recréé comme cadran indépendant. Les sessions en cours ne sont pas reprises pendant une migration de version.
 
-Les durées sont des propositions d'entraînement et peuvent être inadaptées à certaines civilisations ou conditions de jeu. Le coach n'observe aucun événement dans AoE2.
+## Installation sur GitHub Pages
 
-## Installer la mise à jour sur GitHub Pages
+1. Décompresse `AoE2-Field-Coach-iPhone-v1.4.zip`.
+2. À la racine du dépôt GitHub Pages existant (`aoe2-field-coach`), remplace **tous** les fichiers : `index.html`, `sw.js`, `manifest.webmanifest`, les trois PNG et, facultativement, `LISEZ-MOI.md`.
+3. Valide le **commit** : GitHub Pages conserve la même adresse HTTPS, aucun nouveau dépôt nécessaire.
+4. Sur l'iPhone, actualise le site et, si l'ancienne version reste affichée, ferme puis rouvre l'application. Le service worker utilise un nouveau cache `aoe2-fieldcoach-v1.4` et supprimera les caches de versions précédentes lors de son activation.
 
-1. Décompresser l'archive ZIP sur le PC.
-2. Dans le dépôt GitHub Pages déjà configuré, remplacer **à la racine** : `index.html`, `sw.js`, `manifest.webmanifest`, les trois images d'icônes et éventuellement ce fichier `LISEZ-MOI.md`.
-3. Effectuer un commit ; GitHub Pages republiera le site à la même adresse.
-4. Sur l'iPhone, recharger la page. Si l'ancienne interface est encore visible, fermer puis rouvrir le site ; le service worker peut prendre un rechargement supplémentaire pour adopter la nouvelle version.
+Tu peux aussi ouvrir `AoE2-Field-Coach-iPhone-v1.4.html` sur un ordinateur pour faire un essai, sans installation. Pour le maintien de l'écran allumé sur iPhone, privilégie la version hébergée en HTTPS.
 
-**Aucun nouveau dépôt GitHub ou réglage Pages n'est nécessaire.** Les préférences sont stockées dans le navigateur utilisé : une installation Safari et un onglet Brave peuvent avoir des préférences différentes.
+## Utilisation type pendant une partie
 
-## En partie, sans multiplier les manipulations
+1. Démarre l'application (bouton **Démarrer**, dans la vue développée), ou touche directement **`›`** lorsque tu cliques le Féodal dans AoE2 : cela démarre la session et la transition.
+2. Les cadrans colorés te rappellent TCs, scouting, économie et production militaire. **Un appui sur un cercle relance ce seul timer.** En mode Auto, il redémarre seul.
+3. Quand tu cliques le passage à l'âge suivant dans le jeu, touche **`›`**. Une ou deux questions de transition peuvent apparaître, puis le profil change automatiquement. Aucun suivi du jeu n'est effectué.
+4. En cas de pause d'AoE2, affiche les commandes (touche le fond noir, pas le cercle) et mets les timers en pause également. Si la recherche d'âge prend un temps différent, corrige le profil via I–IV.
+5. Ouvre **⚙ Paramètres → catégorie** pour modifier les profils, les rappels et les priorités. L'option « Reliques et carte » est conçue pour être activée en **message temporaire** à l'âge III, sans cadran.
 
-1. Tourner l'iPhone en paysage. Toucher le fond noir (pas le cadran) pour faire apparaître les commandes, puis choisir **Démarrer**. Toucher « Masquer » pour revenir à la vue compacte.
-2. Quand l'âge change **dans le jeu**, appuyer simplement sur **I, II, III ou IV** en bas. Les cadrans changent automatiquement selon votre profil défini dans les réglages.
-3. Si nécessaire, toucher **⚔ Combat** pour suspendre temporairement les rappels secondaires, puis le retoucher en fin de combat. Le rappel TC et la production militaire continuent.
-4. Un appui sur un **cercle** relance uniquement son rappel. Le comportement Auto/Manuel/Hybride reste disponible.
-5. Pour ouvrir les réglages en paysage, toucher une zone noire libre puis **⚙** ; en portrait l'interface est visible directement.
+### Rappels activés par défaut
 
-### Paramétrage des profils d'âge
+| Famille | Au début | Après les transitions |
+|---|---|---|
+| Quatre cadrans | TC 25 s, Scout 50 s, Économie 70 s, Armée 40 s (à partir de II) | Les profils activent automatiquement les cadrans pertinents selon l'âge |
+| Arrivée Féodal | — | 2e bâtiment (+20 s) et forge (+40 s), regroupables |
+| Arrivée Castle | — | TC2 (+35 s), monastère (+65 s), atelier de siège (+90 s), université (+110 s), regroupables |
+| Arrivée Impérial | — | Vérification du plan de siège |
+| Stratégie | — | Plan Castle (âge II, toutes les 180 s), Mission/Composition/Financement (III, 180 s), Condition de victoire (IV, 180 s) |
 
-Dans **⚙ → Timers et affichage par âge** :
+La majorité des 32 rappels restent **désactivés par défaut**. Leur durée est une hypothèse d'entraînement configurable, pas une optimisation garantie.
 
-- Activez ou désactivez globalement chaque rappel.
-- Cochez séparément les âges **I / II / III / IV** correspondant à ses périodes utiles.
-- Choisissez l'intervalle, la base de temps (s réelles ou s jeu), la couleur de l'icône et la couleur du glow/bordure.
-- Les changements sont enregistrés automatiquement. Les changements de couleur ne relancent pas le chronomètre.
+## Limites et confidentialité
 
-### Configurations de départ
+- Un timer n'indique pas qu'une action s'est réellement déroulée. Un message « Forge ? » demande une vérification, sans prescrire la construction.
+- **Le profil d'âge automatique est une estimation** calculée à partir du moment où tu appuies sur `›`, pas une lecture du jeu. Les temps réels changent avec les vitesses et certains bonus de civilisation. Les pauses du jeu ne sont pas détectées.
+- Si le navigateur suspend l'application en arrière-plan, l'interface ne peut pas y afficher ses rappels. Au retour, les échéances sont recalculées et les anciens messages ne sont pas rejoués en rafale.
+- Les données (configurations, état des minuteurs) résident dans le `localStorage` du navigateur/app web sur l'iPhone. Brave, Firefox et l'application ajoutée à l'écran d'accueil peuvent utiliser des espaces de stockage distincts.
+- La prise en charge de **Screen Wake Lock** dépend du navigateur iOS, de HTTPS et des autorisations en cours. Non garantie.
+- La conformité avec les règles de parties classées et tournois n'est **pas garantie** par le projet. Utilisé sur l'iPhone, aucun logiciel de rappel ne s'exécute sur le PC AoE2.
 
-| Rappel | Intervalle réel proposé | Âges actifs par défaut |
-| --- | --- | --- |
-| TCs et villageois | 25 s | I, II, III, IV |
-| Scouting | 50 s | I, II, III |
-| Économie et fermes | 70 s | I, II, III, IV |
-| Production militaire | 40 s | II, III, IV |
-| Mission et prochain âge | 110 s | Précoché II, III, IV, mais désactivé globalement |
-| Sécurité et murs | 55 s | Précoché II, III, mais désactivé globalement |
-| Reliques et carte | 105 s | Précoché III, IV, mais désactivé globalement |
-| Population et maisons | 45 s | Précoché I, II, III, IV, mais désactivé globalement |
+## Contrôles et validation
 
-Les autres rappels peuvent être activés à volonté. Si huit rappels sont visibles, la grille passe à deux rangées ; il est préférable d'en activer seulement quelques-uns pour conserver une bonne lisibilité.
-
-## Contraintes et confidentialité
-
-- **Aucune interaction avec AoE2 :** pas d'injection, pas de lecture mémoire, pas d'automatisation du jeu, pas de capture écran.
-- L'app n'identifie pas l'âge, la civilisation, les files de production ou la mise en pause du jeu. **Chaque changement d'âge doit être effectué manuellement.**
-- Les timers ne peuvent s'afficher en temps réel lorsque l'iPhone est verrouillé ou que la page n'est plus visible. Au retour à l'app, les échéances sont recalculées ; les événements manqués ne déclenchent pas une série d'alertes.
-- Le maintien de l'écran allumé est une demande faite au navigateur, sans garantie de prise en charge ni de disponibilité sur Firefox ou Brave iOS.
-- Un onglet Brave/Firefox peut présenter des barres de navigation ; pour un affichage proche d'une application plein écran, installer le site sur l'écran d'accueil avec Safari.
-- Les informations restent stockées localement dans le navigateur via `localStorage`, sauf les fichiers publics de l'application hébergés sur GitHub Pages. Aucun service d'analyse ou serveur applicatif n'est inclus.
-- La compatibilité avec les règles des parties classées et des tournois n'est pas garantie par ce projet ; l'outil ne tourne pas sur le PC de jeu lorsqu'il est utilisé sur l'iPhone.
-- L'application est une aide visuelle d'entraînement, **pas un outil mesurant automatiquement les actions réalisées**.
-
-## Vérifications techniques
-
-La version a été testée dans Chromium automatisé aux tailles 852×393, 668×290 et 393×852 : profils par âge, grille de 3/4/8 cadrans, paramètres de couleur, sauvegarde, mode Auto/Manuel, pause/reprise, alertes de changement d'âge, timer de recherche et absence d'alertes d'un âge quitté. Elle **n'a pas encore été testée directement sur Firefox/Brave iOS**.
+Tests avec Chromium automatisé, en dimensions simulées **852×393**, **668×290** et **393×852** : affichage, quatre cadrans maximum, bibliothèque de 32 entrées, modifications des paramètres, sauvegarde, migration v1.3, transitions automatiques, événements d'arrivée, regroupement de deux messages, pause/reprise. **Non testé directement sur Firefox ou Brave iOS**.
