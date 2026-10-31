@@ -1,56 +1,36 @@
-# AoE2 Field Coach — rappels iPhone (v1.1)
+# AoE2 Field Coach — v1.2 (iPhone)
 
-Petit outil de rappels visuels pour **Age of Empires II: Definitive Edition**, conçu pour être affiché sur un iPhone posé près de l'écran de jeu. Il fonctionne **indépendamment du PC de jeu** et ne lit ni ne commande AoE2.
+Application web de rappels visuels, entièrement indépendante du jeu. Tous les compteurs s'exécutent sur l'iPhone et ne communiquent pas avec AoE2.
 
-## Affichage horizontal (nouveauté v1.1)
+## Nouveautés
 
-- Tournez l'iPhone **en orientation paysage** : les trois cadrans **Scouting, Production et Économie** apparaissent côte à côte, avec les modes et boutons en dessous ou au-dessus.
-- L'affichage s'adapte à la largeur et à la hauteur disponibles. Le mode portrait reste utilisable en dépannage.
-- Le manifeste web demande l'orientation `landscape`, mais **Safari sur iPhone peut ignorer cette préférence**. L'application ne peut pas forcer la rotation si l'orientation est verrouillée dans iOS ; désactivez le verrouillage de rotation si nécessaire.
-- Les réglages restent accessibles par la roue dentée et sont défilables en paysage.
+- **Paysage :** fond noir et seulement trois cadrans côte à côte (icônes, anneaux de progression, décomptes), sans barre ni commandes.
+- **Faire apparaître les commandes :** toucher le fond noir ou une tuile en dehors de son cercle. Toucher une seconde fois le fond noir pour les masquer ; bouton **Masquer** dans la barre supérieure.
+- **Portrait :** interface complète, comme avant.
+- **Auto par défaut**, y compris lors du premier lancement après migration depuis v1.1. Les choix effectués ensuite dans v1.2 sont conservés.
+- **Alertes :** quand le cadran clignote, la bordure rectangulaire pulse également (si animations activées).
+- Icônes vectorielles plus détaillées : **boussole** pour le scouting et **grange / blé / pièce** pour l'économie. L'icône de production est conservée.
 
-## Modes
+## Utilisation
 
-- **Auto** : le compteur se relance automatiquement après une brève alerte de 6 secondes. Vous pouvez aussi le relancer manuellement.
-- **Manuel** : le compteur atteint zéro, puis reste sur « À vérifier » jusqu'à ce que vous appuyiez sur le cercle ou la flèche.
-- **Hybride** : même fonctionnement manuel, mais l'alerte pulse pour attirer le regard tant que vous ne l'avez pas acquittée.
+1. Mettre à jour sur GitHub : envoyer tous les fichiers de cette archive à la **racine** du dépôt GitHub Pages, en remplaçant `index.html`, `sw.js` et `manifest.webmanifest`.
+2. Ouvrir la page sur l'iPhone. Si la version précédente reste visible, rafraîchir ou fermer/réouvrir l'application ; le service worker peut nécessiter un nouveau chargement pour s'actualiser.
+3. Tourner en paysage : trois cadrans seulement. Touchez le fond noir pour faire apparaître les commandes, puis **Démarrer la session**. Appuyer sur **Masquer** pour revenir aux cadrans seuls.
+4. Toucher un **cercle** pour réinitialiser le rappel correspondant. Un appui à côté du cercle sur une tuile compacte ouvre les commandes.
+5. Tourner en portrait pour afficher directement l'interface et accéder aux réglages.
 
-## Réglages
+## Modes et réglages
 
-- Trois compteurs indépendants : **Scouting (60 s)**, **Production (25 s)**, **Économie (45 s)**.
-- Intervalles modifiables de **10 à 600 secondes** ; les valeurs initiales sont **expérimentales**, pas une recommandation de gameplay.
-- Activation/désactivation de chaque rappel.
-- Pause générale, remise à zéro d'un rappel, remise à zéro générale, durée de session.
-- Maintien d'écran éveillé, en utilisant **Screen Wake Lock** lorsque Safari l'autorise.
-- Bip optionnel (désactivé par défaut), pouvant dépendre des restrictions audio de Safari.
-- Réglages conservés localement sur l'appareil tant que les données du site ne sont pas effacées.
+- **Auto :** relance automatiquement le décompte ; alerte visuelle pendant quelques secondes.
+- **Manuel :** attend l'acquittement par une touche sur le cercle.
+- **Hybride :** rappel persistant avec pulsation jusqu'à acquittement.
+- Durées initiales : scouting 60 s, production 25 s, économie 45 s. Valeurs expérimentales, personnalisables de 10 à 600 s.
+- Pause, remise à zéro, réglages des alertes visuelles, bip optionnel, fonction de maintien de l'écran allumé si prise en charge par le navigateur.
 
-## Installer comme application sur iPhone (recommandé)
+## Points importants
 
-L'application est un site statique. Elle **n'est pas encore hébergée**. Pour en faire une application Safari, placer les fichiers de ce dossier à la racine d'un hébergement HTTPS, par exemple **GitHub Pages** :
-
-1. Créer un dépôt GitHub dédié (avec GitHub Free, le dépôt Pages doit être public).
-2. Déposer les fichiers **index.html**, **manifest.webmanifest**, **sw.js**, les **icônes PNG** à la racine du dépôt.
-3. Aller dans **Settings > Pages**, choisir **Deploy from a branch**, puis `main` et `/ (root)` ; enregistrer.
-4. Ouvrir l'URL HTTPS de la page publiée dans Safari sur l'iPhone.
-5. Dans Safari, utiliser **Partager > Sur l'écran d'accueil > Ouvrir comme app web > Ajouter**.
-6. Lancer l'app depuis l'icône de l'écran d'accueil.
-
-Lorsqu'elle est servie en HTTPS et que son service worker a pu mettre les fichiers en cache, l'app peut être utilisée hors ligne après une première ouverture réussie.
-
-Documentations :
-- GitHub Pages : https://docs.github.com/fr/pages/getting-started-with-github-pages/creating-a-github-pages-site
-- Apple : https://support.apple.com/fr-fr/guide/iphone/iphea86e5236/ios
-- Wake Lock : https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API
-
-## Essayer sans hébergement
-
-`index.html` contient tout le code de l'interface (HTML, CSS et JavaScript). Il peut être ouvert depuis un navigateur de bureau pour un essai. Sur iPhone, l'application **Fichiers** n'ouvre pas systématiquement un fichier HTML local dans Safari comme un site web interactif. Pour un usage fiable et pour bénéficier de l'option « écran allumé », préférez un hébergement HTTPS.
-
-## Limites
-
-- Les minuteurs utilisent le **temps réel**, pas le temps du jeu. Ils ne détectent pas une pause AoE2, un changement de vitesse ou une action réellement effectuée.
-- Le bip et l'affichage des rappels ne sont **pas garantis en arrière-plan**, écran verrouillé ou onglet suspendu. La page doit rester visible.
-- La fonction « garder l'écran allumé » est soumise aux autorisations et conditions de Safari ; elle n'est pas garantie. Prévoir un test sur l'iPhone.
-- Il s'agit d'un outil indépendant : aucune garantie n'est donnée quant à sa conformité aux règles particulières d'un tournoi. La validation de son usage compétitif est distincte de son fonctionnement technique.
-- Pas de compte, pas de télémétrie, pas de transmission de données à un serveur applicatif : les réglages sont stockés dans le navigateur.
+- On ne peut pas forcer l'orientation du téléphone si le verrouillage de rotation est activé dans iOS.
+- Le maintien de l'écran allumé dépend de la prise en charge par Brave/Firefox iOS et du fonctionnement au premier plan.
+- Les minuteries utilisent le **temps réel**, pas celui du jeu. La pause du jeu ne met pas automatiquement le coach en pause.
+- Les données de configuration restent dans le stockage local du navigateur ; une suppression des données du site peut effacer les préférences.
+- L'application n'interagit pas avec le processus du jeu. Cela ne constitue pas une garantie de conformité aux règles d'une compétition.

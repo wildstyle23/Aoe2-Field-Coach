@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b101a">
+  <meta name="theme-color" content="#000000">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="AoE2 Rappels">
@@ -45,7 +45,7 @@
     .reminder.overdue{border-color:var(--task);background:linear-gradient(115deg,#263347,#162333)}
     .reminder.disabled{opacity:.43}
     .dial{width:74px;height:74px;min-width:74px;border:0;background:transparent;padding:0;position:relative;display:grid;place-items:center}
-    .dial svg{width:74px;height:74px;transform:rotate(-90deg);overflow:visible}
+    .dial > svg{width:74px;height:74px;transform:rotate(-90deg);overflow:visible}
     .dial .track{stroke:#38485a;stroke-width:5;fill:none}
     .dial .fill{stroke:var(--task);stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;transition:stroke-dashoffset .13s linear}
     .dial-inner{position:absolute;font-size:27px;font-weight:750;line-height:1;color:var(--task)}
@@ -87,7 +87,7 @@
     .banner{border:1px solid #655331;background:#302919;color:#e4c996;border-radius:12px;padding:11px 13px;font-size:12px;line-height:1.45;margin:10px 0;display:none}
     .banner.show{display:block}
     .footer{font-size:11px;color:#68788c;text-align:center;margin-top:24px}
-    @media (max-width:350px){.app{padding-left:12px;padding-right:12px}.reminder{gap:9px}.dial,.dial svg{width:66px;height:66px;min-width:66px}.info h2{font-size:16px}.again{width:37px}.hero h1{font-size:26px}}
+    @media (max-width:350px){.app{padding-left:12px;padding-right:12px}.reminder{gap:9px}.dial,.dial > svg{width:66px;height:66px;min-width:66px}.info h2{font-size:16px}.again{width:37px}.hero h1{font-size:26px}}
     @media (min-height:850px){.hero{padding-top:33px}.cards{gap:13px}.reminder{min-height:113px}}
 
     /* v1.1 : disposition horizontale, trois cadrans côte à côte */
@@ -103,7 +103,7 @@
     .readout .next{font-size:11px;min-height:14px;text-align:center}
     .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
     .reminder{min-height:191px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px 8px 13px;background:linear-gradient(150deg,#1a2534,#121c29)}
-    .dial,.dial svg{height:92px;width:92px;min-width:92px}
+    .dial,.dial > svg{height:92px;width:92px;min-width:92px}
     .dial-inner{font-size:29px}
     .again{display:none}
     .actions{justify-content:center;max-width:600px;margin:14px auto 0}
@@ -129,7 +129,7 @@
       .task-heading{margin:8px 1px 7px}
       .cards{gap:10px}
       .reminder{min-height:0;height:clamp(160px,48dvh,198px);gap:5px;padding:8px 5px}
-      .dial,.dial svg{width:clamp(78px,23dvh,94px);height:clamp(78px,23dvh,94px);min-width:0}
+      .dial,.dial > svg{width:clamp(78px,23dvh,94px);height:clamp(78px,23dvh,94px);min-width:0}
       .readout .count{font-size:clamp(18px,5.4dvh,24px)}
       .actions{margin-top:10px;gap:9px}
       .primary,.secondary{min-height:42px;border-radius:11px;font-size:13px}
@@ -147,7 +147,7 @@
       .control-strip{margin:3px 0}
       .task-heading{margin:5px 0}
       .reminder{height:clamp(143px,47dvh,175px)}
-      .dial,.dial svg{height:clamp(72px,22dvh,84px);width:clamp(72px,22dvh,84px)}
+      .dial,.dial > svg{height:clamp(72px,22dvh,84px);width:clamp(72px,22dvh,84px)}
       .actions{margin-top:7px}
       .primary,.secondary{min-height:38px}
       .assist{margin-top:4px}
@@ -164,7 +164,7 @@
       .reminder{display:grid;grid-template-columns:78px minmax(0,1fr) 40px;grid-template-rows:auto auto;grid-template-areas:"dial title again" "dial readout again";justify-items:start;align-items:center;gap:2px 11px;min-height:105px;padding:11px}
       .task-title{grid-area:title;align-self:end}
       .dial{grid-area:dial}
-      .dial,.dial svg{height:76px;width:76px;min-width:76px}
+      .dial,.dial > svg{height:76px;width:76px;min-width:76px}
       .readout{grid-area:readout;align-items:start;align-self:start;gap:2px}
       .readout .count{font-size:21px;order:2}
       .readout .next{text-align:left;font-size:11px;order:1}
@@ -179,13 +179,68 @@
       .readout .next{font-size:10px}
     }
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}}
+
+    /* v1.2 : illustrations vectorielles et alertes sur tout le cadre */
+    .dial-inner{display:flex;align-items:center;justify-content:center}
+    .dial-inner .task-art{width:39px;height:39px;display:block;transform:none;overflow:visible;filter:drop-shadow(0 1px 2px #0009)}
+    .dial-inner .task-art .stroke{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+    .reminder.pulsing{animation:alertTile 1.12s ease-in-out infinite}
+    .reminder.pulsing::after{content:"";position:absolute;inset:0;pointer-events:none;border:2px solid var(--task);border-radius:inherit;animation:alertBorder 1.12s ease-in-out infinite}
+    @keyframes alertTile{0%,100%{border-color:#445062;box-shadow:0 0 0 transparent}50%{border-color:var(--task);box-shadow:0 0 21px -2px var(--task),inset 0 0 15px -5px var(--task)}}
+    @keyframes alertBorder{0%,100%{opacity:.10;box-shadow:0 0 0 transparent}50%{opacity:1;box-shadow:0 0 15px -2px var(--task),inset 0 0 14px -4px var(--task)}}
+    .header-buttons{display:flex;align-items:center;gap:8px}
+    .collapse-ui[hidden]{display:none!important}
+    .collapse-ui{font-size:11px;font-weight:760;letter-spacing:.02em;display:flex;align-items:center;gap:5px}
+    .collapse-ui svg{width:16px;height:16px}
+    /* Fond véritablement noir en orientation paysage, y compris en mode réglages. */
+    @media (orientation:landscape){
+      html,body{background:#000}
+      .app{background:#000}
+      .reminder{background:#070a0e}
+      .reminder.overdue{background:#111925}
+    }
+    /* Vue zen : uniquement les trois cadrans, leur bordure et leur décompte. */
+    @media (orientation:landscape){
+      body.compact-landscape{overflow:hidden}
+      body.compact-landscape .app{height:100dvh;min-height:100dvh;max-width:none;width:100%;padding:max(7px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(7px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:center}
+      body.compact-landscape .topline,
+      body.compact-landscape .hero,
+      body.compact-landscape .control-strip,
+      body.compact-landscape .mode-desc,
+      body.compact-landscape .task-heading,
+      body.compact-landscape .actions,
+      body.compact-landscape .assist,
+      body.compact-landscape .banner,
+      body.compact-landscape .footer{display:none!important}
+      body.compact-landscape #playPage.page.active{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;max-width:none}
+      body.compact-landscape .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(7px,2vw,20px);width:min(100%,1040px);align-items:stretch;margin:0}
+      body.compact-landscape .reminder{height:clamp(145px,67dvh,290px);min-height:0;padding:clamp(7px,2dvh,18px) 5px;gap:clamp(9px,2.4dvh,17px);border-radius:clamp(13px,2.5vw,23px);border-width:2px;justify-content:center;box-shadow:0 2px 12px #0008}
+      body.compact-landscape .reminder .task-title,
+      body.compact-landscape .reminder .next,
+      body.compact-landscape .reminder .again{display:none!important}
+      body.compact-landscape .dial,
+      body.compact-landscape .dial > svg{width:clamp(76px,27dvh,134px);height:clamp(76px,27dvh,134px);min-width:0}
+      body.compact-landscape .dial-inner .task-art{width:clamp(33px,12dvh,54px);height:clamp(33px,12dvh,54px);max-width:none;max-height:none}
+      body.compact-landscape .readout .count{font-size:clamp(17px,6dvh,28px);line-height:1.05}
+      body.compact-landscape .readout{min-height:24px;justify-content:center}
+    }
+    @media (orientation:landscape) and (max-height:320px){
+      body.compact-landscape .reminder{height:clamp(122px,67dvh,190px);gap:5px}
+      body.compact-landscape .dial,
+      body.compact-landscape .dial > svg{width:clamp(64px,26dvh,85px);height:clamp(64px,26dvh,85px)}
+      body.compact-landscape .dial-inner .task-art{width:35px;height:35px}
+    }
+    @media (prefers-reduced-motion:reduce){.reminder.pulsing,.reminder.pulsing::after{animation:none!important}.reminder.pulsing{border-color:var(--task);box-shadow:0 0 12px -3px var(--task)}.reminder.pulsing::after{opacity:1}}
   </style>
 </head>
 <body>
 <div class="app">
   <header class="topline">
     <div class="brand"><div class="emblem" aria-hidden="true">II</div><div><div class="brand-over">AGE OF EMPIRES II</div><div class="brand-main">FIELD COACH</div></div></div>
+    <div class="header-buttons">
+      <button id="collapseUiBtn" class="settings-trigger collapse-ui" type="button" aria-label="Masquer l’interface et retrouver les trois cadrans" title="Masquer les commandes" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>Masquer</button>
     <button id="settingsBtn" class="settings-trigger" aria-label="Ouvrir les réglages" title="Réglages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06-1.8 1.8-.07-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.06 1.56V20h-2.55v-.11a1.7 1.7 0 0 0-1.06-1.56 1.7 1.7 0 0 0-1.87.34l-.07.06-1.8-1.8.06-.06A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.56-1.06H6.3v-2.55h.11A1.7 1.7 0 0 0 8 10.33a1.7 1.7 0 0 0-.34-1.87L7.6 8.4l1.8-1.8.07.06A1.7 1.7 0 0 0 11.34 7a1.7 1.7 0 0 0 1.06-1.56V5.3h2.55v.11A1.7 1.7 0 0 0 16 6.97a1.7 1.7 0 0 0 1.87-.34l.07-.06 1.8 1.8-.06.07A1.7 1.7 0 0 0 19.34 10a1.7 1.7 0 0 0 1.56 1.06H21v2.55h-.11A1.7 1.7 0 0 0 19.4 15Z" transform="translate(-1 -1) scale(1.04)"/></svg></button>
+    </div>
   </header>
 
   <main id="playPage" class="page active">
@@ -195,9 +250,9 @@
       <div class="mode-area">
         <span class="mode-label">MODE</span>
         <div class="mode-choice" role="group" aria-label="Mode de rappel">
-          <button type="button" data-mode="auto" aria-pressed="false" title="Redémarrage automatique après une alerte">Auto</button>
+          <button type="button" data-mode="auto" aria-pressed="true" title="Redémarrage automatique après une alerte">Auto</button>
           <button type="button" data-mode="manual" aria-pressed="false" title="Rappel persistant jusqu’à confirmation">Manuel</button>
-          <button type="button" data-mode="hybrid" aria-pressed="true" title="Rappel persistant avec pulsation">Hybride</button>
+          <button type="button" data-mode="hybrid" aria-pressed="false" title="Rappel persistant avec pulsation">Hybride</button>
         </div>
       </div>
     </div>
@@ -216,16 +271,16 @@
     <div id="settingsTasks"></div>
     <div class="section-label"><span>Confort de jeu</span></div>
     <div class="setting-card">
-      <div class="setting-head"><div><div class="setting-name">Écran toujours allumé</div><p class="small-description">Demande à Safari de maintenir l'écran éveillé pendant la session.</p></div><input id="wakeToggle" class="toggle" type="checkbox" aria-label="Garder l'écran allumé"></div>
+      <div class="setting-head"><div><div class="setting-name">Écran toujours allumé</div><p class="small-description">Demande au navigateur de maintenir l'écran éveillé pendant la session.</p></div><input id="wakeToggle" class="toggle" type="checkbox" aria-label="Garder l'écran allumé"></div>
       <div class="divider"></div>
-      <div class="setting-head"><div><div class="setting-name">Signal sonore discret</div><p class="small-description">Un bip lorsque le rappel arrive à échéance, si Safari autorise l'audio.</p></div><input id="soundToggle" class="toggle" type="checkbox" aria-label="Activer le signal sonore"></div>
+      <div class="setting-head"><div><div class="setting-name">Signal sonore discret</div><p class="small-description">Un bip lorsque le rappel arrive à échéance, si le navigateur autorise l'audio.</p></div><input id="soundToggle" class="toggle" type="checkbox" aria-label="Activer le signal sonore"></div>
       <div class="divider"></div>
       <div class="setting-head"><div><div class="setting-name">Animation des rappels</div><p class="small-description">Fait pulser les indicateurs pour attirer l'attention.</p></div><input id="pulseToggle" class="toggle" type="checkbox" aria-label="Activer l'animation"></div>
     </div>
     <div class="setting-foot">Les réglages sont conservés localement dans ce navigateur. Aucun compte ni serveur n'est nécessaire pour les compteurs. Maintenir la page visible ; si le téléphone se verrouille, les rappels ne s'affichent plus en temps réel.</div>
     <button id="resetDefaults" class="secondary" type="button">Rétablir les réglages initiaux</button>
   </section>
-  <footer class="footer">AoE2 FIELD COACH · v1.1 · Outil indépendant</footer>
+  <footer class="footer">AoE2 FIELD COACH · v1.2 · Outil indépendant</footer>
 </div>
 <script>
 (() => {
@@ -237,17 +292,20 @@
     hybrid: 'Hybride : l’alerte reste visible et pulse jusqu’à ce que vous relanciez le compteur.'
   };
   const DEFINITIONS = [
-    {id:'scout',name:'Scouting',icon:'◉',color:'#72c9f2',interval:60},
+    {id:'scout',name:'Scouting',icon:'scout',color:'#72c9f2',interval:60},
     {id:'prod',name:'Production',icon:'⚒',color:'#f0bd69',interval:25},
-    {id:'eco',name:'Économie',icon:'⌂',color:'#7ddaac',interval:45}
+    {id:'eco',name:'Économie',icon:'eco',color:'#7ddaac',interval:45}
   ];
   const $ = (id) => document.getElementById(id);
-  const cloneDefaults = () => ({mode:'hybrid',wake:true,sound:false,pulse:true,running:false,sessionElapsed:0,sessionResumedAt:null,tasks:Object.fromEntries(DEFINITIONS.map(d=>[d.id,{enabled:true,interval:d.interval,remaining:d.interval*1000,dueAt:null,lastAlertAt:0}]))});
+  const cloneDefaults = () => ({schemaVersion:12,mode:'auto',wake:true,sound:false,pulse:true,running:false,sessionElapsed:0,sessionResumedAt:null,tasks:Object.fromEntries(DEFINITIONS.map(d=>[d.id,{enabled:true,interval:d.interval,remaining:d.interval*1000,dueAt:null,lastAlertAt:0}]))});
   let state = cloneDefaults();
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved && saved.tasks && MODES[saved.mode]) {
       state = {...state,...saved,tasks:{...state.tasks}};
+      // v1.1 démarrait en mode hybride : migrer une fois vers Auto, sans effacer les autres réglages.
+      if(Number(saved.schemaVersion || 0) < 12) state.mode = 'auto';
+      state.schemaVersion = 12;
       for (const d of DEFINITIONS) {
         const task = saved.tasks[d.id] || {};
         state.tasks[d.id] = {...state.tasks[d.id],...task};
@@ -257,11 +315,46 @@
       if(state.running && !Number.isFinite(state.sessionResumedAt)) state.sessionResumedAt=Date.now();
     }
   } catch (_) { /* defaults */ }
+  // SVG autonomes : dessinés pour rester lisibles à côté d'un écran de jeu.
+  const ICONS = {
+    scout: `<svg class="task-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="24" fill="#163146" stroke="#8dd8fb" stroke-width="2.4"/>
+      <circle cx="32" cy="32" r="19.2" stroke="#c6eaff" stroke-width="1.1" opacity=".82"/>
+      <path d="M32 5.5v8M32 50.5v8M5.5 32h8M50.5 32h8" stroke="#e8f7ff" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="m39.8 23.2-4 12.6-12.6 5 4.4-13.2 12.2-4.4Z" fill="#a8e7ff" stroke="#f2fcff" stroke-width="2.3" stroke-linejoin="round"/>
+      <path d="m27.6 27.6 8.2 8.2-12.6 5 4.4-13.2Z" fill="#4388b0"/>
+      <circle cx="32" cy="32" r="3.3" fill="#f0fbff" stroke="#216388" stroke-width="1"/>
+      <path d="M11.5 17.5 14 15M50 49l2.5-2.5" stroke="#b3dfff" stroke-width="1.3" opacity=".7"/>
+    </svg>`,
+    eco: `<svg class="task-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M18 49V25l14-11 14 11v24" fill="#1a3c2e" stroke="#99e9b7" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="m13.5 28.3 18.5-15 18.5 15" stroke="#d8ffe0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="27" y="34" width="10" height="15" rx="1.5" fill="#62ac77" stroke="#b6f4c4" stroke-width="1.8"/>
+      <path d="M13 52V29M13 35c-3-1-5-4-4-7 4 0 6 2 6 5m-2 9c-4-1-6-4-5-7 5 0 7 2 7 5m-2 8c-4-1-6-4-5-7 5 0 7 2 7 5m-2-15c4-1 6-4 5-7-4 0-6 2-6 5m1 10c4-1 6-4 5-7-5 0-7 2-7 5" stroke="#b8e992" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="48" cy="46" r="10" fill="#b3a060" stroke="#f5dc86" stroke-width="2.4"/>
+      <path d="M51.4 42.5c-.9-1.1-2.2-1.5-3.8-1.4-2.2.2-3.5 1.3-3.5 2.7 0 3.4 7.7 1.2 7.7 4.6 0 1.6-1.5 2.8-4 2.8-1.7 0-3.1-.5-4-1.6M48 39v14" stroke="#58451c" stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M18 52h30" stroke="#d1f8d6" stroke-width="2.3" stroke-linecap="round"/>
+    </svg>`
+  };
+  function iconMarkup(d){return ICONS[d.id] || d.icon;}
   let wakeSentinel = null;
   let wakeUnavailableNotified = false;
   let audioCtx = null;
   let inSettings = false;
   let lastPersist = 0;
+  const landscapeQuery = window.matchMedia('(orientation: landscape)');
+  let controlsVisible = false;
+  function syncLayout(){
+    const landscape = landscapeQuery.matches;
+    document.body.classList.toggle('compact-landscape', landscape && !controlsVisible && !inSettings);
+    document.body.classList.toggle('landscape-ui-open', landscape && controlsVisible && !inSettings);
+    document.body.classList.toggle('in-settings', inSettings);
+    $('collapseUiBtn').hidden = !landscape || inSettings;
+    const theme = document.querySelector('meta[name="theme-color"]');
+    if(theme) theme.setAttribute('content',landscape ? '#000000' : '#0b101a');
+  }
+  function revealControls(open){controlsVisible=Boolean(open);syncLayout();}
+  function updateOrientation(){controlsVisible=false;syncLayout();}
   function clampInterval(n){return Math.min(600,Math.max(10,Number.isFinite(Number(n))?Math.round(Number(n)):60));}
   function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(_){} }
   function prettyMs(ms){const s=Math.ceil(Math.max(0,ms)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
@@ -272,7 +365,7 @@
       <h2 class="task-title">${d.name}</h2>
       <button type="button" class="dial" data-reset="${d.id}" aria-label="Relancer le rappel ${d.name}">
         <svg viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="30"></circle><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="30"></circle></svg>
-        <span class="dial-inner" aria-hidden="true">${d.icon}</span>
+        <span class="dial-inner" aria-hidden="true">${iconMarkup(d)}</span>
       </button>
       <div class="readout"><div class="count" id="count-${d.id}">--:--</div><div class="next" id="status-${d.id}">En attente</div></div>
       <button class="again" data-reset="${d.id}" aria-label="Remettre ${d.name} à zéro" title="Relancer ce rappel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11a9 9 0 1 1 2.7 6.4"/><path d="M3 4v7h7"/></svg></button>
@@ -305,9 +398,9 @@
     else{state.running=true;state.sessionResumedAt=now;for(const d of DEFINITIONS){const t=state.tasks[d.id];if(t.remaining===null||!Number.isFinite(t.remaining))t.remaining=t.interval*1000;t.dueAt=now+t.remaining;}requestWake();}
     render();save();}
   function showBanner(message){const el=$('appBanner');el.textContent=message;el.classList.add('show')}
-  async function requestWake(){if(!state.wake||!state.running||document.hidden)return;if(!('wakeLock' in navigator)||!window.isSecureContext){if(!wakeUnavailableNotified){showBanner('Maintien de l’écran indisponible ici. Ouvrez la version hébergée en HTTPS dans Safari, ou ajustez le verrouillage automatique de l’iPhone.');wakeUnavailableNotified=true;}return;}
+  async function requestWake(){if(!state.wake||!state.running||document.hidden)return;if(!('wakeLock' in navigator)||!window.isSecureContext){if(!wakeUnavailableNotified){showBanner('Maintien de l’écran indisponible ici. Ouvrez la version hébergée en HTTPS dans Brave/Firefox, ou ajustez le verrouillage automatique de l’iPhone.');wakeUnavailableNotified=true;}return;}
     if(wakeSentinel)return;
-    try {wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null;});}catch(_){if(!wakeUnavailableNotified){showBanner('Safari n’a pas pu maintenir l’écran allumé. Vérifiez les réglages de verrouillage automatique de l’iPhone.');wakeUnavailableNotified=true;}}}
+    try {wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null;});}catch(_){if(!wakeUnavailableNotified){showBanner('Le navigateur n’a pas pu maintenir l’écran allumé. Vérifiez les réglages de verrouillage automatique de l’iPhone.');wakeUnavailableNotified=true;}}}
   async function releaseWake(){if(wakeSentinel){try{await wakeSentinel.release();}catch(_){}wakeSentinel=null;}}
   function unlockSound(){if(!state.sound)return;try{const Context=window.AudioContext||window.webkitAudioContext;if(Context){audioCtx??=new Context();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});}}catch(_) {}}
   function beep(){if(!state.sound||document.hidden)return;try{unlockSound();if(!audioCtx||audioCtx.state!=='running')return;const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(720,audioCtx.currentTime);gain.gain.setValueAtTime(0.0001,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(0.035,audioCtx.currentTime+.015);gain.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+.23);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+.24);}catch(_) {}}
@@ -337,8 +430,18 @@
       card.querySelectorAll('[data-reset]').forEach(b=>b.disabled=!t.enabled);
     }
   }
-  function showSettings(open){inSettings=open;$('playPage').classList.toggle('active',!open);$('settingsPage').classList.toggle('active',open);$('settingsBtn').style.visibility=open?'hidden':'visible';if(open){for(const d of DEFINITIONS){const t=state.tasks[d.id];$(`interval-${d.id}`).value=t.interval;$(`toggle-${d.id}`).checked=t.enabled;}$('wakeToggle').checked=state.wake;$('soundToggle').checked=state.sound;$('pulseToggle').checked=state.pulse;}window.scrollTo({top:0,behavior:'instant'});}
+  function showSettings(open){inSettings=open;syncLayout();$('playPage').classList.toggle('active',!open);$('settingsPage').classList.toggle('active',open);$('settingsBtn').style.visibility=open?'hidden':'visible';if(open){for(const d of DEFINITIONS){const t=state.tasks[d.id];$(`interval-${d.id}`).value=t.interval;$(`toggle-${d.id}`).checked=t.enabled;}$('wakeToggle').checked=state.wake;$('soundToggle').checked=state.sound;$('pulseToggle').checked=state.pulse;}window.scrollTo({top:0,behavior:'instant'});}
   function bind(){
+    $('collapseUiBtn').addEventListener('click',()=>revealControls(false));
+    // Un tap sur le fond ou sur une tuile (hors bouton du cadran) révèle/masque les commandes.
+    document.addEventListener('click', e=>{
+      if(!landscapeQuery.matches || inSettings) return;
+      if(e.target.closest('button,input,label,.mode-choice,.topline,.actions')) return;
+      if(controlsVisible && e.target.closest('.reminder')) return;
+      revealControls(!controlsVisible);
+    });
+    if(landscapeQuery.addEventListener)landscapeQuery.addEventListener('change',updateOrientation);
+    else if(landscapeQuery.addListener)landscapeQuery.addListener(updateOrientation);
     $('settingsBtn').addEventListener('click',()=>showSettings(true));$('backBtn').addEventListener('click',()=>showSettings(false));$('playPause').addEventListener('click',()=>{unlockSound();togglePlay()});$('resetAll').addEventListener('click',resetAll);
     document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{unlockSound();setMode(b.dataset.mode)}));
     $('wakeToggle').addEventListener('change',e=>{state.wake=e.target.checked;save();if(state.wake)requestWake();else releaseWake()});
@@ -349,7 +452,7 @@
     window.addEventListener('pagehide',save);
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&inSettings)showSettings(false)});
   }
-  createCards();createSettings();bind();render();
+  createCards();createSettings();bind();syncLayout();render();
   if(state.running)requestWake();
   setInterval(()=>{render();const now=Date.now();if(now-lastPersist>5000){save();lastPersist=now;}},200);
   if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
