@@ -10,7 +10,7 @@
 <meta name="description" content="AoE2 Field Coach : rappels visuels autonomes, transitions d'âge et vérifications stratégiques.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>AoE2 Field Coach · v1.4</title>
+<title>AoE2 Field Coach · v1.5</title>
 <style>
 :root{color-scheme:dark;--bg:#0b111b;--panel:#172131;--panel2:#222e41;--line:#34435a;--fg:#f4f6fa;--muted:#abb9cb;--gold:#e6bd73;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100%}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #81cbf7;outline-offset:2px}[hidden]{display:none!important}
@@ -20,22 +20,37 @@
 h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 12px}.session{font-size:12px;color:var(--muted);margin:13px 0}.session strong{color:#fff}.session-state{font-weight:750;letter-spacing:.08em}.session-state:before{content:'';display:inline-block;width:8px;height:8px;background:#718298;border-radius:50%;margin-right:7px}.session-state.running:before{background:#71e5ab;box-shadow:0 0 7px #71e5ab}
 .controls{justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0}.modes{gap:3px;border:1px solid #344457;background:#0e1724;padding:4px;border-radius:11px}.modes button{border:0;background:transparent;color:#a7b5c8;padding:8px 12px;border-radius:8px;min-height:32px;font-weight:760;font-size:12px}.modes button[aria-pressed="true"]{background:#3a526d;color:#fff}.explain{font-size:11px;color:#91a2b8;line-height:1.4;margin:8px 0 13px}.section-label{font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#9fafc3;margin:17px 0 9px}
 .cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:10px;align-items:stretch}.timer-card{--task:#66c9ff;--glow:#66c9ff;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:155px;padding:12px 6px;border:2px solid #283648;background:#101b2a;border-radius:17px;overflow:hidden;isolation:isolate;text-align:center}.timer-card.alert{border-color:var(--glow);background:#14212e}.timer-card.pulsing{animation:cardGlow 1.15s ease-in-out infinite}.timer-card.pulsing:after{content:'';position:absolute;inset:0;pointer-events:none;border:2px solid var(--glow);border-radius:inherit;animation:frameGlow 1.15s ease-in-out infinite}@keyframes cardGlow{0%,100%{box-shadow:none;border-color:#3b4758}50%{box-shadow:0 0 22px -2px var(--glow),inset 0 0 20px -10px var(--glow);border-color:var(--glow)}}@keyframes frameGlow{0%,100%{opacity:.1}50%{opacity:1;box-shadow:inset 0 0 17px -7px var(--glow)}}
-.timer-name{font-size:clamp(10px,1.8vw,14px);line-height:1.1;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dial{--dial:86px;border:0;background:none;display:grid;place-items:center;width:var(--dial);height:var(--dial);padding:0;position:relative;color:var(--task)}.dial:active{transform:scale(.96)}.dial .ring{width:100%;height:100%;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:5}.ring .track{stroke:#3a495c}.ring .fill{stroke:var(--task);stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;transition:stroke-dashoffset .2s linear}.symbol{position:absolute;width:45%;height:45%;display:grid;place-items:center}.symbol svg{width:100%;height:100%;display:block;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.timer-card.pulsing .dial{animation:dialGlow 1.15s ease-in-out infinite}@keyframes dialGlow{50%{filter:drop-shadow(0 0 13px var(--glow))}}.count{font-size:21px;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:840}.alert .count{color:var(--task)}.count-hint{font-size:10px;color:#9badc3;min-height:11px}.no-cards{border:1px dashed #455772;padding:20px;text-align:center;border-radius:12px;color:#b4c5dc;grid-column:1/-1}
+.timer-name{font-size:clamp(10px,1.8vw,14px);line-height:1.1;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dial{--dial:86px;border:0;background:none;display:grid;place-items:center;width:var(--dial);height:var(--dial);padding:0;position:relative;color:var(--task)}.dial:active{transform:scale(.96)}.dial .ring{width:100%;height:100%;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:5}.ring .track{stroke:#3a495c}.ring .fill{stroke:var(--task);stroke-linecap:round;stroke-dasharray:207.35;stroke-dashoffset:207.35;transition:stroke-dashoffset .2s linear}.symbol{position:absolute;width:52%;height:52%;display:grid;place-items:center}.symbol svg{width:100%;height:100%;display:block;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.timer-card.pulsing .dial{animation:dialGlow 1.15s ease-in-out infinite}@keyframes dialGlow{50%{filter:drop-shadow(0 0 13px var(--glow))}}.count{font-size:21px;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:840}.alert .count{color:var(--task)}.count-hint{font-size:10px;color:#9badc3;min-height:11px}.no-cards{border:1px dashed #455772;padding:20px;text-align:center;border-radius:12px;color:#b4c5dc;grid-column:1/-1}
 .age-strip{gap:8px;margin:14px auto 0;border:1px solid #354458;background:#121d2a;padding:8px;border-radius:13px;max-width:620px;justify-content:space-between}.age-options{gap:5px;flex:1}.age-options button{min-width:0;flex:1;min-height:41px;border:1px solid #45566a;border-radius:9px;background:#1c2a39;color:#c4cbd6;font-weight:800}.age-options button[aria-pressed="true"]{background:var(--gold);border-color:#f7d79e;color:#10151c}.next-age{font-size:20px;min-width:50px;min-height:41px;border-radius:9px;background:#e6bd73;color:#101419;border:1px solid #ffe2ac;font-weight:850}.next-age[disabled]{opacity:.3}.next-age.active{background:#524225;color:#ffe4a9}.transition-state{color:#e5c587;font-weight:750;font-size:11px;text-align:center;white-space:nowrap;min-height:16px;max-width:250px;overflow:hidden;text-overflow:ellipsis}.age-caption{font-size:10px;color:#b3c0d2;font-weight:850}.toolbar{margin:15px 0;justify-content:center;gap:10px;flex-wrap:wrap}.toolbar .btn{min-height:43px}.toolbar .gold{min-width:160px}.under-note{text-align:center;color:#8c9eb5;font-size:11px;line-height:1.5;margin:10px auto;max-width:700px}.quick-actions{gap:9px;justify-content:center;flex-wrap:wrap;margin-top:6px}.quick-actions button{font-size:11px}
 .notification{position:fixed;z-index:20;left:50%;bottom:calc(68px + var(--safe-bottom));transform:translateX(-50%);width:min(92vw,640px);background:#2a2015;border:1px solid #c39853;border-radius:13px;box-shadow:0 0 32px #000e;padding:10px 13px;pointer-events:none}.notification-content{gap:10px}.notification-icon{font-size:18px;color:#f7ce8c}.notification-text{color:#ffe7b6;font-size:12px;line-height:1.4;font-weight:770;flex:1}.notification-progress{height:2px;background:#6b5231;overflow:hidden;border-radius:3px;margin-top:7px}.notification-progress span{height:100%;background:#edbd73;display:block;transform-origin:left}.notification.urgent{border-color:#f5ca8b;box-shadow:0 0 22px #c7944c44}.notification.flash{animation:messageIn .25s ease-out}@keyframes messageIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
 .settings-top{align-items:flex-start}.settings-page{padding-bottom:30px}.settings-page h1{margin:12px 0 4px}.settings-description{color:#aab9ce;font-size:12px;line-height:1.55}.settings-section{color:#bac9d9;font-size:11px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;margin:20px 0 10px}.setting-card,.category{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:13px;margin-bottom:10px}.setting-head{justify-content:space-between;gap:10px}.setting-title{font-size:13px;font-weight:800}.setting-descr{font-size:11px;color:#a4b5c8;line-height:1.45;margin:4px 0}.setting-line{justify-content:space-between;gap:10px;margin:8px 0}.setting-line label{font-size:12px;color:#bfccdb}.setting-line input[type="number"],.setting-line select,.field-number{background:#0e1927;color:white;border:1px solid #52647d;border-radius:8px;padding:7px;font-size:13px;width:86px}.setting-line select{width:auto;max-width:145px}.toggle{appearance:none;-webkit-appearance:none;width:43px;height:27px;border-radius:16px;flex:none;background:#46566a;border:1px solid #78889a;position:relative;cursor:pointer}.toggle:before{content:'';width:19px;height:19px;background:white;border-radius:50%;position:absolute;left:3px;top:3px;transition:transform .15s}.toggle:checked{background:#c49c59}.toggle:checked:before{transform:translateX(16px)}.settings-grid{align-items:flex-start;gap:11px;flex-wrap:wrap}.settings-grid>*{min-width:230px;flex:1}
 .category{padding:0;overflow:hidden}.category summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px;font-size:14px;font-weight:800}.category summary::-webkit-details-marker{display:none}.category summary:after{content:'⌄';color:#dbb875;font-size:19px}.category[open] summary:after{transform:rotate(180deg)}.category-content{padding:0 12px 12px}.reminder-setting{background:#111c2a;border:1px solid #34445a;border-radius:12px;padding:11px;margin:9px 0}.reminder-setting .head-info{display:flex;align-items:center;gap:8px}.colored-dot{width:9px;height:9px;border-radius:50%;background:var(--task);display:inline-block;flex:none}.reminder-setting .setting-head .setting-title{line-height:1.2}.reminder-setting .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:8px;margin-top:11px}.field{min-width:0}.field label{font-size:10px;color:#c2cfdf;font-weight:700;display:block;margin-bottom:5px}.field input[type="number"],.field select{width:100%;height:34px;background:#0c1623;color:#f6f6f6;border:1px solid #50627a;border-radius:8px;padding:5px 7px;font-size:12px}.colorpair{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}.colorpair label{font-size:10px;color:#aabbcf;display:flex;gap:5px;align-items:center}.colorpair input{width:38px;height:30px;background:transparent;padding:1px;border-radius:6px;border:1px solid #566980}.age-picker{gap:6px;margin-top:8px}.age-picker label{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;border:1px solid #475a73;background:#0d1825;border-radius:7px;padding:6px 3px}.age-picker input{accent-color:#d3a968;width:15px;height:15px;margin:0}.settings-help{font-size:11px;color:#9eafc1;line-height:1.5;padding:5px 0}.warning{color:#f8ce88;font-size:11px;line-height:1.4;border:1px solid #735d3a;border-radius:9px;padding:9px 10px;margin-top:10px}.settings-end{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}.settings-end .btn{min-height:42px}.footer{text-align:center;color:#8290a1;font-size:10px;margin:20px auto 3px}
 @media (orientation:portrait){.app{max-width:580px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.timer-card{min-height:147px}.dial{--dial:72px}.age-strip{gap:5px;padding:6px}.transition-state,.age-caption{display:none}.age-options button,.next-age{min-height:40px}.modes{flex:1}.modes button{flex:1}.notification{bottom:calc(18px + var(--safe-bottom))}}
 @media (orientation:landscape){html,body,.app{background:#000}.app{max-width:none;padding:calc(8px + var(--safe-top)) max(10px,env(safe-area-inset-right,0px)) calc(8px + var(--safe-bottom)) max(10px,env(safe-area-inset-left,0px))}.settings-page{max-width:1120px;margin:auto}.settings-page .category-content{display:block}.settings-page .reminder-settings-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.settings-page .reminder-setting{margin:0}.timer-card{background:#06090e}.age-strip{background:#07090e;border-color:#263243}}
-@media (orientation:landscape){body.zen{overflow:hidden}body.zen .app{height:100dvh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}body.zen #playPage.active{display:flex;flex-direction:column;min-height:0;height:100%}body.zen .header,body.zen h1,body.zen .lead,body.zen .session,body.zen .controls,body.zen .explain,body.zen .section-label,body.zen .toolbar,body.zen .under-note,body.zen .quick-actions,body.zen .footer{display:none!important}body.zen .cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));grid-template-rows:1fr;align-items:stretch;align-content:center;flex:1;min-height:0;max-height:calc(100% - 55px);width:min(100%,1100px);margin:auto auto 0;gap:clamp(7px,1.6vw,16px)}body.zen .timer-card{height:100%;min-height:0;gap:clamp(4px,1.2dvh,12px);padding:clamp(4px,1.2dvh,12px);border-radius:clamp(11px,1.8vw,23px)}body.zen .timer-name{font-size:clamp(11px,2.8dvh,18px);white-space:normal;max-height:2.2em;overflow:hidden;line-height:1.1}body.zen .dial{--dial:clamp(42px,25dvh,117px)}body.zen .count{font-size:clamp(16px,5.3dvh,28px)}body.zen .count-hint{display:none}body.zen .age-strip{flex:none;min-height:41px;margin:7px auto 0;padding:4px 7px;width:min(100%,650px);border:1px solid #253143;border-radius:11px}body.zen .age-options button,body.zen .next-age{min-height:32px}body.zen .age-caption{display:none}body.zen .transition-state{font-size:10px;max-width:150px}body.zen .notification{bottom:calc(55px + var(--safe-bottom));font-size:12px}}
-@media (orientation:landscape) and (max-height:340px){body.zen .cards{max-height:calc(100% - 40px)}body.zen .timer-card{gap:3px;padding:3px 6px}body.zen .dial{--dial:clamp(35px,22dvh,82px)}body.zen .timer-name{font-size:clamp(10px,2.8dvh,13px)}body.zen .count{font-size:clamp(13px,4.7dvh,20px)}body.zen .age-strip{min-height:35px;margin-top:4px;padding:2px 5px}body.zen .age-options button,body.zen .next-age{min-height:27px}.age-strip{gap:4px}}
+@media (orientation:landscape){body.zen{overflow:hidden}body.zen .app{height:100dvh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}body.zen #playPage.active{display:flex;flex-direction:column;min-height:0;height:100%}body.zen .header,body.zen h1,body.zen .lead,body.zen .session,body.zen .controls,body.zen .explain,body.zen .section-label,body.zen .toolbar,body.zen .under-note,body.zen .quick-actions,body.zen .footer{display:none!important}body.zen .cards{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));grid-template-rows:1fr;align-items:stretch;align-content:center;flex:1;min-height:0;max-height:calc(100% - 55px);width:min(100%,1100px);margin:auto auto 0;gap:clamp(7px,1.6vw,16px)}body.zen .timer-card{height:100%;min-height:0;gap:clamp(4px,1.2dvh,12px);padding:clamp(4px,1.2dvh,12px);border-radius:clamp(11px,1.8vw,23px)}body.zen .timer-name{font-size:clamp(11px,2.8dvh,18px);white-space:normal;max-height:2.2em;overflow:hidden;line-height:1.1}body.zen .dial{--dial:clamp(64px,43dvh,188px);width:min(var(--dial),100%);height:auto;aspect-ratio:1;flex-shrink:1;min-height:0}body.zen .symbol{width:54%;height:54%}body.zen .count{font-size:clamp(16px,5.3dvh,28px)}body.zen .count-hint{display:none}body.zen .age-strip{flex:none;min-height:41px;margin:7px auto 0;padding:4px 7px;width:min(100%,650px);border:1px solid #253143;border-radius:11px}body.zen .age-options button,body.zen .next-age{min-height:32px}body.zen .age-caption{display:none}body.zen .transition-state{font-size:10px;max-width:150px}body.zen .notification{bottom:calc(55px + var(--safe-bottom));font-size:12px}}
+@media (orientation:landscape) and (max-height:340px){body.zen .cards{max-height:calc(100% - 40px)}body.zen .timer-card{gap:3px;padding:3px 6px}body.zen .dial{--dial:clamp(52px,40dvh,124px);width:min(var(--dial),100%);height:auto;aspect-ratio:1}body.zen .timer-name{font-size:clamp(10px,2.8dvh,13px)}body.zen .count{font-size:clamp(13px,4.7dvh,20px)}body.zen .age-strip{min-height:35px;margin-top:4px;padding:2px 5px}body.zen .age-options button,body.zen .next-age{min-height:27px}.age-strip{gap:4px}}
+/* Disposition par âge : quatre emplacements tactiles sans glisser-déposer. */
+.layout-age-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 12px}
+.layout-age-options button{min-height:42px;border-radius:9px;border:1px solid #485e73;background:#0e1927;color:#c3d0dc;font-weight:800}
+.layout-age-options button[aria-pressed="true"]{background:#dab571;color:#121922;border-color:#ffe0a4}
+.layout-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.layout-slot{min-width:0;border:1px solid #42546b;background:#0c1523;border-radius:11px;padding:10px 8px;text-align:center}
+.layout-slot-label{font-size:10px;letter-spacing:.08em;color:#9db1c8;font-weight:850}
+.layout-slot-preview{display:grid;place-items:center;min-height:50px;gap:3px;margin:7px 0;color:var(--preview-color,#dde6f3)}
+.layout-slot-preview svg{width:30px;height:30px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.layout-slot-preview .layout-slot-name{font-size:11px;color:#ecf1f8;font-weight:750;overflow:hidden;text-overflow:ellipsis;max-width:100%;white-space:nowrap}
+.layout-slot select{width:100%;min-height:40px;border:1px solid #536780;background:#172334;color:#f6f8fb;border-radius:8px;font-size:12px;padding:4px;max-width:100%}
+.layout-move{display:flex;gap:6px;margin-top:8px}.layout-move button{flex:1;min-width:0;min-height:37px;border-radius:8px;border:1px solid #485a71;background:#243346;color:#fff;font-size:17px;font-weight:800}
+.layout-move button:disabled{opacity:.24;cursor:default}
+.layout-legend{margin-top:10px;color:#acc0d4;font-size:11px;line-height:1.5}
+@media (max-width:520px) and (orientation:portrait){.layout-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){.timer-card.pulsing,.timer-card.pulsing:after,.timer-card.pulsing .dial,.notification.flash{animation:none!important}.timer-card.pulsing{border-color:var(--glow);box-shadow:0 0 15px -4px var(--glow)}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="header">
-    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.4</span></strong></span></div>
+    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.5</span></strong></span></div>
     <div class="header-actions"><button class="icon-btn" type="button" id="hideControls" hidden>Masquer</button><button class="icon-btn" type="button" id="settingsBtn" aria-label="Ouvrir les paramètres" title="Paramètres">⚙</button></div>
   </header>
   <main id="playPage" class="page active">
@@ -77,6 +92,15 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
         <p class="setting-descr">Le maintien d'écran dépend du navigateur iOS ; les rappels restent visuels par défaut.</p>
       </div>
     </div>
+    <div class="settings-section">Ordre et position des cadrans</div>
+    <div class="setting-card" id="layoutSettings">
+      <div class="setting-title">Disposition par âge</div>
+      <p class="setting-descr">Choisis l'âge puis place jusqu'à quatre cadrans de gauche à droite. Tu peux changer les quatre emplacements sans toucher à leurs timers. Les boutons ← et → échangent deux positions. Les choix sont enregistrés séparément pour chaque âge.</p>
+      <div class="layout-age-options" id="layoutAgeOptions" role="group" aria-label="Âge à configurer"></div>
+      <div class="layout-slots" id="layoutSlots"></div>
+      <p class="layout-legend" id="layoutLegend"></p>
+      <div class="setting-line"><button class="btn ghost" id="restoreAgeOrder" type="button">Ordre initial pour cet âge</button></div>
+    </div>
     <div id="limitWarning" class="warning" hidden></div>
     <div class="settings-section">32 vérifications et rappels, personnalisables</div>
     <p class="settings-help">Pour chaque rappel périodique : choisir « Cadran » ou « Message », puis les âges d'activation. Les événements d'arrivée et de transition ne prennent jamais de place parmi les quatre cadrans. Cliquer sur une catégorie pour ouvrir sa liste.</p>
@@ -85,11 +109,11 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
     <div class="settings-end"><button id="defaultsBtn" class="btn danger" type="button">Réglages par défaut</button><button id="doneBtn" class="btn gold" type="button">Terminé</button></div>
   </section>
   <div id="notice" class="notification" role="status" aria-live="polite" hidden><div class="notification-content"><span class="notification-icon" aria-hidden="true">◆</span><span id="noticeText" class="notification-text"></span></div><div class="notification-progress"><span id="noticeProgress"></span></div></div>
-  <footer class="footer">AOE2 FIELD COACH · v1.4 · Aucune connexion ni action sur le jeu</footer>
+  <footer class="footer">AOE2 FIELD COACH · v1.5 · Aucune connexion ni action sur le jeu</footer>
 </div>
 <script>
 (()=>{'use strict';
-const KEY='aoe2-field-coach-v14', PREV_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
+const KEY='aoe2-field-coach-v15', PREV_KEY='aoe2-field-coach-v14', LEGACY_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
 const AGE_NAME={I:'Sombre',II:'Féodal',III:'Castle',IV:'Impérial'};
 const AGE_SECONDS={II:130,III:160,IV:190};
 const MODE_HELP={auto:'Auto : les cadrans se réinitialisent à chaque échéance.',manual:'Manuel : chaque cadran reste allumé jusqu’à ce que tu le touches.',hybrid:'Hybride : comme Manuel, avec glow et pulsation.'};
@@ -150,39 +174,49 @@ function symbol(type){const prefix='viewBox="0 0 48 48" aria-hidden="true"', sha
  shield:'<path d="M24 5 39 11v12c0 12-7 17-15 20C16 40 9 35 9 23V11L24 5Z"/><path d="m17 24 5 5 10-11"/>',
  landmark:'<path d="M5 18 24 7l19 11H5Zm5 5v14m9-14v14m10-14v14m9-14v14M6 41h36M8 37h32"/>'};return `<svg ${prefix}>${shapes[type]||shapes.flag}</svg>`;}
 function defaultTask(d){return {enabled:d.on,view:d.view,ages:[...d.ages],seconds:d.seconds,base:d.base,color:d.color,glow:d.glow,priority:d.priority,delay:d.delay??0,lead:d.lead??0,dueAt:null,remainingMs:null,lastAlertAt:0,notified:false};}
-function defaults(){return {v:14,mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
+function defaults(){return {v:15,dialOrder:Object.fromEntries(AGES.map(a=>[a,['tc','scout','eco','army']])),mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
 function sanitizeTask(d, raw){const t=defaultTask(d);if(!raw||typeof raw!=='object')return t;
  t.enabled=raw.enabled===true;t.view=raw.view==='timer'?'timer':'message';t.ages=Array.isArray(raw.ages)?AGES.filter(a=>raw.ages.includes(a)):[...d.ages];t.seconds=clamp(raw.seconds,10,3600,d.seconds);t.base=raw.base==='game'?'game':'real';t.color=color(raw.color,d.color);t.glow=color(raw.glow,d.glow);t.priority=clamp(raw.priority,1,3,d.priority);t.delay=clamp(raw.delay,0,600,d.delay??0);t.lead=clamp(raw.lead,0,120,d.lead??0);
  t.dueAt=Number.isFinite(raw.dueAt)?raw.dueAt:null;t.remainingMs=Number.isFinite(raw.remainingMs)?clamp(raw.remainingMs,-3600000,7200000,0):null;t.lastAlertAt=clamp(raw.lastAlertAt,0,2e13,0);t.notified=raw.notified===true;
  return t;}
 function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode=MODE_HELP[raw.mode]?raw.mode:'auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;
+ if(raw.dialOrder&&typeof raw.dialOrder==='object'){for(const age of AGES){const v=raw.dialOrder[age];if(Array.isArray(v))s.dialOrder[age]=[...new Set(v.filter(id=>typeof id==='string'&&BY_ID[id]?.kind==='periodic'))].slice(0,4);}}
  for(const d of LIB){if(raw.tasks?.[d.id])s.tasks[d.id]=sanitizeTask(d,raw.tasks[d.id]);}
  if(raw.transition&&AGES.includes(raw.transition.target)&&AGES.includes(raw.transition.from)){
  const r=raw.transition;s.transition={from:r.from,target:r.target,dueAt:Number.isFinite(r.dueAt)?r.dueAt:null,remainingMs:clamp(r.remainingMs,0,2e7,0)};
  }
  if(Array.isArray(raw.events)){s.events=raw.events.filter(e=>BY_ID[e.id]&&Number.isFinite(e.dueAt)||BY_ID[e.id]&&Number.isFinite(e.remainingMs)).slice(0,30).map(e=>({id:e.id,dueAt:Number.isFinite(e.dueAt)?e.dueAt:null,remainingMs:Number.isFinite(e.remainingMs)?clamp(e.remainingMs,-3e5,1e7,0):null,age:e.age}));}
  if(s.running&&s.sessionResumedAt>now())s.sessionResumedAt=now();return s;}
-function migrate(){const s=defaults();try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(!old||typeof old!=='object')return s;
+function migrateV13(){const s=defaults();try{const old=JSON.parse(localStorage.getItem(LEGACY_KEY));if(!old||typeof old!=='object')return s;
  s.age=AGES.includes(old.age)?old.age:'I';s.mode=MODE_HELP[old.mode]?old.mode:'auto';s.wake=old.wake!==false;s.pulse=old.pulse!==false;s.sound=old.sound===true;s.gameSpeed=clamp(old.gameSpeed,.25,4,1.7);
  const map={tc:'tc',scout:'scout',eco:'eco',army:'army',mission:'mission',wall:'exposed',relic:'relicMap'};
  for(const [oldId,newId] of Object.entries(map)){const src=old.tasks?.[oldId];if(!src)continue;const d=BY_ID[newId],t=s.tasks[newId];t.enabled=src.enabled===true;t.ages=Array.isArray(src.ages)?AGES.filter(a=>src.ages.includes(a)):t.ages;t.seconds=clamp(src.seconds,10,3600,t.seconds);t.base=src.timeBase==='game'?'game':'real';t.color=color(src.color,d.color);t.glow=color(src.glow,d.glow);t.view=oldId==='mission'||oldId==='wall'||oldId==='relic'?'message':'timer';}
  // L'ancienne case Population est déjà couverte par le cadran TCs/villageois.
  if(old.eventOpts){if(typeof old.eventOpts.wallsII==='boolean')s.tasks.wallsII.enabled=old.eventOpts.wallsII;if(typeof old.eventOpts.tc2III==='boolean')s.tasks.tc2III.enabled=old.eventOpts.tc2III;if(typeof old.eventOpts.relicIII==='boolean'&&old.eventOpts.relicIII===true)s.tasks.relicMap.enabled=true;if(typeof old.eventOpts.siegeIV==='boolean')s.tasks.siegeIV.enabled=old.eventOpts.siegeIV;}
  return s;}catch(_){return s;}}
+function legacyDialOrder(s){const layout={};for(const age of AGES){layout[age]=LIB.filter(d=>d.kind==='periodic'&&s.tasks[d.id].enabled&&s.tasks[d.id].view==='timer'&&s.tasks[d.id].ages.includes(age)).sort((a,b)=>s.tasks[b.id].priority-s.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b)).map(d=>d.id);}return layout;}
+function migrate(){try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=15;s.dialOrder=legacyDialOrder(s);return s;}}catch(_){}const s=migrateV13();s.dialOrder=legacyDialOrder(s);return s;}
 let state;try{const raw=localStorage.getItem(KEY);state=raw?restore(JSON.parse(raw)):migrate();}catch(_){state=defaults();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){}}
 const visible=()=>!document.hidden;
 const periodMs=(t)=>Math.max(1000,1000*t.seconds/(t.base==='game'?state.gameSpeed:1));
 const active=d=>state.tasks[d.id].enabled&&(d.kind!=='periodic'||state.tasks[d.id].ages.includes(state.age));
 const periodic=d=>d.kind==='periodic'&&active(d);
-function activeDials(age=state.age){return LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].ages.includes(age)&&state.tasks[d.id].view==='timer').sort((a,b)=>state.tasks[b.id].priority-state.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b));}
+function eligibleDials(age){return LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].ages.includes(age)&&state.tasks[d.id].view==='timer');}
+function activeDials(age=state.age){
+ const eligible=eligibleDials(age),byId=new Map(eligible.map(d=>[d.id,d]));
+ const selected=[],seen=new Set();
+ for(const id of (state.dialOrder[age]||[])){const d=byId.get(id);if(d&&!seen.has(id)&&selected.length<4){selected.push(d);seen.add(id);}}
+ const remainder=eligible.filter(d=>!seen.has(d.id)).sort((a,b)=>state.tasks[b.id].priority-state.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b));
+ return [...selected,...remainder].slice(0,4);
+}
 function isDial(d){return activeDials().some(x=>x.id===d.id);}
 function remaining(t,n=now()){return Number.isFinite(t.dueAt)?t.dueAt-n:Number.isFinite(t.remainingMs)?t.remainingMs:periodMs(t);}
-const landscape=matchMedia('(orientation:landscape)');let settingsOpen=false,controlsOpen=false,lastCardSignature='',audioCtx=null,wakeSentinel=null,wakeWarned=false,lastStore=0;
+const landscape=matchMedia('(orientation:landscape)');let settingsOpen=false,controlsOpen=false,layoutAgeEditing=state.age,lastCardSignature='',audioCtx=null,wakeSentinel=null,wakeWarned=false,lastStore=0;
 let queue=[],notice=null,lastNoticeAt=-1e15,backFromHidden=false;
 function syncLayout(){document.body.classList.toggle('zen',landscape.matches&&!settingsOpen&&!controlsOpen);$('hideControls').hidden=!landscape.matches||settingsOpen;$('settingsBtn').hidden=settingsOpen;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b';}
 function setControls(v){controlsOpen=Boolean(v);syncLayout();}
-function showSettings(v){settingsOpen=Boolean(v);$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
+function showSettings(v){settingsOpen=Boolean(v);if(!v&&landscape.matches)controlsOpen=false;$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
 async function wake(){if(!state.wake||!state.running||!visible()||wakeSentinel)return;if(!('wakeLock' in navigator)||!isSecureContext){if(!wakeWarned){console.info('Screen Wake Lock non disponible');wakeWarned=true;}return;}
  try{wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null;});}catch(_){if(!wakeWarned){console.info('Screen Wake Lock refusé');wakeWarned=true;}}}
 async function releaseWake(){if(wakeSentinel){try{await wakeSentinel.release();}catch(_){}wakeSentinel=null;}}
@@ -271,7 +305,7 @@ function pump(n){queue=queue.filter(x=>x.age===state.age&&n<x.expireAt);if(!visi
 function drawCards(force=false){const defs=activeDials();const ids=defs.map(d=>[d.id,state.tasks[d.id].color,state.tasks[d.id].glow,state.tasks[d.id].view].join(':')).join('|');if(!force&&ids===lastCardSignature)return;lastCardSignature=ids;
  const container=$('cards');container.style.setProperty('--cols',String(Math.max(1,defs.length)));container.innerHTML=defs.map(d=>{const t=state.tasks[d.id];return `<article class="timer-card" id="card-${d.id}" aria-label="${escapeHTML(d.name)}" style="--task:${t.color};--glow:${t.glow}">
   <div class="timer-name" title="${escapeHTML(d.name)}">${escapeHTML(d.short)}</div>
-  <button class="dial" type="button" data-reset="${d.id}" aria-label="Relancer ${escapeHTML(d.name)}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="30"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="30"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
+  <button class="dial" type="button" data-reset="${d.id}" aria-label="Relancer ${escapeHTML(d.name)}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="33"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="33"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
   <div class="count" id="count-${d.id}">--:--</div><div class="count-hint" id="hint-${d.id}">Prochain check</div>
  </article>`;}).join('')||'<div class="no-cards">Aucun cadran actif pour cet âge. Ouvre les paramètres pour en ajouter.</div>';
  $('cardCount').textContent=String(defs.length);
@@ -282,7 +316,7 @@ function draw(){const n=now();tick(n);pump(n);drawCards();const elapsed=elapsedT
  for(const d of activeDials()){const t=state.tasks[d.id],card=$(`card-${d.id}`);if(!card)continue;const left=remaining(t,n),overdue=state.running&&left<=0&&state.mode!=='auto',flashing=state.running&&state.mode==='auto'&&t.lastAlertAt>0&&n-t.lastAlertAt<4800,alert=overdue||flashing;
  card.classList.toggle('alert',alert);card.classList.toggle('pulsing',alert&&state.pulse&&(state.mode==='auto'||state.mode==='hybrid'));
  $(`count-${d.id}`).textContent=overdue?'CHECK':format(left);$(`hint-${d.id}`).textContent=!state.running?'En pause':overdue?'Touchez le cercle':flashing?'Vérifiez !':'Prochain check';
- const fraction=overdue?1:1-Math.min(1,Math.max(0,left)/periodMs(t));$(`ring-${d.id}`).style.strokeDashoffset=String(188.5*(1-fraction));
+ const fraction=overdue?1:1-Math.min(1,Math.max(0,left)/periodMs(t));$(`ring-${d.id}`).style.strokeDashoffset=String(207.35*(1-fraction));
  }
  const index=AGES.indexOf(state.age);$('nextAge').disabled=index>=3||Boolean(state.transition);$('nextAge').classList.toggle('active',Boolean(state.transition));$('nextAge').title=state.transition?`Transition en cours vers ${state.transition.target}`:'Lancer le passage à l’âge suivant';$('cancelTransition').hidden=!state.transition;
  $('transitionState').textContent=state.transition?`${state.age}→${state.transition.target} · ${format(Number.isFinite(state.transition.dueAt)?state.transition.dueAt-n:state.transition.remainingMs)}`:`Âge ${state.age} · ${AGE_NAME[state.age]}`;
@@ -310,7 +344,32 @@ function syncInputs(){for(const d of LIB){const t=state.tasks[d.id],card=documen
  }
  $('gapSec').value=String(state.gapSec);$('showSec').value=String(state.showSec);$('mergeToggle').checked=state.merge;$('gameSpeed').value=String(state.gameSpeed);$('earlySec').value=String(state.earlySec);$('wakeToggle').checked=state.wake;$('pulseToggle').checked=state.pulse;$('soundToggle').checked=state.sound;
  const excess=AGES.map(age=>{const count=LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].view==='timer'&&state.tasks[d.id].ages.includes(age)).length;return count>4?`${age} : ${count} cadrans demandés`:null;}).filter(Boolean);
+ renderLayoutSettings();
  $('limitWarning').hidden=!excess.length;if(excess.length)$('limitWarning').textContent=`4 cadrans maximum pour garder les icônes grandes. ${excess.join(' · ')}. Les cadrans supplémentaires seront automatiquement traités comme des messages temporaires.`;
+}
+function renderLayoutSettings(){
+ const age=layoutAgeEditing;
+ $('layoutAgeOptions').innerHTML=AGES.map(a=>`<button type="button" data-layout-age="${a}" aria-pressed="${a===age}">${a} · ${AGE_NAME[a]}</button>`).join('');
+ const options=eligibleDials(age),shown=activeDials(age);
+ $('layoutSlots').innerHTML=Array.from({length:4},(_,i)=>{
+  const chosen=shown[i]||null;
+  const item=chosen?state.tasks[chosen.id]:null;
+  const optionsHTML=`<option value="">— Aucun —</option>`+options.map(d=>`<option value="${d.id}" ${chosen?.id===d.id?'selected':''}>${escapeHTML(d.short)}</option>`).join('');
+  return `<div class="layout-slot"><div class="layout-slot-label">POSITION ${i+1}</div><div class="layout-slot-preview" style="--preview-color:${item?.color||'#a5b0be'}">${chosen?symbol(chosen.icon):'<span style="font-size:21px">—</span>'}<span class="layout-slot-name">${chosen?escapeHTML(chosen.short):'Vide'}</span></div><label class="layout-slot-label" for="layout-slot-${i}">Cadran</label><select id="layout-slot-${i}" aria-label="Cadran en position ${i+1}" data-layout-slot="${i}" ${options.length?'':'disabled'}>${optionsHTML}</select><div class="layout-move"><button type="button" data-layout-move="${i},-1" title="Déplacer à gauche" aria-label="Déplacer la position ${i+1} vers la gauche" ${i===0||!chosen?'disabled':''}>←</button><button type="button" data-layout-move="${i},1" title="Déplacer à droite" aria-label="Déplacer la position ${i+1} vers la droite" ${i===3||!chosen||!shown[i+1]?'disabled':''}>→</button></div></div>`;
+ }).join('');
+ $('layoutLegend').textContent=options.length>4?`${options.length} cadrans activés pour l'âge ${age} : seuls les 4 sélectionnés sont affichés ; les autres conservent leurs rappels temporaires.`:`${shown.length} cadran${shown.length>1?'s':''} affiché${shown.length>1?'s':''} à l'âge ${age}. Les positions sans cadran restent disponibles lorsque tu en actives de nouveaux.`;
+}
+function changeLayoutSlot(slot,id){const age=layoutAgeEditing,shown=activeDials(age).map(d=>d.id),valid=eligibleDials(age).some(d=>d.id===id);
+ if(!valid){renderLayoutSettings();return;}
+ const prior=shown.indexOf(id);if(prior===slot){return;}
+ if(prior>=0){[shown[slot],shown[prior]]=[shown[prior],shown[slot]];}
+ else if(slot<shown.length)shown[slot]=id;
+ else shown.push(id);
+ state.dialOrder[age]=shown.slice(0,4);lastCardSignature='';drawCards(true);draw();save();renderLayoutSettings();
+}
+function moveLayoutSlot(slot,offset){const shown=activeDials(layoutAgeEditing).map(d=>d.id),next=slot+offset;
+ if(next<0||next>=shown.length)return;
+ [shown[slot],shown[next]]=[shown[next],shown[slot]];state.dialOrder[layoutAgeEditing]=shown;lastCardSignature='';drawCards(true);draw();save();renderLayoutSettings();
 }
 function saveSettingsField(target){const id=target.dataset.id,d=BY_ID[id];if(!d)return;
  let patch={};if(target.dataset.agefield){const ages=new Set(state.tasks[id].ages);if(target.checked)ages.add(target.dataset.agevalue);else ages.delete(target.dataset.agevalue);patch.ages=[...ages];}
@@ -324,6 +383,10 @@ function wire(){
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{audioUnlock();modeChange(b.dataset.mode); }));
  document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>{if(state.transition&&b.dataset.age===state.age){cancelTransition();return;}setAge(b.dataset.age);draw();}));
  $('nextAge').addEventListener('click',()=>{audioUnlock();beginTransition();});$('cancelTransition').addEventListener('click',cancelTransition);
+ $('layoutAgeOptions').addEventListener('click',e=>{const btn=e.target.closest('[data-layout-age]');if(!btn)return;layoutAgeEditing=btn.dataset.layoutAge;renderLayoutSettings();});
+ $('layoutSlots').addEventListener('change',e=>{const select=e.target.closest('[data-layout-slot]');if(select)changeLayoutSlot(Number(select.dataset.layoutSlot),select.value);});
+ $('layoutSlots').addEventListener('click',e=>{const btn=e.target.closest('[data-layout-move]');if(!btn)return;const [slot,offset]=btn.dataset.layoutMove.split(',').map(Number);moveLayoutSlot(slot,offset);});
+ $('restoreAgeOrder').addEventListener('click',()=>{const eligible=eligibleDials(layoutAgeEditing);state.dialOrder[layoutAgeEditing]=eligible.sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).map(d=>d.id);drawCards(true);draw();save();renderLayoutSettings();});
  $('settingsCatalog').addEventListener('change',e=>saveSettingsField(e.target));
  $('settingsCatalog').addEventListener('input',e=>{if(e.target.dataset.field==='color'||e.target.dataset.field==='glow')saveSettingsField(e.target);});
  $('gapSec').addEventListener('change',e=>{state.gapSec=clamp(e.target.value,20,120,45);save();syncInputs();});
@@ -343,7 +406,7 @@ function wire(){
  window.addEventListener('pagehide',save);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(settingsOpen)showSettings(false);else if(landscape.matches)setControls(false);}});
 }
-// Initialisation : les configurations de v1.3 sont reprises, les anciennes sessions ne sont pas poursuivies après migration.
+// Initialisation : migration intégrale des réglages v1.4 vers v1.5 et conservation des dispositions par âge.
 if(!localStorage.getItem(KEY)){state.running=false;state.sessionElapsed=0;state.sessionResumedAt=null;}
 drawCards(true);wire();syncLayout();draw();save();if(state.running)wake();
 setInterval(()=>{draw();const n=now();if(n-lastStore>4000){save();lastStore=n;}},200);
