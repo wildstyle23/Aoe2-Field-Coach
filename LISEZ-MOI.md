@@ -1,40 +1,35 @@
-# AoE2 Field Coach v1.8
+# AoE2 Field Coach v1.9
 
-## Changements v1.8
-- Mode Circuit, présentation **6 rectangles** : suppression du texte bas pour gagner de l’espace.
-- Grille 3 colonnes × 2 lignes conservée, avec carrés agrandis.
-- Noms dans les rectangles agrandis.
-- Icône **Production** redessinée pour être plus lisible.
+Application web autonome destinée à l'iPhone, en mode paysage. Les **Timers** et le **Circuit** restent indépendants, et l'application ne communique pas avec Age of Empires II.
 
-## Audit synthétique orienté objectif de l’app
-Objectif central : entraîner des automatismes et un "tour des yeux" sans détourner l’attention du jeu.
+## Nouveautés
 
-### Ce qui fonctionne très bien
-1. **Placement sous la minimap** : excellent, car l’app devient un point d’ancrage vers la carte.
-2. **Séparation Timers / Circuit** : pertinente, car les deux modes servent des objectifs différents.
-3. **Couleurs personnalisables** : très utiles pour construire des réflexes visuels stables.
-4. **Profils par âge + rappels contextuels** : bonne aide mémoire sans dépendance au jeu.
-5. **Vue paysage minimaliste** : cohérente avec l’usage en partie.
+- Icône **Production** redessinée avec deux épées croisées.
+- **Circuit sélectionné par défaut** ; le sélecteur visible en portrait place Circuit avant Timers. En paysage, il reste volontairement masqué. Le mode affiché se choisit également dans les paramètres.
+- **Circuit configurable par âge I, II, III, IV** : cocher/décocher les étapes et modifier leur ordre avec les flèches. Les configurations de chaque âge sont sauvegardées séparément. En âge I, la production militaire n'est pas sélectionnée par défaut (mais reste activable).
+- Choix entre **une durée commune** pour toutes les étapes et **des durées individuelles par étape et par âge** (2–30 s).
+- **Bips synchronisés** : en mode Circuit, seul le changement d'étape (ou le signal du mode libre) peut produire un bip. Les échéances des Timers et des messages contextuels n'émettent plus de bip supplémentaire dans cette vue. Garde-fou anti-double signal de 420 ms.
+- Le bouton **Relancer les Timers + Circuit** réinitialise les compteurs des deux modes, même si l'un n'est pas affiché.
+- Séparation explicite des réglages **Circuit** et **Timers — ordre et position des cadrans**.
+- Traductions de ces réglages en français, anglais et espagnol.
 
-### Priorités d’amélioration recommandées
-1. **Présets de circuit** : proposer des ordres prédéfinis (Macro, Scout-heavy, Army-heavy).
-2. **A/B testing du rythme** : conserver quelques profils 4s / 5s / 6s par étape.
-3. **Mode "entraînement" puis "entretien"** : mêmes couleurs, mais glow plus discret une fois les automatismes acquis.
-4. **Optimisation batterie / fluidité** : le rendu actuel est déjà léger, mais un rafraîchissement adaptatif pourrait encore réduire la charge.
-5. **Mode test intégré** : bouton pour lancer une boucle de démonstration de 30 secondes sans démarrer une vraie session.
+## Installer ou mettre à jour GitHub Pages
 
-### Risques UX à surveiller
-- Trop de rappels contextuels = perte d’attention.
-- Cadence trop rapide du circuit = regard attiré vers l’iPhone au lieu du jeu.
-- Trop de couleurs proches = perte d’association mentale.
+1. Décompresser l'archive ZIP.
+2. Copier ses fichiers **à la racine** du dépôt GitHub Pages, dont `index.html`, `manifest.webmanifest` et `sw.js`. Ne pas ajouter un sous-dossier supplémentaire.
+3. Valider les changements sur la branche utilisée par GitHub Pages.
+4. Sur l'iPhone, recharger l'application après publication. Le cache du service worker passe en version `v1.9`.
 
-### Recommandations concrètes d’usage
-- Démarrer avec **Circuit guidé 5–6 s** par étape.
-- Garder des couleurs très distinctes pour Villageois / Économie / Maisons / Production / Carte / Scout.
-- Utiliser les Timers surtout comme deuxième couche, pas comme mode principal si le but est l’automatisme visuel.
+Les préférences enregistrées par la version v1.8 sont récupérées lorsque l'application est ouverte depuis **le même site et le même espace de stockage du navigateur**. La première ouverture de la v1.9 passe au Circuit par défaut ; tu peux choisir à nouveau Timers dans les paramètres ou en portrait.
 
-### Prochaines optimisations possibles
-- Présets exportables/importables.
-- Intensité du glow réglable.
-- Historique léger de session (ex. nombre de tours réalisés), uniquement local.
-- Option de duplication d’un ordre de cadrans entre les âges.
+## Logique de la routine
+
+**Villageois → Économie → Maisons → Production → Carte → Scout / Armée**. Ce circuit est un parcours d'attention proposé, pas une routine rigide. Une menace ou un combat important doit primer sur la séquence.
+
+Le Circuit est conçu pour développer des automatismes de vérification ; les Timers gardent leur rôle de rappels périodiques indépendants. Le passage d'âge reste un événement initié manuellement, avec échéance estimée et correction possible via I–IV. Les bips sont désactivés par défaut.
+
+## Limites techniques
+
+- Le rythme du jeu, les pauses et les événements de combat ne sont pas détectés automatiquement.
+- Les tests automatisés ont été réalisés dans Chromium, pas directement sur Brave/Firefox iOS.
+- L'API de maintien de l'écran allumé dépend des autorisations et du navigateur.
