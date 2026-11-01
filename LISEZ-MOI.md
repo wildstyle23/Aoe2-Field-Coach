@@ -1,4 +1,4 @@
-# AoE2 Field Coach — v1.6
+# AoE2 Field Coach — v1.7
 
 Application web autonome pour iPhone, compatible avec un hébergement statique GitHub Pages. Ne lit ni ne modifie AoE2.
 
@@ -8,13 +8,13 @@ Application web autonome pour iPhone, compatible avec un hébergement statique G
 - **Circuit des yeux** avec 6 étapes dans l'ordre : 1. Villageois, 2. Économie, 3. Maisons, 4. Production militaire, 5. Carte, 6. Scout / armée.
 - **Pictogrammes distincts pour villageois et maisons** : silhouette(s) humaine(s) contre deux toits de maisons.
 - **Deux variantes de rythme :**
-  - **Guidé** : le cadre actif change automatiquement à intervalles configurables (3, 4, 5, 6, 7 ou 8 secondes par étape) ; les trois premiers quarts d'étape restent stables, puis une anticipation visuelle apparaît pendant le dernier quart. À 6 secondes/étape, un tour complet dure 36 secondes.
+  - **Guidé** : le cadre actif change automatiquement à intervalles configurables (3, 4, 5, 6, 7 ou 8 secondes par étape) ; les trois derniers quarts d'étape restent stables, puis une anticipation visuelle apparaît pendant le dernier quart. À 6 secondes/étape, un tour complet dure 36 secondes.
   - **Libre** : aucun passage automatique d'étape ; les six pictogrammes restent visibles et un pulse collectif revient toutes les 15, 20, 25, 30, 40, 45 ou 60 secondes (25 s par défaut).
 - **Deux dispositions de circuit :** `Six carrés + texte unique` (étape active et description en dessous) ou `Six rectangles nommés` (six noms intégrés). Les deux conservent le sélecteur d'âge I–IV et le bouton « › ».
 - **Six couleurs configurables** indépendantes des couleurs des timers existants.
 - **Langues sélectionnables dans les réglages : Français, English, Español.** L'interface et les noms/messages des 32 rappels sont traduits. Le choix est sauvegardé dans le navigateur.
 - **Notifications contextuelles plus lisibles et positionnées en haut de l'écran.** Les noms des cadrans Timers sont agrandis.
-- **Conservation des réglages de la v1.5** lors de l'ouverture de la v1.6 sur le même site et dans le même stockage navigateur (avec migration automatique).
+- **Conservation des réglages de la v1.5** lors de l'ouverture de la v1.7 sur le même site et dans le même stockage navigateur (avec migration automatique).
 
 ## Choisir la cadence
 
@@ -46,7 +46,7 @@ La session démarre / s'arrête via les commandes de l'application. Les cycles s
 1. Extraire le ZIP.
 2. Remplacer les fichiers à la racine du dépôt existant, notamment `index.html`, `sw.js`, `manifest.webmanifest`, les trois icônes et ce fichier.
 3. Valider le commit. Garder le même dépôt et la même URL GitHub Pages.
-4. Une fois le déploiement terminé, actualiser la page ou fermer / rouvrir l'app web sur iPhone. Le cache du service worker porte désormais le nom `aoe2-fieldcoach-v1.6`.
+4. Une fois le déploiement terminé, actualiser la page ou fermer / rouvrir l'app web sur iPhone. Le cache du service worker porte désormais le nom `aoe2-fieldcoach-v1.7`.
 
 **Remarque :** stockage local à l'origine web. Un changement de navigateur ou de domaine peut séparer les réglages. Faire une sauvegarde externe avant de changer de navigateur si les préférences sont importantes.
 
