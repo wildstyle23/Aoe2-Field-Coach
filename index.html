@@ -10,7 +10,7 @@
 <meta name="description" content="AoE2 Field Coach : rappels visuels autonomes, transitions d'âge et vérifications stratégiques.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>AoE2 Field Coach · v1.5</title>
+<title>AoE2 Field Coach · v1.6</title>
 <style>
 :root{color-scheme:dark;--bg:#0b111b;--panel:#172131;--panel2:#222e41;--line:#34435a;--fg:#f4f6fa;--muted:#abb9cb;--gold:#e6bd73;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100%}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #81cbf7;outline-offset:2px}[hidden]{display:none!important}
@@ -45,12 +45,56 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
 .layout-legend{margin-top:10px;color:#acc0d4;font-size:11px;line-height:1.5}
 @media (max-width:520px) and (orientation:portrait){.layout-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){.timer-card.pulsing,.timer-card.pulsing:after,.timer-card.pulsing .dial,.notification.flash{animation:none!important}.timer-card.pulsing{border-color:var(--glow);box-shadow:0 0 15px -4px var(--glow)}}
+
+/* v1.6 : circuit visuel, deux variantes et deux présentations. */
+body.zen .timer-name{font-size:clamp(13px,3.5dvh,19px)!important;line-height:1.12}
+body.zen .circuit.six-layout .circuit-name{font-size:clamp(11px,2.9dvh,16px);line-height:1.14}
+@media(orientation:landscape) and (max-height:340px){body.zen .timer-name{font-size:clamp(11px,3.4dvh,15px)!important}}
+
+.view-switch{display:flex;align-items:center;justify-content:center;gap:5px;margin:10px auto 2px;max-width:280px;padding:3px;background:#0d151f;border:1px solid #334256;border-radius:11px;flex:none}
+.view-switch button{min-height:34px;flex:1;border:0;background:transparent;color:#9cabbc;border-radius:8px;font-size:12px;font-weight:820}
+.view-switch button[aria-pressed="true"]{background:#3d5269;color:#fff}
+.circuit{display:flex;flex-direction:column;justify-content:center;gap:12px;align-items:center;min-width:0;min-height:210px;flex:1;width:100%;padding:8px 0}
+.circuit-icons{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(4px,1vw,11px);width:min(100%,1040px);align-items:center}
+.circuit-cell{position:relative;isolation:isolate;min-width:0;aspect-ratio:1.03;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#0a0d13;color:var(--step-color);border:2px solid #2a3442;border-radius:clamp(9px,1.4vw,15px);overflow:hidden;transition:border-color .18s,background .18s,box-shadow .18s,opacity .18s}
+.circuit-symbol{width:60%;height:60%;display:grid;place-items:center;opacity:.73;transition:opacity .18s,filter .18s,transform .18s}
+.circuit-symbol svg,.circuit-color-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round}
+.circuit-name{display:none;font-size:clamp(9px,2.4dvh,16px);font-weight:840;color:#e8eff9;text-align:center;line-height:1.1}
+.circuit-progress{position:absolute;left:8%;right:8%;bottom:5px;height:3px;background:#26303c;border-radius:3px;overflow:hidden;opacity:0}
+.circuit-progress div{height:100%;width:0;background:var(--step-color);transition:width .17s linear}
+.circuit-cell.is-active{border-color:var(--step-color);background:#111b28;box-shadow:0 0 14px -5px var(--step-color)}
+.circuit-cell.is-active .circuit-symbol{opacity:1;filter:drop-shadow(0 0 6px var(--step-color));transform:scale(1.04)}
+.circuit-cell.is-active .circuit-progress,.circuit-cell.is-free-pulse .circuit-progress,.circuit-cell.is-free-soon .circuit-progress{opacity:1}
+.circuit-cell.is-warn{animation:stageWarn .9s ease-in-out infinite}
+.circuit-cell.is-next{border-color:var(--step-color);box-shadow:0 0 9px -5px var(--step-color)}
+.circuit-cell.is-free-pulse{border-color:var(--step-color);animation:stageWarn 1s ease-in-out 2}
+.circuit-cell.is-free-soon{border-color:var(--step-color)}
+@keyframes stageWarn{0%,100%{box-shadow:0 0 3px -3px var(--step-color)}50%{box-shadow:0 0 20px -3px var(--step-color),inset 0 0 9px -6px var(--step-color)}}
+.circuit-detail{min-height:66px;text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:0 6px;max-width:95%}
+.circuit-detail strong{font-size:clamp(17px,4.5dvh,27px);line-height:1.12}
+.circuit-detail span{font-size:clamp(12px,3dvh,17px);color:#d9e2ee;line-height:1.2;text-align:center}
+.circuit.six-layout .circuit-cell{aspect-ratio:.90;gap:clamp(1px,1dvh,7px);padding:7px 3px}
+.circuit.six-layout .circuit-name{display:block}
+.circuit.six-layout .circuit-symbol{width:65%;height:56%;max-height:85px}
+.circuit-colors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.circuit-color-item{display:flex;align-items:center;gap:8px;background:#0d1927;border:1px solid #31475f;border-radius:9px;padding:9px;color:#eff4f9;font-size:12px}
+.circuit-color-icon{width:27px;height:27px;display:grid;place-items:center;flex:none}
+.circuit-color-item span:nth-child(2){flex:1}
+.circuit-color-item input{width:38px;height:30px;background:transparent;padding:1px;border:1px solid #5e7081;border-radius:6px}
+.notification{top:calc(8px + var(--safe-top));bottom:auto;width:min(95vw,790px);padding:13px 16px;box-shadow:0 4px 20px #000e}
+.notification-text{font-size:clamp(15px,3dvh,21px);line-height:1.3}
+.notification-icon{font-size:22px}
+@media(orientation:landscape){body.zen .view-switch{margin:2px auto 0;max-width:300px;min-height:32px;padding:2px}body.zen .view-switch button{min-height:29px}body.zen .cards{max-height:calc(100% - 95px)}body.zen .circuit{flex:1;min-height:0;height:0;gap:clamp(3px,2dvh,13px);padding:0;width:100%}body.zen .circuit-icons{width:min(100%,970px);height:min(53dvh,200px)}body.zen .circuit-cell{max-height:100%;height:100%;aspect-ratio:auto}body.zen .circuit-symbol{height:60%;width:65%}body.zen .circuit.six-layout .circuit-icons{height:min(62dvh,230px)}body.zen .circuit.six-layout .circuit-symbol{height:54%}body.zen .circuit-detail{min-height:0;height:auto}body.zen .notification{top:calc(6px + var(--safe-top));bottom:auto}body.zen .age-strip{margin-top:3px}}
+@media(orientation:landscape) and (max-height:340px){body.zen .view-switch{margin:1px auto 0;min-height:28px}body.zen .view-switch button{min-height:25px}body.zen .circuit-icons{height:min(49dvh,130px)}body.zen .circuit.six-layout .circuit-icons{height:min(57dvh,160px)}body.zen .circuit-detail strong{font-size:16px}body.zen .circuit-detail span{font-size:11px}body.zen .circuit.six-layout .circuit-name{font-size:11px}body.zen .cards{max-height:calc(100% - 90px)}}
+@media(orientation:portrait){.circuit{min-height:210px}.circuit-icons{gap:5px}.circuit-cell{border-radius:10px}.circuit.six-layout .circuit-name{font-size:9px}.circuit-colors{grid-template-columns:repeat(2,minmax(0,1fr))}.notification{top:calc(6px + var(--safe-top));bottom:auto}}
+@media(prefers-reduced-motion:reduce){.circuit-cell.is-warn,.circuit-cell.is-free-pulse{animation:none;box-shadow:0 0 13px -5px var(--step-color)}}
+
 </style>
 </head>
 <body>
 <div class="app">
   <header class="header">
-    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.5</span></strong></span></div>
+    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.6</span></strong></span></div>
     <div class="header-actions"><button class="icon-btn" type="button" id="hideControls" hidden>Masquer</button><button class="icon-btn" type="button" id="settingsBtn" aria-label="Ouvrir les paramètres" title="Paramètres">⚙</button></div>
   </header>
   <main id="playPage" class="page active">
@@ -60,6 +104,14 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
     <p class="explain" id="modeHelp">Les compteurs repartent automatiquement.</p>
     <div class="section-label">Cadrans permanents · <span id="cardCount">0</span>/4</div>
     <div class="cards" id="cards" aria-label="Rappels permanents"></div>
+    <section class="circuit" id="circuit" aria-label="Circuit de vérification" hidden>
+      <div class="circuit-icons" id="circuitIcons"></div>
+      <div class="circuit-detail" id="circuitDetail">
+        <strong id="circuitTitle">Villageois</strong>
+        <span id="circuitHint">Files de TCs et villageois inactifs</span>
+      </div>
+    </section>
+    <div class="view-switch" role="group" aria-label="Mode d'entraînement"><button type="button" data-view="timers">◴ <span>Timers</span></button><button type="button" data-view="circuit">◎ <span>Circuit</span></button></div>
     <div class="age-strip" aria-label="Âge et transitions">
       <span class="age-caption">ÂGE</span>
       <div class="age-options"><button type="button" data-age="I">I</button><button type="button" data-age="II">II</button><button type="button" data-age="III">III</button><button type="button" data-age="IV">IV</button></div>
@@ -72,6 +124,17 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
   </main>
   <section id="settingsPage" class="page settings-page" aria-label="Paramètres">
     <div class="settings-top"><div><button id="backBtn" class="btn ghost" type="button">← Retour</button><h1>Bibliothèque de rappels</h1><p class="settings-description">Choisis les timers, les messages et les événements pour chaque âge. Tous les réglages sont conservés sur cet appareil.</p></div><button id="saveBack" class="btn gold" type="button">Terminé</button></div>
+    <div class="settings-section" data-l10n="langsection">Langue / Language / Idioma</div>
+    <div class="setting-card"><div class="setting-line"><label for="languageChoice" data-l10n="language">Langue de l'application</label><select id="languageChoice"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option></select></div></div>
+    <div class="settings-section" data-l10n="circuitSettings">Circuit de vérification · Entraînement</div>
+    <div class="setting-card">
+      <div class="setting-line"><label for="circuitVariant" data-l10n="variantLabel">Variante</label><select id="circuitVariant"><option value="guided">Guidé (six étapes)</option><option value="free">Libre (signal collectif)</option></select></div>
+      <div class="setting-line"><label for="circuitLayout" data-l10n="layoutLabel">Présentation en paysage</label><select id="circuitLayout"><option value="focus">Six carrés + texte unique</option><option value="six">Six rectangles nommés</option></select></div>
+      <div class="setting-line"><label for="circuitStepSec" data-l10n="stepDuration">Durée d'une étape guidée</label><select id="circuitStepSec"><option value="3">3 s (tour 18 s)</option><option value="4">4 s (tour 24 s)</option><option value="5">5 s (tour 30 s)</option><option value="6">6 s (tour 36 s)</option><option value="7">7 s (tour 42 s)</option><option value="8">8 s (tour 48 s)</option></select></div>
+      <div class="setting-line"><label for="circuitFreeSec" data-l10n="freeInterval">Signal en mode libre</label><select id="circuitFreeSec"><option value="15">15 s</option><option value="20">20 s</option><option value="25">25 s</option><option value="30">30 s</option><option value="40">40 s</option><option value="45">45 s</option><option value="60">60 s</option></select></div>
+      <p class="setting-descr" data-l10n="circuitDescr">Le circuit entraîne le regard ; il n'active aucune commande dans AoE2. Le dernier quart d'étape annonce la suivante. Les quatre boutons d'âge restent accessibles.</p>
+    </div>
+    <div class="setting-card"><div class="setting-title" data-l10n="circuitColors">Couleurs des six étapes</div><div class="circuit-colors" id="circuitColors"></div></div>
     <div class="settings-section">Confort et rythme des messages</div>
     <div class="settings-grid">
       <div class="setting-card">
@@ -109,11 +172,11 @@ h1{font-size:clamp(23px,5vw,31px);margin:22px 0 4px;letter-spacing:-.045em}.lead
     <div class="settings-end"><button id="defaultsBtn" class="btn danger" type="button">Réglages par défaut</button><button id="doneBtn" class="btn gold" type="button">Terminé</button></div>
   </section>
   <div id="notice" class="notification" role="status" aria-live="polite" hidden><div class="notification-content"><span class="notification-icon" aria-hidden="true">◆</span><span id="noticeText" class="notification-text"></span></div><div class="notification-progress"><span id="noticeProgress"></span></div></div>
-  <footer class="footer">AOE2 FIELD COACH · v1.5 · Aucune connexion ni action sur le jeu</footer>
+  <footer class="footer">AOE2 FIELD COACH · v1.6 · Aucune connexion ni action sur le jeu</footer>
 </div>
 <script>
 (()=>{'use strict';
-const KEY='aoe2-field-coach-v15', PREV_KEY='aoe2-field-coach-v14', LEGACY_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
+const KEY='aoe2-field-coach-v16', PREV_KEY='aoe2-field-coach-v15', LEGACY_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
 const AGE_NAME={I:'Sombre',II:'Féodal',III:'Castle',IV:'Impérial'};
 const AGE_SECONDS={II:130,III:160,IV:190};
 const MODE_HELP={auto:'Auto : les cadrans se réinitialisent à chaque échéance.',manual:'Manuel : chaque cadran reste allumé jusqu’à ce que tu le touches.',hybrid:'Hybride : comme Manuel, avec glow et pulsation.'};
@@ -166,6 +229,9 @@ const color=(v, fallback)=>/^#[\da-f]{6}$/i.test(v||'')?v:fallback;
 const format=(ms)=>{const x=Math.ceil(Math.max(0,ms)/1000);return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');};
 const escapeHTML=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 function symbol(type){const prefix='viewBox="0 0 48 48" aria-hidden="true"', shapes={
+ villagers:'<circle cx="17" cy="15" r="6"/><path d="M6 39v-7c0-6 5-10 11-10s11 4 11 10v7M31 15c4-1 7 2 7 6s-3 7-7 6m3 3c5 1 8 5 8 10"/>',
+ houses:'<path d="M4 25 15 15l11 10v17H4V25Zm22-7 8-7 10 9v22H28V25m-13 6v11m20-13v13"/>',
+ map:'<path d="M5 10 17 6l14 5 12-4v31l-12 4-14-5-12 4V10Zm12-4v31m14-26v31"/>',
  house:'<path d="M7 22 24 8l17 14M12 20v20h24V20M19 40V28h10v12"/>',
  compass:'<circle cx="24" cy="24" r="18"/><path d="M24 6v6m0 24v6M6 24h6m24 0h6M31 17l-4 10-10 4 4-10 10-4Z"/>',
  wheat:'<path d="M24 43V11M24 10l-3-5m3 5 3-5M23 18c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 27c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM23 36c-7-1-10-5-10-9 7 0 10 4 10 9Zm2 0c7-1 10-5 10-9-7 0-10 4-10 9ZM16 43h16"/>',
@@ -173,13 +239,190 @@ function symbol(type){const prefix='viewBox="0 0 48 48" aria-hidden="true"', sha
  flag:'<path d="M12 43V7m0 3c9-7 16 7 27 0v20c-11 7-18-7-27 0"/>',
  shield:'<path d="M24 5 39 11v12c0 12-7 17-15 20C16 40 9 35 9 23V11L24 5Z"/><path d="m17 24 5 5 10-11"/>',
  landmark:'<path d="M5 18 24 7l19 11H5Zm5 5v14m9-14v14m10-14v14m9-14v14M6 41h36M8 37h32"/>'};return `<svg ${prefix}>${shapes[type]||shapes.flag}</svg>`;}
+const CIRCUIT_STEPS=[
+ {id:'villagers',icon:'villagers',color:'#62C9FF',fr:['Villageois','Files des TCs · villageois inactifs'],en:['Villagers','Town Center queues · idle villagers'],es:['Aldeanos','Colas de centros urbanos · aldeanos inactivos']},
+ {id:'economy',icon:'wheat',color:'#7DDB96',fr:['Économie','Équilibre des ressources · nouvelles fermes'],en:['Economy','Resource balance · new farms'],es:['Economía','Equilibrio de recursos · nuevas granjas']},
+ {id:'houses',icon:'houses',color:'#E7BD6E',fr:['Maisons','Population disponible · prochaine maison'],en:['Houses','Population room · next house'],es:['Casas','Espacio de población · siguiente casa']},
+ {id:'production',icon:'swords',color:'#F28A74',fr:['Production','Files militaires · points de ralliement'],en:['Production','Military queues · rally points'],es:['Producción','Colas militares · puntos de reunión']},
+ {id:'map',icon:'map',color:'#A7C6EF',fr:['Carte','Minimap · alertes · ressources exposées'],en:['Map','Minimap · alerts · exposed resources'],es:['Mapa','Minimapa · alertas · recursos expuestos']},
+ {id:'scoutArmy',icon:'compass',color:'#B6A2ED',fr:['Scout / armée','Position · reconnaissance · mission'],en:['Scout / army','Position · scouting · mission'],es:['Explorador / ejército','Posición · exploración · misión']}
+];
+function circuitElapsed(n=now()){const c=state.circuit;return c.elapsedMs+(state.running&&Number.isFinite(c.startedAt)?Math.max(0,n-c.startedAt):0);}
+function resetCircuit(){state.circuit.elapsedMs=0;state.circuit.startedAt=state.running?now():null;}
+function circuitFrame(n=now()){
+ const c=state.circuit,t=circuitElapsed(n)/1000,cycle=c.variant==='guided'?CIRCUIT_STEPS.length*c.stepSec:c.freeSec,phase=t%cycle;
+ const step=c.variant==='guided'?Math.floor(phase/c.stepSec):0;
+ const stageProgress=c.variant==='guided'?phase/c.stepSec-step:phase/cycle;
+ return {step,progress:stageProgress,soon:state.running&&stageProgress>=.75,free:c.variant==='free',flash:c.variant==='free'&&state.running&&phase<2,cycle};
+}
+function drawCircuit(n=now()){
+ const c=state.circuit,fr=circuitFrame(n),isSix=c.layout==='six',needsBuild=$('circuitIcons').dataset.layout!==c.layout||$('circuitIcons').children.length!==6;
+ $('circuit').classList.toggle('six-layout',isSix);$('circuit').classList.toggle('free-variant',fr.free);
+ if(needsBuild){$('circuitIcons').dataset.layout=c.layout;$('circuitIcons').innerHTML=CIRCUIT_STEPS.map((s,i)=>`<div class="circuit-cell" data-step="${i}" style="--step-color:${c.colors[s.id]}"><div class="circuit-name">${escapeHTML(s[state.language][0])}</div><div class="circuit-symbol">${symbol(s.icon)}</div><div class="circuit-progress"><div></div></div></div>`).join('');}
+ const names=CIRCUIT_STEPS.map(s=>s[state.language][0]);
+ for(let i=0;i<6;i++){const s=CIRCUIT_STEPS[i],cell=$('circuitIcons').children[i];cell.style.setProperty('--step-color',c.colors[s.id]);cell.classList.toggle('is-active',!fr.free&&fr.step===i);cell.classList.toggle('is-next',!fr.free&&fr.soon&&i===(fr.step+1)%6);cell.classList.toggle('is-warn',!fr.free&&fr.soon&&i===fr.step);cell.classList.toggle('is-free-pulse',fr.free&&fr.flash);cell.classList.toggle('is-free-soon',fr.free&&fr.soon);
+ cell.querySelector('.circuit-name').textContent=names[i];cell.querySelector('.circuit-progress div').style.width=((fr.free?fr.progress:(fr.step===i?fr.progress:0))*100).toFixed(2)+'%';}
+ if(fr.free){$('circuitTitle').textContent=tr('freeTitle');$('circuitHint').textContent=tr('freeHint');$('circuitTitle').style.color='#e6bd73';}
+ else{const s=CIRCUIT_STEPS[fr.step];$('circuitTitle').textContent=s[state.language][0];$('circuitHint').textContent=s[state.language][1];$('circuitTitle').style.color=c.colors[s.id];}
+}
+function drawCircuitColors(){
+ $('circuitColors').innerHTML=CIRCUIT_STEPS.map(s=>`<label class="circuit-color-item"><span class="circuit-color-icon" style="color:${state.circuit.colors[s.id]}">${symbol(s.icon)}</span><span>${escapeHTML(s[state.language][0])}</span><input type="color" data-circuit-color="${s.id}" value="${state.circuit.colors[s.id]}" aria-label="${escapeHTML(s[state.language][0])}"></label>`).join('');
+}
+// French is the reference language; English and Spanish are fully authored translations.
+const UI={
+ freeTitle:['Tour de vérification','Check loop','Ronda de revisión'],
+ freeHint:['Villageois → économie → maisons → production → carte → scout / armée','Villagers → economy → houses → production → map → scout / army','Aldeanos → economía → casas → producción → mapa → explorador / ejército'],
+ langsection:['Langue / Language / Idioma','Language / Langue / Idioma','Idioma / Language / Langue'],
+ language:['Langue de l’application','App language','Idioma de la aplicación'],
+ circuitSettings:['Circuit de vérification · Entraînement','Check circuit · Training','Circuito de revisión · Entrenamiento'],
+ variantLabel:['Variante','Variant','Variante'],
+ layoutLabel:['Présentation en paysage','Landscape layout','Diseño horizontal'],
+ stepDuration:['Durée d’une étape guidée','Guided step duration','Duración de cada paso guiado'],
+ freeInterval:['Signal en mode libre','Free-mode pulse interval','Intervalo de señal en modo libre'],
+ circuitDescr:['Le circuit entraîne le regard, sans agir sur AoE2. Le dernier quart d’étape annonce la suivante. Les boutons d’âge restent visibles.','The circuit trains your scanning pattern without controlling AoE2. The final quarter of each step previews the next. Age controls stay visible.','El circuito entrena la mirada sin controlar AoE2. El último cuarto de cada paso anticipa el siguiente. Los botones de edad siguen visibles.'],
+ circuitColors:['Couleurs des six étapes','Six step colors','Colores de los seis pasos'],
+ castleTransition:['Transition Castle : répartition des villageois et prochain plan ?','Castle transition: villager allocation and next plan?','Transición a Castillos: ¿reparto de aldeanos y próximo plan?'],
+ imperialTransition:['Transition Impérial : production, ressources et préparation du siège ?','Imperial transition: production, resources and siege preparation?','Transición a Imperial: ¿producción, recursos y preparación del asedio?'],
+ speedChanged:['Vitesse modifiée : transition annulée.','Speed changed: age transition canceled.','Velocidad cambiada: transición de edad cancelada.'],
+ confirmNew:['Commencer une nouvelle partie à l’âge I ? Les réglages seront conservés.','Start a new game in Dark Age? Your settings will be kept.','¿Empezar una partida nueva en Edad Oscura? Se conservarán los ajustes.'],
+ confirmReset:['Réinitialiser tous les réglages, rappels et compteurs ?','Reset all settings, reminders and timers?','¿Restablecer todos los ajustes, recordatorios y temporizadores?'],
+ paused:['EN PAUSE','PAUSED','EN PAUSA'], ready:['PRÊT','READY','LISTO'], running:['EN COURS','RUNNING','EN CURSO'],
+ pause:['Pause','Pause','Pausa'],resume:['Reprendre','Resume','Reanudar'],start:['Démarrer','Start','Iniciar'],
+ check:['CHECK','CHECK','REVISAR'],hintPaused:['En pause','Paused','En pausa'],hintTap:['Touchez le cercle','Tap the circle','Toca el círculo'],hintFlash:['Vérifiez !','Check now!','¡Revisa!'],hintNext:['Prochain check','Next check','Próxima revisión'],
+ age:['Âge','Age','Edad'], transitionInProgress:['Transition en cours vers','Transition in progress to','Transición en curso a'],nextAge:['Lancer le passage à l’âge suivant','Start the next age transition','Iniciar el paso a la siguiente edad'],
+ noCards:['Aucun cadran actif pour cet âge. Ouvre les paramètres pour en ajouter.','No active dials for this age. Open settings to add some.','No hay esferas activas para esta edad. Abre ajustes para añadirlas.'],
+ relaunch:['Relancer','Reset','Reiniciar'], select:['Sélectionner','Select','Seleccionar'],empty:['Vide','Empty','Vacío'],none:['— Aucun —','— None —','— Ninguno —'],
+ pos:['POSITION','POSITION','POSICIÓN'], dial:['Cadran','Dial','Esfera'],
+ left:['Déplacer à gauche','Move left','Mover a la izquierda'], right:['Déplacer à droite','Move right','Mover a la derecha'],
+ view:['Affichage','Display','Visualización'], permanent:['Cadran permanent','Permanent dial','Esfera permanente'], temporary:['Message temporaire','Temporary message','Mensaje temporal'],frequency:['Fréquence (secondes)','Frequency (seconds)','Frecuencia (segundos)'],
+ timebase:['Base de temps','Time base','Base de tiempo'],real:['Secondes réelles','Real seconds','Segundos reales'],game:['Secondes du jeu','Game seconds','Segundos del juego'],priority:['Priorité','Priority','Prioridad'],low:['Secondaire','Secondary','Secundaria'],medium:['Importante','Important','Importante'],high:['Prioritaire','High priority','Prioritaria'],
+ ages:['Âges d’activation :','Active ages:','Edades activas:'],iconColor:['Icône','Icon','Icono'],glowColor:['Glow et bordure','Glow and border','Brillo y borde'],activate:['Activer','Enable','Activar'],
+ afterAge:['Après arrivée à l’âge','After reaching age','Tras llegar a la edad'], beforeEnd:['Avant la fin estimée (s réelles)','Before estimated end (real s)','Antes del fin estimado (s reales)'],trigger:['Déclenchement','Trigger','Activación'],atClick:['Dès le clic sur ›','As soon as › is tapped','Al pulsar ›'], triggerOnArrival:['Déclenchement à l’arrivée en','Triggered on arrival in','Activación al llegar a'],triggerOnTransition:['Déclenchement pendant la transition vers','Triggered during transition to','Activación durante la transición a'], noDial:['sans cadran permanent.','no permanent dial.','sin esfera permanente.'],
+ categoryCount:['entrées','entries','entradas'],
+ limit:['4 cadrans maximum pour garder les icônes grandes.','Maximum four dials to keep the icons large.','Máximo cuatro esferas para mantener iconos grandes.'],excess:['cadrans demandés','requested dials','esferas solicitadas'], excessEnd:['Les cadrans supplémentaires seront automatiquement traités comme des messages temporaires.','Extra dials will be handled as temporary reminders.','Las esferas adicionales se mostrarán como recordatorios temporales.'],
+ shown:['affiché(s)','shown','mostradas'],active:['activés','enabled','activadas'],onlyFour:['seuls les 4 sélectionnés sont affichés ; les autres conservent leurs rappels temporaires.','only the selected four are shown; the others remain temporary reminders.','solo se muestran las cuatro seleccionadas; las demás siguen como recordatorios temporales.'],
+ layoutSpace:['Les positions sans cadran restent disponibles lorsque tu en actives de nouveaux.','Empty positions become available when you enable more dials.','Las posiciones vacías estarán disponibles al activar más esferas.'],
+ layoutAge:['Disposition pour l’âge','Layout for age','Disposición para la edad'],
+ ageDark:['Sombre','Dark','Oscura'],ageFeudal:['Féodal','Feudal','Feudal'],ageCastle:['Castle','Castle','Castillos'],ageImperial:['Impérial','Imperial','Imperial'],
+ modeAuto:['Auto : les cadrans se réinitialisent à chaque échéance.','Auto: dials reset at each deadline.','Auto: las esferas se reinician en cada vencimiento.'],modeManual:['Manuel : chaque cadran reste allumé jusqu’à ce que tu le touches.','Manual: each dial stays lit until you tap it.','Manual: cada esfera sigue iluminada hasta que la toques.'],modeHybrid:['Hybride : comme Manuel, avec glow et pulsation.','Hybrid: like Manual, with pulsing glow.','Híbrido: como Manual, con brillo pulsante.'],
+};
+const LOCALE_INDEX={fr:0,en:1,es:2};
+function tr(key){const row=UI[key];return row?row[LOCALE_INDEX[state?.language||'fr']??0]:key;}
+// Names, compact labels and messages for the complete reminder library.
+const TASK_LOCALE={
+ tc:{en:['Town Centers & villagers','TCs','Active TCs? Idle villagers? Housing?'],es:['Centros urbanos y aldeanos','CU','¿Centros urbanos activos? ¿Aldeanos inactivos? ¿Casas?']},
+ scout:{en:['Scouting','Scout','Where is my scout? Enemy buildings? New threats?'],es:['Exploración','Explorar','¿Dónde está mi explorador? ¿Edificios enemigos? ¿Nuevas amenazas?']},
+ eco:{en:['Economy & farms','Economy','Farms? Villager allocation? Resources?'],es:['Economía y granjas','Economía','¿Granjas? ¿Reparto de aldeanos? ¿Recursos?']},
+ army:{en:['Military production','Military','Military queues? Reinforcements? Rally points?'],es:['Producción militar','Ejército','¿Colas militares? ¿Refuerzos? ¿Puntos de reunión?']},
+ prod2II:{en:['Second military building','2nd building','Do I need a second military production building?'],es:['Segundo edificio militar','2.º edificio','¿Necesito un segundo edificio de producción militar?']},
+ forgeII:{en:['Feudal blacksmith','Blacksmith','Does my opening need a blacksmith?'],es:['Herrería en Feudal','Herrería','¿Necesito una herrería para mi apertura?']},
+ wallsII:{en:['Walls and resources','Walls','Walls? Exposed resources? Enemy approaches?'],es:['Muros y recursos','Muros','¿Muros? ¿Recursos expuestos? ¿Accesos enemigos?']},
+ tc2III:{en:['Second TC in Castle Age','TC2','Second TC or prioritize military pressure?'],es:['Segundo CU en Castillos','CU2','¿Segundo centro urbano o priorizar la presión militar?']},
+ monasteryIII:{en:['Monastery in Castle Age','Monastery','Would a monastery help? Relics to secure?'],es:['Monasterio en Castillos','Monasterio','¿Sería útil un monasterio? ¿Reliquias por conseguir?']},
+ workshopIII:{en:['Siege workshop in Castle Age','Siege workshop','Do I need a siege workshop for my mission?'],es:['Taller de asedio en Castillos','Taller de asedio','¿Necesito un taller de asedio para mi misión?']},
+ universityIII:{en:['University in Castle Age','University','Would a university or its technologies help now?'],es:['Universidad en Castillos','Universidad','¿Ayudarían una universidad o sus tecnologías ahora?']},
+ extraProd:{en:['Enough military buildings?','Production buildings','Are my military buildings enough to sustain production?'],es:['¿Suficientes edificios militares?','Edificios militares','¿Tengo suficientes edificios militares para mantener la producción?']},
+ siegeIV:{en:['Siege in Imperial Age','Siege','How will I finish the game? Trebuchets?'],es:['Asedio en Imperial','Asedio','¿Con qué asedio terminaré la partida? ¿Trebuchets?']},
+ foodEarly:{en:['Food for next objective','Food','Enough food for my next objective?'],es:['Comida para el objetivo','Comida','¿Suficiente comida para mi próximo objetivo?']},
+ farms:{en:['New farms','Farms','Enough farms to sustain production?'],es:['Nuevas granjas','Granjas','¿Tengo granjas suficientes para mantener la producción?']},
+ stock:{en:['Floating resources','Resources','Stockpiled resources? Rebalance the economy?'],es:['Recursos acumulados','Recursos','¿Recursos acumulados? ¿Reequilibrar la economía?']},
+ ecoUp:{en:['Economic upgrades','Eco upgrades','Which economic upgrades are useful now?'],es:['Mejoras económicas','Tecnologías eco','¿Qué mejoras económicas son útiles ahora?']},
+ villagerEfficiency:{en:['Villager efficiency','Efficiency','Blocked, idle or poorly allocated villagers?'],es:['Eficiencia de aldeanos','Eficiencia','¿Aldeanos bloqueados, inactivos o mal repartidos?']},
+ postFight:{en:['Economy after fights','After a fight','After a fight? Resume TCs, farms and reinforcements.'],es:['Economía tras combates','Tras un combate','¿Tras un combate? Retoma CU, granjas y refuerzos.']},
+ enemyBuildings:{en:['Enemy military buildings','Enemy buildings','Which military buildings does the enemy have?'],es:['Edificios militares enemigos','Edificios enemigos','¿Qué edificios militares tiene el rival?']},
+ enemyThreat:{en:['New enemy threat','Threats','What new enemy threat should I prepare for?'],es:['Nueva amenaza enemiga','Amenazas','¿Qué nueva amenaza enemiga debo anticipar?']},
+ exposed:{en:['Exposed resources','Safety','Are my resources and villagers protected?'],es:['Recursos expuestos','Seguridad','¿Están protegidos mis recursos y aldeanos?']},
+ relicMap:{en:['Relics and map','Relics','Relics and map control: an opportunity?'],es:['Reliquias y mapa','Reliquias','¿Reliquias y control del mapa: una oportunidad?']},
+ mapControl:{en:['Map control','Map control','Which area or resource can I control?'],es:['Control del mapa','Control','¿Qué zona o recurso puedo controlar?']},
+ fortify:{en:['Defensive position','Fortify','Which position should I defend or fortify?'],es:['Posición defensiva','Fortificar','¿Qué posición debo defender o fortificar?']},
+ openFeudal:{en:['Prepare Feudal opening','Opening','Feudal transition: opening, buildings, wood allocation?'],es:['Preparar apertura Feudal','Apertura','Transición Feudal: ¿apertura, edificios, reparto de madera?']},
+ castlePlan:{en:['Plan for Castle Age','Castle plan','What is my Castle Age plan: economy or pressure?'],es:['Plan para Castillos','Plan Castillos','¿Mi plan para Castillos: economía o presión?']},
+ castlePrep:{en:['Prepare Castle upgrades','Upgrades','Castle Age soon: upgrades, buildings and army mission?'],es:['Preparar mejoras de Castillos','Mejoras','Pronto Castillos: ¿mejoras, edificios y misión del ejército?']},
+ mission:{en:['Mission → Composition → Funding','Mission','Mission? Suitable composition? How to fund it?'],es:['Misión → Composición → Financiación','Misión','¿Misión? ¿Composición adecuada? ¿Cómo financiarla?']},
+ consolidate:{en:['Attack or consolidate?','Consolidate','Attack, consolidate or develop the economy?'],es:['¿Atacar o consolidar?','Consolidación','¿Atacar, consolidar o desarrollar la economía?']},
+ imperialPrep:{en:['Prepare Imperial Age','Imperial plan','Imperial Age soon: army, upgrades and siege?'],es:['Preparar Imperial','Plan Imperial','Pronto Imperial: ¿ejército, tecnologías y asedio?']},
+ victory:{en:['Win condition','Win condition','How do I win this game? Siege and objectives?'],es:['Condición de victoria','Victoria','¿Cómo ganaré esta partida? ¿Asedio y objetivos?']},
+};
+function dName(d){return TASK_LOCALE[d.id]?.[state.language]?.[0]||d.name;}
+function dShort(d){return TASK_LOCALE[d.id]?.[state.language]?.[1]||d.short;}
+function dMessage(d){return TASK_LOCALE[d.id]?.[state.language]?.[2]||d.message;}
+const CATEGORY_LOCALE={
+ core:{en:'01 · Rhythm & habits',es:'01 · Ritmo y hábitos'},buildings:{en:'02 · Infrastructure & buildings',es:'02 · Infraestructura y edificios'},economy:{en:'03 · Economy & development',es:'03 · Economía y desarrollo'},map:{en:'04 · Scouting & map control',es:'04 · Exploración y control del mapa'},strategy:{en:'05 · Strategy & transitions',es:'05 · Estrategia y transiciones'}
+};
+function categoryTitle(id,defaultText){return CATEGORY_LOCALE[id]?.[state.language]||defaultText;}
+function ageName(age){return tr({I:'ageDark',II:'ageFeudal',III:'ageCastle',IV:'ageImperial'}[age]);}
+// Source-language static interface labels are immutable; the current locale is applied without reloading.
+const STATIC_LOCALE={
+ 'Garde le rythme.':['Keep the rhythm.','Mantén el ritmo.'],
+ 'Les couleurs pour les réflexes. Les messages pour les décisions.':['Colors for habits. Messages for decisions.','Colores para los hábitos. Mensajes para las decisiones.'],
+ 'PRÊT':['READY','LISTO'],
+ 'SESSION':['SESSION','SESIÓN'],
+ 'Manuel':['Manual','Manual'], 'Hybride':['Hybrid','Híbrido'],
+ '⚙ Rappels':['⚙ Reminders','⚙ Recordatorios'],
+ 'Cadrans permanents ·':['Permanent dials ·','Esferas permanentes ·'],
+ 'ÂGE':['AGE','EDAD'],
+ 'Démarrer':['Start','Iniciar'],
+ 'Relancer les cadrans':['Reset dials','Reiniciar esferas'],
+ 'Annuler transition':['Cancel transition','Cancelar transición'],
+ 'Nouvelle partie (âge I)':['New game (Dark Age)','Nueva partida (Edad Oscura)'],
+ 'Un appui sur › démarre la recherche estimée et fera passer automatiquement au profil d\'âge suivant. Les boutons I–IV permettent de corriger l\'âge manuellement. Touchez un cadran pour relancer son compteur.':['Tap › to start an estimated age transition and switch automatically to the next age profile. Use I–IV to correct the age. Tap a dial to reset it.','Pulsa › para iniciar una transición de edad estimada y pasar automáticamente al siguiente perfil. Usa I–IV para corregir la edad. Toca una esfera para reiniciarla.'],
+ '← Retour':['← Back','← Volver'],
+ 'Bibliothèque de rappels':['Reminder library','Biblioteca de recordatorios'],
+ 'Choisis les timers, les messages et les événements pour chaque âge. Tous les réglages sont conservés sur cet appareil.':['Choose timers, messages and events for each age. Your settings are saved on this device.','Elige temporizadores, mensajes y eventos para cada edad. Los ajustes se guardan en este dispositivo.'],
+ 'Terminé':['Done','Listo'],
+ 'Confort et rythme des messages':['Message pacing and comfort','Ritmo y comodidad de los mensajes'],
+ 'Intervalle minimal entre deux messages':['Minimum gap between messages','Intervalo mínimo entre mensajes'],
+ "Affichage d'un message":['Message display duration','Duración de un mensaje'],
+ 'Regrouper les rappels proches':['Merge nearby reminders','Agrupar recordatorios cercanos'],
+ 'Jamais deux messages à la fois ; les messages trop anciens sont ignorés. Les alertes des quatre cadrans restent indépendantes.':['Never two messages at once; outdated messages are skipped. The four dials remain independent.','Nunca se muestran dos mensajes a la vez; se descartan los antiguos. Las cuatro esferas siguen independientes.'],
+ 'Vitesse du jeu':['Game speed','Velocidad de juego'],
+ "Avance du profil d'âge (estimation)":['Age profile lead time (estimate)','Antelación del perfil de edad (estimación)'],
+ 'À 1,7×, les passages standards durent environ 76, 94 et 112 s réelles. Le profil peut basculer un peu avant la fin estimée.':['At 1.7×, standard age transitions take roughly 76, 94 and 112 real seconds. The profile may switch before the estimated end.','A 1,7×, los cambios de edad estándar duran unos 76, 94 y 112 segundos reales. El perfil puede cambiar antes del final estimado.'],
+ "Maintenir l'écran allumé":['Keep screen awake','Mantener pantalla encendida'],
+ 'Clignotement et glow':['Pulsing and glow','Parpadeo y brillo'],
+ 'Bip discret (facultatif)':['Soft beep (optional)','Pitido suave (opcional)'],
+ "Le maintien d'écran dépend du navigateur iOS ; les rappels restent visuels par défaut.":['Screen wake lock depends on the iOS browser; reminders are visual by default.','La pantalla activa depende del navegador iOS; los recordatorios son visuales por defecto.'],
+ 'Ordre et position des cadrans':['Dial order and position','Orden y posición de esferas'],
+ 'Disposition par âge':['Layout by age','Disposición por edad'],
+ "Choisis l'âge puis place jusqu'à quatre cadrans de gauche à droite. Tu peux changer les quatre emplacements sans toucher à leurs timers. Les boutons ← et → échangent deux positions. Les choix sont enregistrés séparément pour chaque âge.":['Choose an age and place up to four dials left to right. Reorder them without changing their timers. Arrows ← and → swap positions. Each age is saved separately.','Elige una edad y coloca hasta cuatro esferas de izquierda a derecha sin cambiar sus temporizadores. Las flechas ← y → intercambian posiciones. Cada edad se guarda por separado.'],
+ 'Ordre initial pour cet âge':['Default order for this age','Orden predeterminado para esta edad'],
+ '32 vérifications et rappels, personnalisables':['32 customizable checks and reminders','32 revisiones y recordatorios personalizables'],
+ 'Pour chaque rappel périodique : choisir « Cadran » ou « Message », puis les âges d\'activation. Les événements d\'arrivée et de transition ne prennent jamais de place parmi les quatre cadrans. Cliquer sur une catégorie pour ouvrir sa liste.':['For each periodic reminder, choose “Dial” or “Message” and its active ages. Age arrival and transition events never occupy a dial. Tap a category to expand it.','Para cada recordatorio periódico, elige «Esfera» o «Mensaje» y sus edades activas. Los eventos de llegada y transición nunca ocupan una esfera. Toca una categoría para abrirla.'],
+ "L'outil ne connaît pas les événements du jeu. Les rappels de bâtiments sont des questions (« En ai-je besoin ? »), pas des ordres de construction. Les changements d'âge et les pauses restent des estimations si tu ne corriges pas manuellement.":['The app cannot detect game events. Building reminders are questions (“Do I need this?”), not build orders. Age changes and pauses remain estimates unless you adjust them manually.','La app no detecta eventos del juego. Los recordatorios de edificios son preguntas («¿Lo necesito?»), no órdenes. Las edades y pausas siguen siendo estimaciones salvo corrección manual.'],
+ 'Réglages par défaut':['Reset settings','Restablecer ajustes'],
+ 'AOE2 FIELD COACH · v1.6 · Aucune connexion ni action sur le jeu':['AOE2 FIELD COACH · v1.6 · No connection to or control of the game','AOE2 FIELD COACH · v1.6 · Sin conexión ni control del juego'],
+ 'Timers':['Timers','Temporizadores'],'Circuit':['Circuit','Circuito'],
+ 'Langue / Language / Idioma':['Language / Langue / Idioma','Idioma / Language / Langue'],
+ "Langue de l'application":['App language','Idioma de la aplicación'],
+ 'Circuit de vérification · Entraînement':['Check circuit · Training','Circuito de revisión · Entrenamiento'],
+ 'Variante':['Variant','Variante'],
+ 'Présentation en paysage':['Landscape layout','Diseño horizontal'],
+ "Durée d'une étape guidée":['Guided step duration','Duración de cada paso guiado'],
+ 'Signal en mode libre':['Free-mode pulse interval','Intervalo de señal en modo libre'],
+ "Le circuit entraîne le regard ; il n'active aucune commande dans AoE2. Le dernier quart d'étape annonce la suivante. Les quatre boutons d'âge restent accessibles.":['The circuit trains visual scanning without controlling AoE2. The final quarter of each step previews the next. Age buttons remain accessible.','El circuito entrena la mirada sin controlar AoE2. El último cuarto de cada paso anticipa el siguiente. Los botones de edad siguen accesibles.'],
+ 'Couleurs des six étapes':['Six step colors','Colores de los seis pasos'],
+ 'Guidé (six étapes)':['Guided (six steps)','Guiado (seis pasos)'],
+ '3 s (tour 18 s)':['3 s (18 s loop)','3 s (ronda 18 s)'], '4 s (tour 24 s)':['4 s (24 s loop)','4 s (ronda 24 s)'], '5 s (tour 30 s)':['5 s (30 s loop)','5 s (ronda 30 s)'], '6 s (tour 36 s)':['6 s (36 s loop)','6 s (ronda 36 s)'], '7 s (tour 42 s)':['7 s (42 s loop)','7 s (ronda 42 s)'], '8 s (tour 48 s)':['8 s (48 s loop)','8 s (ronda 48 s)'],
+ 'Libre (signal collectif)':['Free (group pulse)','Libre (señal conjunta)'],
+ 'Six carrés + texte unique':['Six squares + one caption','Seis cuadrados + texto único'],
+ 'Six rectangles nommés':['Six labeled cards','Seis rectángulos con nombre'],
+};
+let originalTextNodes=[];
+function applyLanguage(){
+ document.documentElement.lang=state.language;
+ const idx=state.language==='en'?0:state.language==='es'?1:-1;
+ if(!originalTextNodes.length){const iter=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while((node=iter.nextNode())){if(node.parentNode?.nodeName==='SCRIPT'||node.parentNode?.nodeName==='STYLE')continue;const original=node.nodeValue;if(STATIC_LOCALE[original.trim()])originalTextNodes.push({node,original});}}
+ for(const {node,original} of originalTextNodes){const pair=STATIC_LOCALE[original.trim()];if(!node.isConnected)continue;const val=idx<0?original:pair[idx];node.nodeValue=original.replace(original.trim(),val);}
+ document.querySelectorAll('[data-l10n]').forEach(el=>el.textContent=tr(el.dataset.l10n));
+}
+
 function defaultTask(d){return {enabled:d.on,view:d.view,ages:[...d.ages],seconds:d.seconds,base:d.base,color:d.color,glow:d.glow,priority:d.priority,delay:d.delay??0,lead:d.lead??0,dueAt:null,remainingMs:null,lastAlertAt:0,notified:false};}
-function defaults(){return {v:15,dialOrder:Object.fromEntries(AGES.map(a=>[a,['tc','scout','eco','army']])),mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
+function defaults(){return {v:16,language:'fr',coachView:'timers',circuit:{variant:'guided',layout:'focus',stepSec:6,freeSec:25,colors:Object.fromEntries(CIRCUIT_STEPS.map(s=>[s.id,s.color])),elapsedMs:0,startedAt:null},dialOrder:Object.fromEntries(AGES.map(a=>[a,['tc','scout','eco','army']])),mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
 function sanitizeTask(d, raw){const t=defaultTask(d);if(!raw||typeof raw!=='object')return t;
  t.enabled=raw.enabled===true;t.view=raw.view==='timer'?'timer':'message';t.ages=Array.isArray(raw.ages)?AGES.filter(a=>raw.ages.includes(a)):[...d.ages];t.seconds=clamp(raw.seconds,10,3600,d.seconds);t.base=raw.base==='game'?'game':'real';t.color=color(raw.color,d.color);t.glow=color(raw.glow,d.glow);t.priority=clamp(raw.priority,1,3,d.priority);t.delay=clamp(raw.delay,0,600,d.delay??0);t.lead=clamp(raw.lead,0,120,d.lead??0);
  t.dueAt=Number.isFinite(raw.dueAt)?raw.dueAt:null;t.remainingMs=Number.isFinite(raw.remainingMs)?clamp(raw.remainingMs,-3600000,7200000,0):null;t.lastAlertAt=clamp(raw.lastAlertAt,0,2e13,0);t.notified=raw.notified===true;
  return t;}
-function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode=MODE_HELP[raw.mode]?raw.mode:'auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;
+function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode=MODE_HELP[raw.mode]?raw.mode:'auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;s.language=['fr','en','es'].includes(raw.language)?raw.language:'fr';s.coachView=raw.coachView==='circuit'?'circuit':'timers';const rc=raw.circuit||{};s.circuit.variant=rc.variant==='free'?'free':'guided';s.circuit.layout=rc.layout==='six'?'six':'focus';s.circuit.stepSec=clamp(rc.stepSec,3,10,6);s.circuit.freeSec=clamp(rc.freeSec,12,120,25);s.circuit.elapsedMs=clamp(rc.elapsedMs,0,1e11,0);s.circuit.startedAt=Number.isFinite(rc.startedAt)?rc.startedAt:null;for(const item of CIRCUIT_STEPS)s.circuit.colors[item.id]=color(rc.colors?.[item.id],item.color);
  if(raw.dialOrder&&typeof raw.dialOrder==='object'){for(const age of AGES){const v=raw.dialOrder[age];if(Array.isArray(v))s.dialOrder[age]=[...new Set(v.filter(id=>typeof id==='string'&&BY_ID[id]?.kind==='periodic'))].slice(0,4);}}
  for(const d of LIB){if(raw.tasks?.[d.id])s.tasks[d.id]=sanitizeTask(d,raw.tasks[d.id]);}
  if(raw.transition&&AGES.includes(raw.transition.target)&&AGES.includes(raw.transition.from)){
@@ -195,7 +438,7 @@ function migrateV13(){const s=defaults();try{const old=JSON.parse(localStorage.g
  if(old.eventOpts){if(typeof old.eventOpts.wallsII==='boolean')s.tasks.wallsII.enabled=old.eventOpts.wallsII;if(typeof old.eventOpts.tc2III==='boolean')s.tasks.tc2III.enabled=old.eventOpts.tc2III;if(typeof old.eventOpts.relicIII==='boolean'&&old.eventOpts.relicIII===true)s.tasks.relicMap.enabled=true;if(typeof old.eventOpts.siegeIV==='boolean')s.tasks.siegeIV.enabled=old.eventOpts.siegeIV;}
  return s;}catch(_){return s;}}
 function legacyDialOrder(s){const layout={};for(const age of AGES){layout[age]=LIB.filter(d=>d.kind==='periodic'&&s.tasks[d.id].enabled&&s.tasks[d.id].view==='timer'&&s.tasks[d.id].ages.includes(age)).sort((a,b)=>s.tasks[b.id].priority-s.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b)).map(d=>d.id);}return layout;}
-function migrate(){try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=15;s.dialOrder=legacyDialOrder(s);return s;}}catch(_){}const s=migrateV13();s.dialOrder=legacyDialOrder(s);return s;}
+function migrate(){try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=16;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v14'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=16;s.dialOrder=legacyDialOrder(s);return s;}}catch(_){}const s=migrateV13();s.dialOrder=legacyDialOrder(s);return s;}
 let state;try{const raw=localStorage.getItem(KEY);state=raw?restore(JSON.parse(raw)):migrate();}catch(_){state=defaults();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){}}
 const visible=()=>!document.hidden;
@@ -216,29 +459,29 @@ const landscape=matchMedia('(orientation:landscape)');let settingsOpen=false,con
 let queue=[],notice=null,lastNoticeAt=-1e15,backFromHidden=false;
 function syncLayout(){document.body.classList.toggle('zen',landscape.matches&&!settingsOpen&&!controlsOpen);$('hideControls').hidden=!landscape.matches||settingsOpen;$('settingsBtn').hidden=settingsOpen;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b';}
 function setControls(v){controlsOpen=Boolean(v);syncLayout();}
-function showSettings(v){settingsOpen=Boolean(v);if(!v&&landscape.matches)controlsOpen=false;$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
+function showSettings(v){settingsOpen=Boolean(v);$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
 async function wake(){if(!state.wake||!state.running||!visible()||wakeSentinel)return;if(!('wakeLock' in navigator)||!isSecureContext){if(!wakeWarned){console.info('Screen Wake Lock non disponible');wakeWarned=true;}return;}
  try{wakeSentinel=await navigator.wakeLock.request('screen');wakeSentinel.addEventListener('release',()=>{wakeSentinel=null;});}catch(_){if(!wakeWarned){console.info('Screen Wake Lock refusé');wakeWarned=true;}}}
 async function releaseWake(){if(wakeSentinel){try{await wakeSentinel.release();}catch(_){}wakeSentinel=null;}}
 function audioUnlock(){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(A){audioCtx??=new A();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});}}catch(_){}}
 function beep(){if(!state.sound||!audioCtx||audioCtx.state!=='running'||!visible())return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=710;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.042,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.19);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.2);}catch(_){}}
-function stopClock(){if(!state.running)return;const n=now();state.sessionElapsed+=Math.max(0,n-state.sessionResumedAt);state.running=false;state.sessionResumedAt=null;
+function stopClock(){if(!state.running)return;const n=now();state.sessionElapsed+=Math.max(0,n-state.sessionResumedAt);state.running=false;state.sessionResumedAt=null;state.circuit.elapsedMs+=Math.max(0,n-(state.circuit.startedAt||n));state.circuit.startedAt=null;
  for(const d of LIB){if(d.kind==='periodic'){const t=state.tasks[d.id];t.remainingMs=remaining(t,n);t.dueAt=null;}}
  for(const ev of state.events){ev.remainingMs=Number.isFinite(ev.dueAt)?ev.dueAt-n:ev.remainingMs;ev.dueAt=null;}
  if(state.transition){state.transition.remainingMs=Math.max(0,state.transition.dueAt-n);state.transition.dueAt=null;}
  notice=null;releaseWake();save();}
-function startClock(){if(state.running)return;const n=now();state.running=true;state.sessionResumedAt=n;
+function startClock(){if(state.running)return;const n=now();state.running=true;state.sessionResumedAt=n;state.circuit.startedAt=n;
  for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];const ms=Number.isFinite(t.remainingMs)?t.remainingMs:periodMs(t);t.dueAt=n+ms;t.remainingMs=null;}
  for(const ev of state.events){ev.dueAt=n+(Number.isFinite(ev.remainingMs)?ev.remainingMs:0);ev.remainingMs=null;}
  if(state.transition){state.transition.dueAt=n+(Number.isFinite(state.transition.remainingMs)?state.transition.remainingMs:0);state.transition.remainingMs=null;}
  wake();save();}
 function resetTask(id){const d=BY_ID[id];if(!d||d.kind!=='periodic')return;const t=state.tasks[id];t.remainingMs=periodMs(t);t.dueAt=state.running?now()+t.remainingMs:null;t.lastAlertAt=0;t.notified=false;save();draw();}
 function resetTimers(){for(const d of LIB)if(d.kind==='periodic')resetTask(d.id);save();draw();}
-function newGame(){if(!confirm('Commencer une nouvelle partie à l’âge I ? Les réglages seront conservés.'))return;stopClock();state.age='I';state.sessionElapsed=0;state.sessionResumedAt=null;state.events=[];state.transition=null;notice=null;queue=[];lastNoticeAt=-1e15;for(const d of LIB)if(d.kind==='periodic'){const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.lastAlertAt=0;t.notified=false;}startClock();setControls(false);drawCards(true);draw();save();}
+function newGame(){if(!confirm(tr('confirmNew')))return;stopClock();state.age='I';state.sessionElapsed=0;state.sessionResumedAt=null;state.circuit.elapsedMs=0;state.circuit.startedAt=null;state.events=[];state.transition=null;notice=null;queue=[];lastNoticeAt=-1e15;for(const d of LIB)if(d.kind==='periodic'){const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.lastAlertAt=0;t.notified=false;}startClock();setControls(false);drawCards(true);draw();save();}
 function modeChange(m){if(!MODE_HELP[m])return;state.mode=m;for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];let r=remaining(t);if(r<=0)r=periodMs(t);t.remainingMs=r;t.dueAt=state.running?now()+r:null;t.lastAlertAt=0;t.notified=false;}draw();save();}
 function eventSchedule(d,delaySec,age){if(!state.running)return;const ms=Math.max(0,delaySec*1000);state.events.push({id:d.id,age,dueAt:now()+ms,remainingMs:null});state.events=state.events.slice(-30);}
 function scheduleArrival(age){if(!state.running)return;for(const d of LIB){if(d.kind!=='arrival'||d.target!==age||!state.tasks[d.id].enabled)continue;eventSchedule(d,state.tasks[d.id].delay,age);}}
-function queueReminder(d,at=now()){queue.push({id:d.id,text:d.message,group:d.group||d.id,priority:state.tasks[d.id].priority,age:state.age,at,expireAt:at+100000});queue=queue.slice(-20);}
+function queueReminder(d,at=now()){queue.push({id:d.id,text:dMessage(d),group:d.group||d.id,priority:state.tasks[d.id].priority,age:state.age,at,expireAt:at+100000});queue=queue.slice(-20);}
 function immediateMessage(text,priority=3){queue.push({id:'manual',text,group:'manual',priority,age:state.age,at:now(),expireAt:now()+55000});}
 function setAge(next,{automatic=false}={}){if(!AGES.includes(next)||next===state.age){if(!automatic)state.transition=null;return;}
  state.age=next;state.transition=null;state.events=[];queue=[];notice=null;
@@ -251,8 +494,8 @@ function beginTransition(){const index=AGES.indexOf(state.age);if(index>=3)retur
  for(const d of LIB){if(d.kind!=='transition'||d.target!==target||!state.tasks[d.id].enabled)continue;const phase=d.phase==='start';const remainingMs=phase?0:Math.max(0,adjusted-state.tasks[d.id].lead*1000);state.events.push({id:d.id,age:`transition-${target}`,dueAt:n+remainingMs,remainingMs:null});}
  // Un check de préparation au clic, puis un autre près de l'arrivée. Ces deux
  // messages suivent l'activation du rappel de transition correspondant.
- if(target==='III'&&state.tasks.castlePrep.enabled)immediateMessage('Transition Castle : répartition des villageois et prochain plan ?',3);
- if(target==='IV'&&state.tasks.imperialPrep.enabled)immediateMessage('Transition Impérial : production, ressources et préparation du siège ?',3);
+ if(target==='III'&&state.tasks.castlePrep.enabled)immediateMessage(tr('castleTransition'),3);
+ if(target==='IV'&&state.tasks.imperialPrep.enabled)immediateMessage(tr('imperialTransition'),3);
  save();draw();}
 function updateTask(id,patch){const d=BY_ID[id];if(!d)return;const t=state.tasks[id],newT={...t,...patch};newT.enabled=Boolean(newT.enabled);newT.view=newT.view==='timer'?'timer':'message';newT.ages=AGES.filter(a=>newT.ages.includes(a));newT.seconds=clamp(newT.seconds,10,3600,d.seconds);newT.delay=clamp(newT.delay,0,600,d.delay??0);newT.lead=clamp(newT.lead,0,120,d.lead??0);newT.priority=clamp(newT.priority,1,3,d.priority);newT.color=color(newT.color,d.color);newT.glow=color(newT.glow,d.glow);newT.base=newT.base==='game'?'game':'real';
  state.tasks[id]=newT;
@@ -296,68 +539,68 @@ function pump(n){queue=queue.filter(x=>x.age===state.age&&n<x.expireAt);if(!visi
   for(const x of same){texts.push(x.text);queue.splice(queue.indexOf(x),1);}
   // On regroupe aussi un événement du même thème prévu dans les 30 prochaines secondes.
   for(const ev of [...state.events]){const d=BY_ID[ev.id];if(!d||!d.group||d.group!==selected.group||ev.age!==state.age||!state.tasks[d.id].enabled||!Number.isFinite(ev.dueAt)||ev.dueAt>n+30000||ev.dueAt<n-10000)continue;
-   texts.push(d.message);state.events.splice(state.events.indexOf(ev),1);
+   texts.push(dMessage(d));state.events.splice(state.events.indexOf(ev),1);
   }
  }
  const final=texts.filter((t,i)=>texts.indexOf(t)===i).join(' · ');
  notice={text:final,until:n+state.showSec*1000,at:n,priority:selected.priority};lastNoticeAt=n;beep();save();
 }
 function drawCards(force=false){const defs=activeDials();const ids=defs.map(d=>[d.id,state.tasks[d.id].color,state.tasks[d.id].glow,state.tasks[d.id].view].join(':')).join('|');if(!force&&ids===lastCardSignature)return;lastCardSignature=ids;
- const container=$('cards');container.style.setProperty('--cols',String(Math.max(1,defs.length)));container.innerHTML=defs.map(d=>{const t=state.tasks[d.id];return `<article class="timer-card" id="card-${d.id}" aria-label="${escapeHTML(d.name)}" style="--task:${t.color};--glow:${t.glow}">
-  <div class="timer-name" title="${escapeHTML(d.name)}">${escapeHTML(d.short)}</div>
-  <button class="dial" type="button" data-reset="${d.id}" aria-label="Relancer ${escapeHTML(d.name)}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="33"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="33"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
+ const container=$('cards');container.style.setProperty('--cols',String(Math.max(1,defs.length)));container.innerHTML=defs.map(d=>{const t=state.tasks[d.id];return `<article class="timer-card" id="card-${d.id}" aria-label="${escapeHTML(dName(d))}" style="--task:${t.color};--glow:${t.glow}">
+  <div class="timer-name" title="${escapeHTML(dName(d))}">${escapeHTML(dShort(d))}</div>
+  <button class="dial" type="button" data-reset="${d.id}" aria-label="${tr('relaunch')} ${escapeHTML(dName(d))}"><svg class="ring" viewBox="0 0 74 74" aria-hidden="true"><circle class="track" cx="37" cy="37" r="33"/><circle class="fill" id="ring-${d.id}" cx="37" cy="37" r="33"/></svg><span class="symbol">${symbol(d.icon)}</span></button>
   <div class="count" id="count-${d.id}">--:--</div><div class="count-hint" id="hint-${d.id}">Prochain check</div>
- </article>`;}).join('')||'<div class="no-cards">Aucun cadran actif pour cet âge. Ouvre les paramètres pour en ajouter.</div>';
+ </article>`;}).join('')||`<div class="no-cards">${escapeHTML(tr('noCards'))}</div>`;
  $('cardCount').textContent=String(defs.length);
 }
-function draw(){const n=now();tick(n);pump(n);drawCards();const elapsed=elapsedTime();$('sessionTime').textContent=format(elapsed);$('runLabel').textContent=state.running?'EN COURS':elapsed>0?'EN PAUSE':'PRÊT';$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?'Pause':elapsed>0?'Reprendre':'Démarrer';
- document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('modeHelp').textContent=MODE_HELP[state.mode];
+function draw(){const n=now();tick(n);pump(n);drawCards();const circuitMode=state.coachView==='circuit';$('cards').hidden=circuitMode;$('circuit').hidden=!circuitMode;document.querySelectorAll('[data-view]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===state.coachView)));if(circuitMode)drawCircuit(n);const elapsed=elapsedTime();$('sessionTime').textContent=format(elapsed);$('runLabel').textContent=state.running?tr('running'):elapsed>0?tr('paused'):tr('ready');$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?tr('pause'):elapsed>0?tr('resume'):tr('start');
+ document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('modeHelp').textContent=tr({auto:'modeAuto',manual:'modeManual',hybrid:'modeHybrid'}[state.mode]);
  document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.age===state.age)));
  for(const d of activeDials()){const t=state.tasks[d.id],card=$(`card-${d.id}`);if(!card)continue;const left=remaining(t,n),overdue=state.running&&left<=0&&state.mode!=='auto',flashing=state.running&&state.mode==='auto'&&t.lastAlertAt>0&&n-t.lastAlertAt<4800,alert=overdue||flashing;
  card.classList.toggle('alert',alert);card.classList.toggle('pulsing',alert&&state.pulse&&(state.mode==='auto'||state.mode==='hybrid'));
- $(`count-${d.id}`).textContent=overdue?'CHECK':format(left);$(`hint-${d.id}`).textContent=!state.running?'En pause':overdue?'Touchez le cercle':flashing?'Vérifiez !':'Prochain check';
+ $(`count-${d.id}`).textContent=overdue?tr('check'):format(left);$(`hint-${d.id}`).textContent=!state.running?tr('hintPaused'):overdue?tr('hintTap'):flashing?tr('hintFlash'):tr('hintNext');
  const fraction=overdue?1:1-Math.min(1,Math.max(0,left)/periodMs(t));$(`ring-${d.id}`).style.strokeDashoffset=String(207.35*(1-fraction));
  }
- const index=AGES.indexOf(state.age);$('nextAge').disabled=index>=3||Boolean(state.transition);$('nextAge').classList.toggle('active',Boolean(state.transition));$('nextAge').title=state.transition?`Transition en cours vers ${state.transition.target}`:'Lancer le passage à l’âge suivant';$('cancelTransition').hidden=!state.transition;
- $('transitionState').textContent=state.transition?`${state.age}→${state.transition.target} · ${format(Number.isFinite(state.transition.dueAt)?state.transition.dueAt-n:state.transition.remainingMs)}`:`Âge ${state.age} · ${AGE_NAME[state.age]}`;
+ const index=AGES.indexOf(state.age);$('nextAge').disabled=index>=3||Boolean(state.transition);$('nextAge').classList.toggle('active',Boolean(state.transition));$('nextAge').title=state.transition?`${tr('transitionInProgress')} ${state.transition.target}`:tr('nextAge');$('cancelTransition').hidden=!state.transition;
+ $('transitionState').textContent=state.transition?`${state.age}→${state.transition.target} · ${format(Number.isFinite(state.transition.dueAt)?state.transition.dueAt-n:state.transition.remainingMs)}`:`${tr('age')} ${state.age} · ${ageName(state.age)}`;
  if(notice&&n<notice.until&&visible()){const box=$('notice');box.hidden=false;box.classList.toggle('urgent',notice.priority>=3);$('noticeText').textContent=notice.text;$('noticeProgress').style.transform=`scaleX(${Math.max(0,(notice.until-n)/(state.showSec*1000))})`;}else $('notice').hidden=true;
 }
 function drawSettings(){const opened=new Set(Array.from(document.querySelectorAll('#settingsCatalog details[open]')).map(el=>el.dataset.category));if(!$('settingsCatalog').children.length)opened.add('core');
  $('settingsCatalog').innerHTML=CATEGORIES.map(([id,title])=>{
   const items=LIB.filter(x=>x.cat===id).map(d=>{
     const t=state.tasks[d.id],periodic=d.kind==='periodic',arrival=d.kind==='arrival',transition=d.kind==='transition';
-    let fields='';if(periodic){fields=`<div class="field"><label for="view-${d.id}">Affichage</label><select id="view-${d.id}" data-field="view" data-id="${d.id}"><option value="timer">Cadran permanent</option><option value="message">Message temporaire</option></select></div>
-      <div class="field"><label for="seconds-${d.id}">Fréquence (secondes)</label><input id="seconds-${d.id}" data-field="seconds" data-id="${d.id}" type="number" min="10" max="3600" step="5" inputmode="numeric"></div>
-      <div class="field"><label for="base-${d.id}">Base de temps</label><select id="base-${d.id}" data-field="base" data-id="${d.id}"><option value="real">Secondes réelles</option><option value="game">Secondes du jeu</option></select></div>`;
-    }else if(arrival){fields=`<div class="field"><label for="delay-${d.id}">Après arrivée à l'âge ${d.target} (s réelles)</label><input type="number" id="delay-${d.id}" data-field="delay" data-id="${d.id}" min="0" max="600" step="5" inputmode="numeric"></div>`;
-    }else if(transition){fields=d.phase==='before'?`<div class="field"><label for="lead-${d.id}">Avant la fin estimée (s réelles)</label><input id="lead-${d.id}" data-field="lead" data-id="${d.id}" type="number" min="0" max="120" step="1" inputmode="numeric"></div>`:'<div class="field"><label>Déclenchement</label><div class="settings-help">Dès le clic sur ›</div></div>';}
-    fields+=`<div class="field"><label for="priority-${d.id}">Priorité</label><select id="priority-${d.id}" data-field="priority" data-id="${d.id}"><option value="1">Secondaire</option><option value="2">Importante</option><option value="3">Prioritaire</option></select></div>`;
-    const ageSection=periodic?`<div class="settings-help">Âges d'activation :</div><div class="age-picker">${AGES.map(age=>`<label><input data-agefield="${d.id}" data-agevalue="${age}" type="checkbox">${age}</label>`).join('')}</div>`:`<div class="settings-help">${arrival?'Déclenchement à l’arrivée en '+AGE_NAME[d.target]:'Déclenchement pendant la transition vers '+AGE_NAME[d.target]} · sans cadran permanent.</div>`;
-    const colorSection=periodic?`<div class="colorpair" id="colors-${d.id}"><label>Icône <input type="color" data-field="color" data-id="${d.id}" aria-label="Couleur icône ${escapeHTML(d.name)}"></label><label>Glow et bordure <input type="color" data-field="glow" data-id="${d.id}" aria-label="Glow ${escapeHTML(d.name)}"></label></div>`:'';
-    return `<div class="reminder-setting" data-card-settings="${d.id}" style="--task:${t.color}"><div class="setting-head"><div><div class="head-info"><span class="colored-dot"></span><span class="setting-title">${escapeHTML(d.name)}</span></div><p class="setting-descr">${escapeHTML(d.message)}</p></div><input class="toggle" type="checkbox" data-field="enabled" data-id="${d.id}" aria-label="Activer ${escapeHTML(d.name)}"></div><div class="fields">${fields}</div>${colorSection}${ageSection}</div>`;
-  }).join('');return `<details class="category" data-category="${id}" ${opened.has(id)?'open':''}><summary>${escapeHTML(title)} <span class="version">${LIB.filter(d=>d.cat===id).length} entrées</span></summary><div class="category-content"><div class="reminder-settings-list">${items}</div></div></details>`;
+    let fields='';if(periodic){fields=`<div class="field"><label for="view-${d.id}">${tr('view')}</label><select id="view-${d.id}" data-field="view" data-id="${d.id}"><option value="timer">${tr('permanent')}</option><option value="message">${tr('temporary')}</option></select></div>
+      <div class="field"><label for="seconds-${d.id}">${tr('frequency')}</label><input id="seconds-${d.id}" data-field="seconds" data-id="${d.id}" type="number" min="10" max="3600" step="5" inputmode="numeric"></div>
+      <div class="field"><label for="base-${d.id}">${tr('timebase')}</label><select id="base-${d.id}" data-field="base" data-id="${d.id}"><option value="real">${tr('real')}</option><option value="game">${tr('game')}</option></select></div>`;
+    }else if(arrival){fields=`<div class="field"><label for="delay-${d.id}">${tr('afterAge')} ${d.target} (s)</label><input type="number" id="delay-${d.id}" data-field="delay" data-id="${d.id}" min="0" max="600" step="5" inputmode="numeric"></div>`;
+    }else if(transition){fields=d.phase==='before'?`<div class="field"><label for="lead-${d.id}">${tr('beforeEnd')}</label><input id="lead-${d.id}" data-field="lead" data-id="${d.id}" type="number" min="0" max="120" step="1" inputmode="numeric"></div>`:`<div class="field"><label>${tr('trigger')}</label><div class="settings-help">${tr('atClick')}</div></div>`;}
+    fields+=`<div class="field"><label for="priority-${d.id}">${tr('priority')}</label><select id="priority-${d.id}" data-field="priority" data-id="${d.id}"><option value="1">${tr('low')}</option><option value="2">${tr('medium')}</option><option value="3">${tr('high')}</option></select></div>`;
+    const ageSection=periodic?`<div class="settings-help">${tr('ages')}</div><div class="age-picker">${AGES.map(age=>`<label><input data-agefield="${d.id}" data-agevalue="${age}" type="checkbox">${age}</label>`).join('')}</div>`:`<div class="settings-help">${arrival?tr('triggerOnArrival')+' '+ageName(d.target):tr('triggerOnTransition')+' '+ageName(d.target)} · ${tr('noDial')}</div>`;
+    const colorSection=periodic?`<div class="colorpair" id="colors-${d.id}"><label>${tr('iconColor')} <input type="color" data-field="color" data-id="${d.id}" aria-label="${tr('iconColor')} ${escapeHTML(dName(d))}"></label><label>${tr('glowColor')} <input type="color" data-field="glow" data-id="${d.id}" aria-label="${tr('glowColor')} ${escapeHTML(dName(d))}"></label></div>`:'';
+    return `<div class="reminder-setting" data-card-settings="${d.id}" style="--task:${t.color}"><div class="setting-head"><div><div class="head-info"><span class="colored-dot"></span><span class="setting-title">${escapeHTML(dName(d))}</span></div><p class="setting-descr">${escapeHTML(dMessage(d))}</p></div><input class="toggle" type="checkbox" data-field="enabled" data-id="${d.id}" aria-label="${tr('activate')} ${escapeHTML(dName(d))}"></div><div class="fields">${fields}</div>${colorSection}${ageSection}</div>`;
+  }).join('');return `<details class="category" data-category="${id}" ${opened.has(id)?'open':''}><summary>${escapeHTML(categoryTitle(id,title))} <span class="version">${LIB.filter(d=>d.cat===id).length} ${tr('categoryCount')}</span></summary><div class="category-content"><div class="reminder-settings-list">${items}</div></div></details>`;
  }).join('');syncInputs();}
-function syncInputs(){for(const d of LIB){const t=state.tasks[d.id],card=document.querySelector(`[data-card-settings="${d.id}"]`);if(!card)continue;card.style.setProperty('--task',t.color);
+function syncInputs(){$('languageChoice').value=state.language;$('circuitVariant').value=state.circuit.variant;$('circuitLayout').value=state.circuit.layout;$('circuitStepSec').value=String(state.circuit.stepSec);$('circuitFreeSec').value=String(state.circuit.freeSec);drawCircuitColors();for(const d of LIB){const t=state.tasks[d.id],card=document.querySelector(`[data-card-settings="${d.id}"]`);if(!card)continue;card.style.setProperty('--task',t.color);
  card.querySelectorAll('[data-field]').forEach(input=>{const k=input.dataset.field;if(input.type==='checkbox')input.checked=Boolean(t[k]);else input.value=String(t[k]);});
  card.querySelectorAll('[data-agefield]').forEach(input=>input.checked=t.ages.includes(input.dataset.agevalue));
  const colorSection=$(`colors-${d.id}`);if(colorSection)colorSection.hidden=t.view!=='timer';
  }
  $('gapSec').value=String(state.gapSec);$('showSec').value=String(state.showSec);$('mergeToggle').checked=state.merge;$('gameSpeed').value=String(state.gameSpeed);$('earlySec').value=String(state.earlySec);$('wakeToggle').checked=state.wake;$('pulseToggle').checked=state.pulse;$('soundToggle').checked=state.sound;
- const excess=AGES.map(age=>{const count=LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].view==='timer'&&state.tasks[d.id].ages.includes(age)).length;return count>4?`${age} : ${count} cadrans demandés`:null;}).filter(Boolean);
+ const excess=AGES.map(age=>{const count=LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].view==='timer'&&state.tasks[d.id].ages.includes(age)).length;return count>4?`${age} : ${count} ${tr('excess')}`:null;}).filter(Boolean);
  renderLayoutSettings();
- $('limitWarning').hidden=!excess.length;if(excess.length)$('limitWarning').textContent=`4 cadrans maximum pour garder les icônes grandes. ${excess.join(' · ')}. Les cadrans supplémentaires seront automatiquement traités comme des messages temporaires.`;
+ $('limitWarning').hidden=!excess.length;if(excess.length)$('limitWarning').textContent=`${tr('limit')} ${excess.join(' · ')}. ${tr('excessEnd')}`;
 }
 function renderLayoutSettings(){
  const age=layoutAgeEditing;
- $('layoutAgeOptions').innerHTML=AGES.map(a=>`<button type="button" data-layout-age="${a}" aria-pressed="${a===age}">${a} · ${AGE_NAME[a]}</button>`).join('');
+ $('layoutAgeOptions').innerHTML=AGES.map(a=>`<button type="button" data-layout-age="${a}" aria-pressed="${a===age}">${a} · ${ageName(a)}</button>`).join('');
  const options=eligibleDials(age),shown=activeDials(age);
  $('layoutSlots').innerHTML=Array.from({length:4},(_,i)=>{
   const chosen=shown[i]||null;
   const item=chosen?state.tasks[chosen.id]:null;
-  const optionsHTML=`<option value="">— Aucun —</option>`+options.map(d=>`<option value="${d.id}" ${chosen?.id===d.id?'selected':''}>${escapeHTML(d.short)}</option>`).join('');
-  return `<div class="layout-slot"><div class="layout-slot-label">POSITION ${i+1}</div><div class="layout-slot-preview" style="--preview-color:${item?.color||'#a5b0be'}">${chosen?symbol(chosen.icon):'<span style="font-size:21px">—</span>'}<span class="layout-slot-name">${chosen?escapeHTML(chosen.short):'Vide'}</span></div><label class="layout-slot-label" for="layout-slot-${i}">Cadran</label><select id="layout-slot-${i}" aria-label="Cadran en position ${i+1}" data-layout-slot="${i}" ${options.length?'':'disabled'}>${optionsHTML}</select><div class="layout-move"><button type="button" data-layout-move="${i},-1" title="Déplacer à gauche" aria-label="Déplacer la position ${i+1} vers la gauche" ${i===0||!chosen?'disabled':''}>←</button><button type="button" data-layout-move="${i},1" title="Déplacer à droite" aria-label="Déplacer la position ${i+1} vers la droite" ${i===3||!chosen||!shown[i+1]?'disabled':''}>→</button></div></div>`;
+  const optionsHTML=`<option value="">${tr('none')}</option>`+options.map(d=>`<option value="${d.id}" ${chosen?.id===d.id?'selected':''}>${escapeHTML(dShort(d))}</option>`).join('');
+  return `<div class="layout-slot"><div class="layout-slot-label">${tr('pos')} ${i+1}</div><div class="layout-slot-preview" style="--preview-color:${item?.color||'#a5b0be'}">${chosen?symbol(chosen.icon):'<span style="font-size:21px">—</span>'}<span class="layout-slot-name">${chosen?escapeHTML(dShort(chosen)):tr('empty')}</span></div><label class="layout-slot-label" for="layout-slot-${i}">${tr('dial')}</label><select id="layout-slot-${i}" aria-label="${tr('dial')} ${i+1}" data-layout-slot="${i}" ${options.length?'':'disabled'}>${optionsHTML}</select><div class="layout-move"><button type="button" data-layout-move="${i},-1" title="${tr('left')}" aria-label="${tr('left')} ${i+1}" ${i===0||!chosen?'disabled':''}>←</button><button type="button" data-layout-move="${i},1" title="${tr('right')}" aria-label="${tr('right')} ${i+1}" ${i===3||!chosen||!shown[i+1]?'disabled':''}>→</button></div></div>`;
  }).join('');
- $('layoutLegend').textContent=options.length>4?`${options.length} cadrans activés pour l'âge ${age} : seuls les 4 sélectionnés sont affichés ; les autres conservent leurs rappels temporaires.`:`${shown.length} cadran${shown.length>1?'s':''} affiché${shown.length>1?'s':''} à l'âge ${age}. Les positions sans cadran restent disponibles lorsque tu en actives de nouveaux.`;
+ $('layoutLegend').textContent=options.length>4?`${options.length} ${tr('active')} · ${tr('age')} ${age} : ${tr('onlyFour')}`:`${shown.length} ${tr('shown')} · ${tr('age')} ${age}. ${tr('layoutSpace')}`;
 }
 function changeLayoutSlot(slot,id){const age=layoutAgeEditing,shown=activeDials(age).map(d=>d.id),valid=eligibleDials(age).some(d=>d.id===id);
  if(!valid){renderLayoutSettings();return;}
@@ -376,6 +619,13 @@ function saveSettingsField(target){const id=target.dataset.id,d=BY_ID[id];if(!d)
  else{const field=target.dataset.field;if(!field)return;patch[field]=target.type==='checkbox'?target.checked:target.value;}
  updateTask(id,patch);syncInputs();}
 function wire(){
+ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{if(state.coachView!==b.dataset.view){state.coachView=b.dataset.view;resetCircuit();save();draw();}}));
+ $('languageChoice').addEventListener('change',e=>{state.language=['fr','en','es'].includes(e.target.value)?e.target.value:'fr';notice=null;queue=[];applyLanguage();drawSettings();drawCards(true);save();draw();});
+ $('circuitVariant').addEventListener('change',e=>{state.circuit.variant=e.target.value==='free'?'free':'guided';resetCircuit();save();draw();});
+ $('circuitLayout').addEventListener('change',e=>{state.circuit.layout=e.target.value==='six'?'six':'focus';drawCircuit();save();});
+ $('circuitStepSec').addEventListener('change',e=>{state.circuit.stepSec=clamp(e.target.value,3,8,6);resetCircuit();save();draw();});
+ $('circuitFreeSec').addEventListener('change',e=>{state.circuit.freeSec=clamp(e.target.value,15,60,25);resetCircuit();save();draw();});
+ $('circuitColors').addEventListener('input',e=>{const id=e.target.dataset.circuitColor;if(id&&CIRCUIT_STEPS.some(s=>s.id===id)){state.circuit.colors[id]=color(e.target.value,state.circuit.colors[id]);drawCircuit();save();}});
  $('cards').addEventListener('click',e=>{const reset=e.target.closest('[data-reset]');if(reset){resetTask(reset.dataset.reset);return;}if(landscape.matches&&!settingsOpen)setControls(!controlsOpen);});
  document.addEventListener('click',e=>{if(settingsOpen||!landscape.matches)return;if(e.target.closest('button,input,select,label,.cards,.age-strip,.header,.toolbar,.controls,.quick-actions,.notification'))return;setControls(!controlsOpen);});
  $('settingsBtn').addEventListener('click',()=>showSettings(true));$('settingsShortcut').addEventListener('click',()=>showSettings(true));$('backBtn').addEventListener('click',()=>showSettings(false));$('saveBack').addEventListener('click',()=>showSettings(false));$('doneBtn').addEventListener('click',()=>showSettings(false));$('hideControls').addEventListener('click',()=>setControls(false));
@@ -392,12 +642,12 @@ function wire(){
  $('gapSec').addEventListener('change',e=>{state.gapSec=clamp(e.target.value,20,120,45);save();syncInputs();});
  $('showSec').addEventListener('change',e=>{state.showSec=clamp(e.target.value,3,10,5);save();syncInputs();});
  $('mergeToggle').addEventListener('change',e=>{state.merge=e.target.checked;save();});
- $('gameSpeed').addEventListener('change',e=>{const old=state.gameSpeed;state.gameSpeed=clamp(e.target.value,.25,4,1.7);if(old!==state.gameSpeed){for(const d of LIB)if(d.kind==='periodic'&&state.tasks[d.id].base==='game')resetTask(d.id);if(state.transition){cancelTransition();immediateMessage('Vitesse modifiée : transition annulée.');}}save();syncInputs();draw();});
+ $('gameSpeed').addEventListener('change',e=>{const old=state.gameSpeed;state.gameSpeed=clamp(e.target.value,.25,4,1.7);if(old!==state.gameSpeed){for(const d of LIB)if(d.kind==='periodic'&&state.tasks[d.id].base==='game')resetTask(d.id);if(state.transition){cancelTransition();immediateMessage(tr('speedChanged'));}}save();syncInputs();draw();});
  $('earlySec').addEventListener('change',e=>{state.earlySec=clamp(e.target.value,0,15,5);save();syncInputs();});
  $('wakeToggle').addEventListener('change',e=>{state.wake=e.target.checked;save();if(state.wake)wake();else releaseWake();});
  $('pulseToggle').addEventListener('change',e=>{state.pulse=e.target.checked;save();draw();});
  $('soundToggle').addEventListener('change',e=>{state.sound=e.target.checked;audioUnlock();save();});
- $('defaultsBtn').addEventListener('click',()=>{if(!confirm('Réinitialiser tous les réglages, rappels et compteurs ?'))return;stopClock();state=defaults();queue=[];notice=null;lastNoticeAt=-1e15;lastCardSignature='';drawSettings();drawCards(true);draw();save();});
+ $('defaultsBtn').addEventListener('click',()=>{if(!confirm(tr('confirmReset')))return;stopClock();state=defaults();queue=[];notice=null;lastNoticeAt=-1e15;lastCardSignature='';drawSettings();drawCards(true);draw();save();});
  const rotation=()=>{controlsOpen=false;syncLayout();draw();};if(landscape.addEventListener)landscape.addEventListener('change',rotation);else landscape.addListener(rotation);
  document.addEventListener('visibilitychange',()=>{if(document.hidden){backFromHidden=true;notice=null;queue=[];}else{if(backFromHidden&&state.running){const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(Number.isFinite(t.dueAt)&&t.dueAt<n&&state.mode==='auto'){t.dueAt=n+periodMs(t);t.lastAlertAt=0;}else if(Number.isFinite(t.dueAt)&&t.dueAt<n&&!isDial(d)){t.dueAt=n+periodMs(t);}}
   // Les événements manqués en arrière-plan sont abandonnés, sans rafale.
@@ -406,9 +656,9 @@ function wire(){
  window.addEventListener('pagehide',save);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(settingsOpen)showSettings(false);else if(landscape.matches)setControls(false);}});
 }
-// Initialisation : migration intégrale des réglages v1.4 vers v1.5 et conservation des dispositions par âge.
-if(!localStorage.getItem(KEY)){state.running=false;state.sessionElapsed=0;state.sessionResumedAt=null;}
-drawCards(true);wire();syncLayout();draw();save();if(state.running)wake();
+// Initialisation : migration intégrale des réglages v1.4 vers v1.6 et conservation des dispositions par âge.
+if(!localStorage.getItem(KEY)){state.running=false;state.sessionElapsed=0;state.sessionResumedAt=null;state.circuit.elapsedMs=0;state.circuit.startedAt=null;}if(state.running&&!Number.isFinite(state.circuit.startedAt))state.circuit.startedAt=now();
+applyLanguage();drawCards(true);wire();syncLayout();draw();save();if(state.running)wake();
 setInterval(()=>{draw();const n=now();if(n-lastStore>4000){save();lastStore=n;}},200);
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
 })();
