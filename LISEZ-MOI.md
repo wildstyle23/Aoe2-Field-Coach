@@ -1,35 +1,24 @@
-# AoE2 Field Coach v1.9
-
-Application web autonome destinée à l'iPhone, en mode paysage. Les **Timers** et le **Circuit** restent indépendants, et l'application ne communique pas avec Age of Empires II.
+# AoE2 Field Coach v1.10 — Décisions
 
 ## Nouveautés
+- Icône de production : **Lucide `swords`**, même pictogramme dans Circuit et Timers, couleur configurable inchangée.
+- Troisième mode **Décisions**, disponible dans Paramètres > Mode affiché et sur le sélecteur en portrait.
+- Une question ouverte, lisible en paysage, filtrée par âge et catégories, traduite en français, anglais et espagnol.
+- Défilement manuel par défaut ; défilement automatique facultatif 90–240 s, pause indépendante, son indépendant désactivé par défaut.
+- Banque de 32 questions entièrement locale, ordre pseudo-aléatoire déterministe et anti-répétition, conservation de l'état et des préférences.
+- Circuit avant Timers dans le sélecteur, Circuit mode initial pour les nouvelles installations ; anciens choix préservés.
+- Timers, Circuit, transitions I–IV et 32 rappels existants préservés.
 
-- Icône **Production** redessinée avec deux épées croisées.
-- **Circuit sélectionné par défaut** ; le sélecteur visible en portrait place Circuit avant Timers. En paysage, il reste volontairement masqué. Le mode affiché se choisit également dans les paramètres.
-- **Circuit configurable par âge I, II, III, IV** : cocher/décocher les étapes et modifier leur ordre avec les flèches. Les configurations de chaque âge sont sauvegardées séparément. En âge I, la production militaire n'est pas sélectionnée par défaut (mais reste activable).
-- Choix entre **une durée commune** pour toutes les étapes et **des durées individuelles par étape et par âge** (2–30 s).
-- **Bips synchronisés** : en mode Circuit, seul le changement d'étape (ou le signal du mode libre) peut produire un bip. Les échéances des Timers et des messages contextuels n'émettent plus de bip supplémentaire dans cette vue. Garde-fou anti-double signal de 420 ms.
-- Le bouton **Relancer les Timers + Circuit** réinitialise les compteurs des deux modes, même si l'un n'est pas affiché.
-- Séparation explicite des réglages **Circuit** et **Timers — ordre et position des cadrans**.
-- Traductions de ces réglages en français, anglais et espagnol.
+## Utilisation sur GitHub Pages
+Décompresser l'archive ZIP et placer **tous ses fichiers à la racine** du dépôt GitHub Pages : `index.html`, `sw.js`, `manifest.webmanifest`, les icônes et ce document. Commit. Rechargez l'application ; le cache versionné est renouvelé.
 
-## Installer ou mettre à jour GitHub Pages
+## Comportements et limites
+- Aucune lecture de l'écran ou des états d'AoE2. L'âge doit être changé manuellement ou via la transition estimée.
+- Les questions n'exigent aucune saisie. Le bouton de pause de Décisions n'arrête pas les deux autres modes.
+- Défilement automatique et son de Décisions **désactivés** pour les installations nouvelles et migrées.
+- Le défilement automatique ne rattrape pas les questions manquées après mise en arrière-plan ; les limitations iOS restent applicables.
+- La génération du bip requiert l'autorisation d'AudioContext du navigateur, généralement débloquée après un geste utilisateur.
 
-1. Décompresser l'archive ZIP.
-2. Copier ses fichiers **à la racine** du dépôt GitHub Pages, dont `index.html`, `manifest.webmanifest` et `sw.js`. Ne pas ajouter un sous-dossier supplémentaire.
-3. Valider les changements sur la branche utilisée par GitHub Pages.
-4. Sur l'iPhone, recharger l'application après publication. Le cache du service worker passe en version `v1.9`.
-
-Les préférences enregistrées par la version v1.8 sont récupérées lorsque l'application est ouverte depuis **le même site et le même espace de stockage du navigateur**. La première ouverture de la v1.9 passe au Circuit par défaut ; tu peux choisir à nouveau Timers dans les paramètres ou en portrait.
-
-## Logique de la routine
-
-**Villageois → Économie → Maisons → Production → Carte → Scout / Armée**. Ce circuit est un parcours d'attention proposé, pas une routine rigide. Une menace ou un combat important doit primer sur la séquence.
-
-Le Circuit est conçu pour développer des automatismes de vérification ; les Timers gardent leur rôle de rappels périodiques indépendants. Le passage d'âge reste un événement initié manuellement, avec échéance estimée et correction possible via I–IV. Les bips sont désactivés par défaut.
-
-## Limites techniques
-
-- Le rythme du jeu, les pauses et les événements de combat ne sont pas détectés automatiquement.
-- Les tests automatisés ont été réalisés dans Chromium, pas directement sur Brave/Firefox iOS.
-- L'API de maintien de l'écran allumé dépend des autorisations et du navigateur.
+## Vérifications / projet
+- Tests dans Chromium automatisé, fenêtre portrait et paysage. Validation directe iPhone, Brave et Firefox à effectuer.
+- Test de migration de la clé `aoe2-field-coach-v19` vers `aoe2-field-coach-v110`.
