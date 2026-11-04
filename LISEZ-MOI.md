@@ -1,24 +1,16 @@
-# AoE2 Field Coach v1.10 — Décisions
+# AoE2 Field Coach v1.11.1 — mise à jour ciblée
 
-## Nouveautés
-- Icône de production : **Lucide `swords`**, même pictogramme dans Circuit et Timers, couleur configurable inchangée.
-- Troisième mode **Décisions**, disponible dans Paramètres > Mode affiché et sur le sélecteur en portrait.
-- Une question ouverte, lisible en paysage, filtrée par âge et catégories, traduite en français, anglais et espagnol.
-- Défilement manuel par défaut ; défilement automatique facultatif 90–240 s, pause indépendante, son indépendant désactivé par défaut.
-- Banque de 32 questions entièrement locale, ordre pseudo-aléatoire déterministe et anti-répétition, conservation de l'état et des préférences.
-- Circuit avant Timers dans le sélecteur, Circuit mode initial pour les nouvelles installations ; anciens choix préservés.
-- Timers, Circuit, transitions I–IV et 32 rappels existants préservés.
+## Modifications
 
-## Utilisation sur GitHub Pages
-Décompresser l'archive ZIP et placer **tous ses fichiers à la racine** du dépôt GitHub Pages : `index.html`, `sw.js`, `manifest.webmanifest`, les icônes et ce document. Commit. Rechargez l'application ; le cache versionné est renouvelé.
+- **Décisions :** nouveaux intervalles : 5, 10, 15, 20, 30, 45, 60, 75, 90, 105, 120, 150, 180, 240 secondes. Valeur par défaut inchangée : 105 secondes. Le défilement automatique reste désactivé par défaut hors profils qui l'activent déjà.
+- **Nom iPhone :** métadonnée Apple et manifeste PWA uniformisés en **AoE2 Field Coach** (sans abréviation).
+- **Compatibilité :** migration de stockage depuis la v1.11 et préservation des profils, y compris les configurations enregistrées et les intervalles choisis.
+- Aucun changement de fonctionnement des modes **Circuit** et **Timers** ; aucune fonction d'export/import ou mode démonstration ajoutée.
 
-## Comportements et limites
-- Aucune lecture de l'écran ou des états d'AoE2. L'âge doit être changé manuellement ou via la transition estimée.
-- Les questions n'exigent aucune saisie. Le bouton de pause de Décisions n'arrête pas les deux autres modes.
-- Défilement automatique et son de Décisions **désactivés** pour les installations nouvelles et migrées.
-- Le défilement automatique ne rattrape pas les questions manquées après mise en arrière-plan ; les limitations iOS restent applicables.
-- La génération du bip requiert l'autorisation d'AudioContext du navigateur, généralement débloquée après un geste utilisateur.
+## Publication GitHub Pages
 
-## Vérifications / projet
-- Tests dans Chromium automatisé, fenêtre portrait et paysage. Validation directe iPhone, Brave et Firefox à effectuer.
-- Test de migration de la clé `aoe2-field-coach-v19` vers `aoe2-field-coach-v110`.
+1. Décompresser l’archive ZIP et transférer tous les fichiers à la **racine** du dépôt.
+2. Valider le commit et recharger la page après publication.
+3. Pour voir le **nouveau nom sur l’icône iPhone**, supprimer l'ancien raccourci de l'écran d'accueil si nécessaire, puis ouvrir le site dans Safari > Partager > Sur l'écran d'accueil > Ajouter. Le changement de nom ne renomme pas toujours un raccourci déjà créé.
+
+Note : 5 secondes est un choix de test, non une cadence recommandée pour une vraie partie. iOS peut suspendre l'app lorsque la page n'est plus visible ; les alertes sonores ne sont pas garanties en arrière-plan.

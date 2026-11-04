@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AoE2 Coach">
+<meta name="apple-mobile-web-app-title" content="AoE2 Field Coach">
 <meta name="description" content="AoE2 Field Coach : rappels visuels autonomes, transitions d'âge et vérifications stratégiques.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>AoE2 Field Coach · v1.10</title>
+<title>AoE2 Field Coach · v1.11.1</title>
 <style>
 :root{color-scheme:dark;--bg:#0b111b;--panel:#172131;--panel2:#222e41;--line:#34435a;--fg:#f4f6fa;--muted:#abb9cb;--gold:#e6bd73;--safe-bottom:env(safe-area-inset-bottom,0px);--safe-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100%}button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #81cbf7;outline-offset:2px}[hidden]{display:none!important}
@@ -140,17 +140,35 @@ body.decisions-view .section-label{display:none}
 @media (orientation:portrait){.decisions{min-height:340px}.decision-question{font-size:clamp(25px,6.7vw,37px)}.decision-settings-categories{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:350px){.decision-settings-categories{grid-template-columns:1fr}}
 
+
+/* v1.11.1 : options de cadence Décisions et nom iOS complet. */
+.profile-session-badge{color:#efcc8f;border:1px solid #76613e;background:#312719;padding:5px 9px;border-radius:9px;font-size:11px;font-weight:750}
+.profile-preview{border:1px solid #46566b;border-radius:11px;background:#0c1724;padding:11px 13px;margin:12px 0;color:#dce7f5;line-height:1.45;font-size:12px;min-height:82px}
+.profile-preview strong{display:block;color:#ffe0a7;font-size:13px;margin-bottom:5px}
+.profile-preview small{display:block;color:#aebccd;margin-top:7px}
+.profile-actions{display:flex;flex-wrap:wrap;gap:8px}.profile-actions .btn{flex:1;min-width:115px}
+body.assist-consolidation .circuit-cell.is-active{box-shadow:0 0 5px -3px var(--step-color)}
+body.assist-consolidation .circuit-cell.is-active .circuit-symbol{filter:none;transform:none}
+body.assist-consolidation .timer-card.pulsing{animation-duration:1.55s}
+body.assist-consolidation .circuit-cell.is-warn{animation-duration:1.25s}
+body.assist-autonomy .circuit-cell.is-active{box-shadow:none;background:#0a0d13;border-color:#566474}
+body.assist-autonomy .circuit-cell.is-active .circuit-symbol{filter:none;transform:none}
+body.assist-autonomy .circuit-cell.is-warn{animation:none}
+body.assist-autonomy .circuit-cell.is-next{box-shadow:none;border-color:#394655}
+body.assist-autonomy .timer-card.pulsing{animation:none;border-color:var(--glow);box-shadow:none}
+body.assist-autonomy .timer-card.pulsing:after,body.assist-autonomy .timer-card.pulsing .dial{animation:none;filter:none}
+@media (orientation:landscape){body.zen .profile-session-badge{display:none}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="header">
-    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.10</span></strong></span></div>
+    <div class="brand"><span class="badge-logo">II</span><span><small>AGE OF EMPIRES II</small><strong>FIELD COACH <span class="version">v1.11.1</span></strong></span></div>
     <div class="header-actions"><button class="icon-btn" type="button" id="hideControls" hidden>Masquer</button><button class="icon-btn" type="button" id="settingsBtn" aria-label="Ouvrir les paramètres" title="Paramètres">⚙</button></div>
   </header>
   <main id="playPage" class="page active">
     <h1>Garde le rythme.</h1><p class="lead">Les couleurs pour les réflexes. Les messages pour les décisions.</p>
-    <div class="session"><span class="session-state" id="runLabel">PRÊT</span><span>SESSION <strong id="sessionTime">00:00</strong></span></div>
+    <div class="session"><span class="session-state" id="runLabel">PRÊT</span><span id="activeProfileBadge" class="profile-session-badge">Équilibré</span><span>SESSION <strong id="sessionTime">00:00</strong></span></div>
     <p class="explain" id="modeHelp" hidden>Les compteurs repartent automatiquement.</p>
     <div class="section-label">Cadrans permanents · <span id="cardCount">0</span>/4</div>
     <div class="cards" id="cards" aria-label="Rappels permanents"></div>
@@ -175,7 +193,7 @@ body.decisions-view .section-label{display:none}
       <span class="transition-state" id="transitionState"></span>
       <button class="next-age" type="button" id="nextAge" aria-label="Lancer le passage à l'âge suivant" title="Démarrer la transition vers l'âge suivant">›</button>
     </div>
-    <div class="toolbar"><button id="playPause" type="button" class="btn gold">Démarrer</button><button id="resetTimers" type="button" class="btn" data-l10n="restartBoth">Relancer les Timers + Circuit</button><button id="cancelTransition" type="button" class="btn danger" hidden>Annuler transition</button></div>
+    <div class="toolbar"><button id="playPause" type="button" class="btn gold">Démarrer</button><button id="stopSession" type="button" class="btn danger" data-l10n="stopSession">Arrêter</button><button id="resetTimers" type="button" class="btn" data-l10n="restartBoth">Relancer les Timers + Circuit</button><button id="cancelTransition" type="button" class="btn danger" hidden>Annuler transition</button></div>
     <div class="quick-actions"><button id="newGame" class="btn ghost" type="button">Nouvelle partie (âge I)</button></div>
     <p class="under-note">Un appui sur › démarre la recherche estimée et fera passer automatiquement au profil d'âge suivant. Les boutons I–IV permettent de corriger l'âge manuellement. Touchez un cadran pour relancer son compteur.</p>
   </main>
@@ -183,13 +201,21 @@ body.decisions-view .section-label{display:none}
     <div class="settings-top"><div><button id="backBtn" class="btn ghost" type="button">← Retour</button><h1>Bibliothèque de rappels</h1><p class="settings-description">Choisis les timers, les messages et les événements pour chaque âge. Tous les réglages sont conservés sur cet appareil.</p></div><button id="saveBack" class="btn gold" type="button">Terminé</button></div>
     <div class="settings-section" data-l10n="langsection">Langue / Language / Idioma</div>
     <div class="setting-card"><div class="setting-line"><label for="languageChoice" data-l10n="language">Langue de l'application</label><select id="languageChoice"><option value="fr">Français</option><option value="en">English</option><option value="es">Español</option></select></div></div>
+    <div class="settings-section" data-l10n="profileSection">Profils d'entraînement</div>
+    <div class="setting-card" id="trainingProfilePanel">
+      <p class="setting-descr" data-l10n="profileHelp">Choisis un objectif avant la partie. Équilibré conserve ta configuration ; les autres profils l'adaptent sans l'effacer.</p>
+      <div class="setting-line"><label for="trainingProfileSelect" data-l10n="profileChoose">Profil</label><select id="trainingProfileSelect"></select></div>
+      <div class="profile-preview" id="trainingProfilePreview" aria-live="polite"></div>
+      <div class="profile-actions"><button class="btn gold" id="applyTrainingProfile" type="button" data-l10n="profileApply">Appliquer ce profil</button><button class="btn" id="saveCustomProfile" type="button" data-l10n="profileSave">Enregistrer mon profil</button><button class="btn danger" id="deleteCustomProfile" type="button" data-l10n="profileDelete" hidden>Supprimer le profil</button></div>
+      <p class="setting-descr" id="trainingProfileNote" data-l10n="profileNote">Les couleurs et préférences de base restent conservées. Un profil personnalisé mémorise ses propres réglages.</p>
+    </div>
     <div class="settings-section" data-l10n="viewSettings">Mode affiché · Circuit ou Timers</div>
     <div class="setting-card"><div class="setting-line"><label for="defaultView" data-l10n="viewChoice">Mode sur l'écran paysage</label><select id="defaultView"><option value="circuit">Circuit</option><option value="timers">Timers</option><option value="decisions" data-l10n="decisionsName">Décisions</option></select></div></div>
     <div class="settings-section" data-l10n="decisionSettingsTitle">Décisions — Questions stratégiques</div>
     <div class="setting-card">
       <p class="setting-descr" data-l10n="decisionSettingsExplain">Une question ouverte, selon l'âge choisi. Aucun état du jeu n'est détecté. Le défilement automatique est désactivé par défaut.</p>
       <div class="setting-line"><label for="decisionAuto" data-l10n="decisionAuto">Défilement automatique des questions</label><input class="toggle" type="checkbox" id="decisionAuto"></div>
-      <div class="setting-line"><label for="decisionInterval" data-l10n="decisionInterval">Intervalle entre les questions</label><select id="decisionInterval"><option value="90">90 s</option><option value="105">105 s</option><option value="120">120 s</option><option value="150">150 s</option><option value="180">180 s</option><option value="240">240 s</option></select></div>
+      <div class="setting-line"><label for="decisionInterval" data-l10n="decisionInterval">Intervalle entre les questions</label><select id="decisionInterval"><option value="5">5 s</option><option value="10">10 s</option><option value="15">15 s</option><option value="20">20 s</option><option value="30">30 s</option><option value="45">45 s</option><option value="60">60 s</option><option value="75">75 s</option><option value="90">90 s</option><option value="105">105 s</option><option value="120">120 s</option><option value="150">150 s</option><option value="180">180 s</option><option value="240">240 s</option></select></div>
       <div class="setting-line"><label for="decisionSound" data-l10n="decisionSound">Son à chaque nouvelle question</label><input class="toggle" type="checkbox" id="decisionSound"></div>
       <div class="setting-title" data-l10n="decisionCategoriesTitle">Catégories proposées</div>
       <div id="decisionCategories" class="decision-settings-categories"></div>
@@ -201,6 +227,7 @@ body.decisions-view .section-label{display:none}
       <div class="setting-line"><label for="circuitLayout" data-l10n="layoutLabel">Présentation en paysage</label><select id="circuitLayout"><option value="focus">Six carrés + texte unique</option><option value="six">Six rectangles nommés</option></select></div>
       <div class="setting-line"><label for="circuitTempoMode" data-l10n="tempoMode">Durée des étapes</label><select id="circuitTempoMode"><option value="global" data-l10n="tempoGlobal">Une durée pour toutes</option><option value="individual" data-l10n="tempoIndividual">Durées individuelles par âge</option></select></div>
       <div class="setting-line" id="circuitGlobalTimeRow"><label for="circuitStepSec" data-l10n="stepDuration">Durée d'une étape guidée</label><select id="circuitStepSec"><option value="3">3 s (tour 18 s)</option><option value="4">4 s (tour 24 s)</option><option value="5">5 s (tour 30 s)</option><option value="6">6 s (tour 36 s)</option><option value="7">7 s (tour 42 s)</option><option value="8">8 s (tour 48 s)</option></select></div>
+      <div class="setting-line"><label for="circuitSoundStyle" data-l10n="circuitSoundStyle">Bips du Circuit</label><select id="circuitSoundStyle"><option value="step" data-l10n="soundEach">À chaque étape</option><option value="cycle" data-l10n="soundCycle">Au début du tour</option></select></div>
       <div class="setting-line"><label for="circuitFreeSec" data-l10n="freeInterval">Signal en mode libre</label><select id="circuitFreeSec"><option value="15">15 s</option><option value="20">20 s</option><option value="25">25 s</option><option value="30">30 s</option><option value="40">40 s</option><option value="45">45 s</option><option value="60">60 s</option></select></div>
       <p class="setting-descr" data-l10n="circuitDescr">Le circuit entraîne le regard ; il n'active aucune commande dans AoE2. Le dernier quart d'étape annonce la suivante. Les quatre boutons d'âge restent accessibles.</p>
     </div>
@@ -226,6 +253,8 @@ body.decisions-view .section-label{display:none}
         <p class="setting-descr">À 1,7×, les passages standards durent environ 76, 94 et 112 s réelles. Le profil peut basculer un peu avant la fin estimée.</p>
       </div>
       <div class="setting-card">
+        <div class="setting-line"><label for="pauseOnHidden" data-l10n="pauseHidden">Pause automatique hors écran</label><input class="toggle" id="pauseOnHidden" type="checkbox"></div>
+        <div class="setting-line"><label for="trainingIntensity" data-l10n="intensityLabel">Intensité de l’assistance visuelle</label><select id="trainingIntensity"><option value="learning" data-l10n="intensityLearning">Apprentissage</option><option value="consolidation" data-l10n="intensityConsolidation">Consolidation</option><option value="autonomy" data-l10n="intensityAutonomy">Autonomie</option></select></div>
         <div class="setting-line"><label for="wakeToggle">Maintenir l'écran allumé</label><input class="toggle" id="wakeToggle" type="checkbox"></div>
         <div class="setting-line"><label for="pulseToggle">Clignotement et glow</label><input class="toggle" id="pulseToggle" type="checkbox"></div>
         <div class="setting-line"><label for="soundToggle">Bip discret (facultatif)</label><input class="toggle" id="soundToggle" type="checkbox"></div>
@@ -249,11 +278,25 @@ body.decisions-view .section-label{display:none}
     <div class="settings-end"><button id="defaultsBtn" class="btn danger" type="button">Réglages par défaut</button><button id="doneBtn" class="btn gold" type="button">Terminé</button></div>
   </section>
   <div id="notice" class="notification" role="status" aria-live="polite" hidden><div class="notification-content"><span class="notification-icon" aria-hidden="true">◆</span><span id="noticeText" class="notification-text"></span></div><div class="notification-progress"><span id="noticeProgress"></span></div></div>
-  <footer class="footer">AOE2 FIELD COACH · v1.10 · Aucune connexion ni action sur le jeu</footer>
+  <footer class="footer">AOE2 FIELD COACH · v1.11.1 · Aucune connexion ni action sur le jeu</footer>
 </div>
 <script>
 (()=>{'use strict';
-const KEY='aoe2-field-coach-v110', PREV_KEY='aoe2-field-coach-v19', LEGACY_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
+const KEY='aoe2-field-coach-v1111', PREV_KEY='aoe2-field-coach-v111', LEGACY_KEY='aoe2-field-coach-v13', AGES=['I','II','III','IV'];
+const PROFILE_TEXT={
+ fr:{balanced:'Équilibré',macro:'Macro',scouting:'Scouting',decisions:'Décisions',custom:'Personnalisé',
+  descBalanced:'Ta configuration actuelle, sans changement.',descMacro:'Privilégie les villageois, l’économie et les bâtiments.',descScouting:'Commence par la carte et la reconnaissance, sans oublier la macro.',descDecisions:'Questions stratégiques sur l’observation, la mission et le financement.',descCustom:'Réglages enregistrés pour ce profil personnalisé.',
+  mode:'Vue principale',circuit:'Parcours',question:'Questions',sound:'Signal',profilePrompt:'Nom du nouveau profil',profileConfirm:'Changer de profil pendant une session ? La session sera mise en pause et les échéances réinitialisées.',profileDeleteConfirm:'Supprimer ce profil personnalisé ?',profileStopConfirm:'Arrêter la partie et remettre les compteurs à zéro ?',profileNameError:'Nom invalide ou déjà utilisé.',profileSaved:'Profil personnalisé enregistré.',profileApplied:'Profil appliqué. Appuie sur Démarrer pour commencer.',active:'Actif',soundOff:'désactivé',soundOn:'activé',questionManual:'manuel'},
+ en:{balanced:'Balanced',macro:'Macro',scouting:'Scouting',decisions:'Decisions',custom:'Custom',
+  descBalanced:'Your current configuration, unchanged.',descMacro:'Emphasizes villagers, economy and production buildings.',descScouting:'Starts with map and scouting, while keeping basic macro checks.',descDecisions:'Strategic questions about observing, mission and funding.',descCustom:'Saved settings for this custom profile.',
+  mode:'Main view',circuit:'Circuit',question:'Questions',sound:'Sound',profilePrompt:'New profile name',profileConfirm:'Change profiles during a session? The session will pause and reminders will reset.',profileDeleteConfirm:'Delete this custom profile?',profileStopConfirm:'Stop this match and reset all counters?',profileNameError:'Invalid or duplicate profile name.',profileSaved:'Custom profile saved.',profileApplied:'Profile applied. Press Start when ready.',active:'Active',soundOff:'off',soundOn:'on',questionManual:'manual'},
+ es:{balanced:'Equilibrado',macro:'Macro',scouting:'Exploración',decisions:'Decisiones',custom:'Personalizado',
+  descBalanced:'Tu configuración actual, sin cambios.',descMacro:'Prioriza aldeanos, economía y edificios militares.',descScouting:'Empieza por mapa y exploración, sin olvidar la macro.',descDecisions:'Preguntas estratégicas sobre observar, misión y financiación.',descCustom:'Ajustes guardados para este perfil personalizado.',
+  mode:'Vista principal',circuit:'Circuito',question:'Preguntas',sound:'Sonido',profilePrompt:'Nombre del nuevo perfil',profileConfirm:'¿Cambiar el perfil durante una partida? Se pausará y se reiniciarán los avisos.',profileDeleteConfirm:'¿Eliminar este perfil personalizado?',profileStopConfirm:'¿Detener la partida y reiniciar todos los contadores?',profileNameError:'Nombre inválido o duplicado.',profileSaved:'Perfil personalizado guardado.',profileApplied:'Perfil aplicado. Pulsa Iniciar para comenzar.',active:'Activo',soundOff:'apagado',soundOn:'encendido',questionManual:'manual'}
+};
+const PROFILE_IDS=['balanced','macro','scouting','decisions'];
+const profileText=key=>(PROFILE_TEXT[state?.language||'fr']||PROFILE_TEXT.fr)[key]||key;
+
 const AGE_NAME={I:'Sombre',II:'Féodal',III:'Castle',IV:'Impérial'};
 const AGE_SECONDS={II:130,III:160,IV:190};
 const MODE_HELP={auto:'Auto : les cadrans se réinitialisent à chaque échéance.',manual:'Manuel : chaque cadran reste allumé jusqu’à ce que tu le touches.',hybrid:'Hybride : comme Manuel, avec glow et pulsation.'};
@@ -371,9 +414,10 @@ dq('impResources','anticipate',['IV'],'Quelles ressources extérieures dois-je s
 dq('impRebuild','finance',['IV'],'Ma production suit-elle mes pertes militaires ?','Can my production replace military losses?','¿Mi producción repone mis bajas militares?');
 dq('impConsolidate','consolidate',['IV'],'Dois-je attaquer maintenant ou consolider mon avantage ?','Should I attack now or consolidate my advantage?','¿Debo atacar ahora o consolidar mi ventaja?');
 const QUESTION_BY_ID=Object.fromEntries(DECISION_QUESTIONS.map(q=>[q.id,q]));
+const DECISION_INTERVALS=Object.freeze([5, 10, 15, 20, 30, 45, 60, 75, 90, 105, 120, 150, 180, 240]);
 function defaultDecisions(){return {auto:false,intervalSec:105,paused:false,sound:false,categories:Object.keys(DECISION_CATS),currentId:null,currentAge:'I',nextAt:null,decks:Object.fromEntries(AGES.map(a=>[a,{order:[],index:0,round:0,lastId:null}]))};}
 function sanitizeDecisions(raw){const d=defaultDecisions();if(!raw||typeof raw!=='object')return d;
- d.auto=raw.auto===true;d.intervalSec=[90,105,120,150,180,240].includes(Number(raw.intervalSec))?Number(raw.intervalSec):105;
+ d.auto=raw.auto===true;d.intervalSec=DECISION_INTERVALS.includes(Number(raw.intervalSec))?Number(raw.intervalSec):105;
  d.paused=raw.paused===true;d.sound=raw.sound===true;
  if(Array.isArray(raw.categories))d.categories=[...new Set(raw.categories.filter(x=>Object.hasOwn(DECISION_CATS,x)))];
  d.currentId=QUESTION_BY_ID[raw.currentId]?raw.currentId:null;d.currentAge=AGES.includes(raw.currentAge)?raw.currentAge:'I';
@@ -629,7 +673,7 @@ const STATIC_LOCALE={
  'Pour chaque rappel périodique : choisir « Cadran » ou « Message », puis les âges d\'activation. Les événements d\'arrivée et de transition ne prennent jamais de place parmi les quatre cadrans. Cliquer sur une catégorie pour ouvrir sa liste.':['For each periodic reminder, choose “Dial” or “Message” and its active ages. Age arrival and transition events never occupy a dial. Tap a category to expand it.','Para cada recordatorio periódico, elige «Esfera» o «Mensaje» y sus edades activas. Los eventos de llegada y transición nunca ocupan una esfera. Toca una categoría para abrirla.'],
  "L'outil ne connaît pas les événements du jeu. Les rappels de bâtiments sont des questions (« En ai-je besoin ? »), pas des ordres de construction. Les changements d'âge et les pauses restent des estimations si tu ne corriges pas manuellement.":['The app cannot detect game events. Building reminders are questions (“Do I need this?”), not build orders. Age changes and pauses remain estimates unless you adjust them manually.','La app no detecta eventos del juego. Los recordatorios de edificios son preguntas («¿Lo necesito?»), no órdenes. Las edades y pausas siguen siendo estimaciones salvo corrección manual.'],
  'Réglages par défaut':['Reset settings','Restablecer ajustes'],
- 'AOE2 FIELD COACH · v1.10 · Aucune connexion ni action sur le jeu':['AOE2 FIELD COACH · v1.10 · No connection to or control of the game','AOE2 FIELD COACH · v1.10 · Sin conexión ni control del juego'],
+ 'AOE2 FIELD COACH · v1.11.1 · Aucune connexion ni action sur le jeu':['AOE2 FIELD COACH · v1.11.1 · No connection to or control of the game','AOE2 FIELD COACH · v1.11.1 · Sin conexión ni control del juego'],
  'Timers':['Timers','Temporizadores'],'Circuit':['Circuit','Circuito'],
  'Langue / Language / Idioma':['Language / Langue / Idioma','Idioma / Language / Langue'],
  "Langue de l'application":['App language','Idioma de la aplicación'],
@@ -647,21 +691,118 @@ const STATIC_LOCALE={
  'Six rectangles nommés':['Six labeled cards','Seis rectángulos con nombre'],
 };
 let originalTextNodes=[];
+const PROFILE_UI={
+ profileSection:['Profils d’entraînement','Training profiles','Perfiles de entrenamiento'],
+ profileHelp:['Choisis un objectif avant la partie. Les profils ne modifient pas ta configuration de base.','Choose a goal before a match. Presets do not overwrite your base configuration.','Elige un objetivo antes de jugar. Los perfiles no sobrescriben tu configuración base.'],
+ profileChoose:['Profil d’entraînement','Training profile','Perfil de entrenamiento'],
+ profileApply:['Appliquer ce profil','Apply this profile','Aplicar este perfil'],
+ profileSave:['Enregistrer mon profil','Save a custom profile','Guardar perfil personalizado'],
+ profileDelete:['Supprimer ce profil','Delete this profile','Eliminar este perfil'],
+ profileNote:['Équilibré garde tes réglages de base. Les profils personnalisés ont leurs propres préférences.','Balanced keeps your base settings. Custom profiles keep their own preferences.','Equilibrado conserva tus ajustes base. Los perfiles personalizados tienen ajustes propios.'],
+ pauseHidden:['Pause automatique hors écran','Auto pause when leaving the app','Pausa automática al salir de la app'],
+ intensityLabel:['Intensité du glow','Glow intensity','Intensidad del brillo'],
+ intensityLearning:['Apprentissage','Learning','Aprendizaje'],
+ intensityConsolidation:['Consolidation','Consolidation','Consolidación'],
+ intensityAutonomy:['Autonomie','Independence','Autonomía'],
+ circuitSoundStyle:['Bips du Circuit','Circuit beeps','Pitidos del circuito'],
+ soundEach:['À chaque étape','At each step','En cada paso'],
+ soundCycle:['Au début du tour','At cycle start','Al inicio del ciclo'],
+ stopSession:['Arrêter','Stop','Detener']
+};
+function applyProfileStrings(){for(const [key,translations] of Object.entries(PROFILE_UI)){document.querySelectorAll(`[data-l10n="${key}"]`).forEach(el=>el.textContent=translations[LOCALE_INDEX[state?.language||'fr']??0]);}}
 function applyLanguage(){
  document.documentElement.lang=state.language;
  const idx=state.language==='en'?0:state.language==='es'?1:-1;
  if(!originalTextNodes.length){const iter=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while((node=iter.nextNode())){if(node.parentNode?.nodeName==='SCRIPT'||node.parentNode?.nodeName==='STYLE')continue;const original=node.nodeValue;if(STATIC_LOCALE[original.trim()])originalTextNodes.push({node,original});}}
  for(const {node,original} of originalTextNodes){const pair=STATIC_LOCALE[original.trim()];if(!node.isConnected)continue;const val=idx<0?original:pair[idx];node.nodeValue=original.replace(original.trim(),val);}
  document.querySelectorAll('[data-l10n]').forEach(el=>el.textContent=tr(el.dataset.l10n));
+ applyProfileStrings();
 }
 
 function defaultTask(d){return {enabled:d.on,view:d.view,ages:[...d.ages],seconds:d.seconds,base:d.base,color:d.color,glow:d.glow,priority:d.priority,delay:d.delay??0,lead:d.lead??0,dueAt:null,remainingMs:null,lastAlertAt:0,notified:false};}
-function defaults(){return {v:110,decisions:defaultDecisions(),language:'fr',coachView:'circuit',circuit:{variant:'guided',layout:'focus',stepSec:6,freeSec:25,colors:Object.fromEntries(CIRCUIT_STEPS.map(s=>[s.id,s.color])),elapsedMs:0,startedAt:null,tempoMode:'global',profiles:defaultCircuitProfiles()},dialOrder:Object.fromEntries(AGES.map(a=>[a,['tc','scout','eco','army']])),mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
+function defaults(){return {v:1111,profileState:{active:"balanced",base:null,custom:[]},pauseOnHidden:true,trainingIntensity:"learning",circuitSoundStyle:"step",savedAt:null,decisions:defaultDecisions(),language:'fr',coachView:'circuit',circuit:{variant:'guided',layout:'focus',stepSec:6,freeSec:25,colors:Object.fromEntries(CIRCUIT_STEPS.map(s=>[s.id,s.color])),elapsedMs:0,startedAt:null,tempoMode:'global',profiles:defaultCircuitProfiles()},dialOrder:Object.fromEntries(AGES.map(a=>[a,['tc','scout','eco','army']])),mode:'auto',age:'I',running:false,sessionElapsed:0,sessionResumedAt:null,wake:true,pulse:true,sound:false,gameSpeed:1.7,earlySec:5,gapSec:45,showSec:5,merge:true,tasks:Object.fromEntries(LIB.map(d=>[d.id,defaultTask(d)])),transition:null,events:[]};}
 function sanitizeTask(d, raw){const t=defaultTask(d);if(!raw||typeof raw!=='object')return t;
  t.enabled=raw.enabled===true;t.view=raw.view==='timer'?'timer':'message';t.ages=Array.isArray(raw.ages)?AGES.filter(a=>raw.ages.includes(a)):[...d.ages];t.seconds=clamp(raw.seconds,10,3600,d.seconds);t.base=raw.base==='game'?'game':'real';t.color=color(raw.color,d.color);t.glow=color(raw.glow,d.glow);t.priority=clamp(raw.priority,1,3,d.priority);t.delay=clamp(raw.delay,0,600,d.delay??0);t.lead=clamp(raw.lead,0,120,d.lead??0);
  t.dueAt=Number.isFinite(raw.dueAt)?raw.dueAt:null;t.remainingMs=Number.isFinite(raw.remainingMs)?clamp(raw.remainingMs,-3600000,7200000,0):null;t.lastAlertAt=clamp(raw.lastAlertAt,0,2e13,0);t.notified=raw.notified===true;
  return t;}
-function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode='auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;s.language=['fr','en','es'].includes(raw.language)?raw.language:'fr';s.coachView=['timers','circuit','decisions'].includes(raw.coachView)?raw.coachView:'circuit';const rc=raw.circuit||{};s.circuit.variant=rc.variant==='free'?'free':'guided';s.circuit.layout=rc.layout==='six'?'six':'focus';s.circuit.stepSec=clamp(rc.stepSec,3,10,6);s.circuit.freeSec=clamp(rc.freeSec,12,120,25);s.circuit.elapsedMs=clamp(rc.elapsedMs,0,1e11,0);s.circuit.startedAt=Number.isFinite(rc.startedAt)?rc.startedAt:null;
+const cloneJson=x=>JSON.parse(JSON.stringify(x));
+function captureTrainingConfig(s){return {
+ coachView:s.coachView,
+ circuit:{variant:s.circuit.variant,layout:s.circuit.layout,stepSec:s.circuit.stepSec,freeSec:s.circuit.freeSec,tempoMode:s.circuit.tempoMode,colors:cloneJson(s.circuit.colors),profiles:cloneJson(s.circuit.profiles)},
+ dialOrder:cloneJson(s.dialOrder),
+ tasks:Object.fromEntries(LIB.map(d=>{const t=s.tasks[d.id];return [d.id,{enabled:t.enabled,view:t.view,ages:[...t.ages],seconds:t.seconds,base:t.base,color:t.color,glow:t.glow,priority:t.priority,delay:t.delay,lead:t.lead}]})),
+ decisions:{auto:s.decisions.auto,intervalSec:s.decisions.intervalSec,sound:s.decisions.sound,categories:[...s.decisions.categories]},
+ sound:s.sound,pulse:s.pulse,trainingIntensity:s.trainingIntensity,circuitSoundStyle:s.circuitSoundStyle
+};}
+function normalizeTrainingConfig(raw,base){const cfg=cloneJson(base);if(!raw||typeof raw!=="object")return cfg;
+ cfg.coachView=['circuit','timers','decisions'].includes(raw.coachView)?raw.coachView:base.coachView;
+ const c=raw.circuit||{};cfg.circuit.variant=c.variant==='free'?'free':'guided';cfg.circuit.layout=c.layout==='six'?'six':'focus';cfg.circuit.stepSec=clamp(c.stepSec,3,8,base.circuit.stepSec);cfg.circuit.freeSec=clamp(c.freeSec,15,60,base.circuit.freeSec);cfg.circuit.tempoMode=c.tempoMode==='individual'?'individual':'global';
+ for(const st of CIRCUIT_STEPS)cfg.circuit.colors[st.id]=color(c.colors?.[st.id],base.circuit.colors[st.id]);
+ for(const age of AGES){const profile=c.profiles?.[age];if(!profile)continue;const ids=CIRCUIT_IDS;const givenOrder=Array.isArray(profile.order)?profile.order.filter(id=>ids.includes(id)):[];
+ cfg.circuit.profiles[age].order=[...new Set([...givenOrder,...ids])];
+ cfg.circuit.profiles[age].enabled=Array.isArray(profile.enabled)?[...new Set(profile.enabled.filter(id=>ids.includes(id)))]:base.circuit.profiles[age].enabled;
+ for(const id of ids)cfg.circuit.profiles[age].seconds[id]=clamp(profile.seconds?.[id],2,30,base.circuit.profiles[age].seconds[id]);
+ }
+ for(const age of AGES){const arr=raw.dialOrder?.[age];if(Array.isArray(arr))cfg.dialOrder[age]=[...new Set(arr.filter(id=>BY_ID[id]?.kind==='periodic'))].slice(0,4);}
+ for(const d of LIB)if(raw.tasks?.[d.id]){const t=sanitizeTask(d,raw.tasks[d.id]);for(const field of Object.keys(cfg.tasks[d.id]))cfg.tasks[d.id][field]=cloneJson(t[field]);}
+ const dc=raw.decisions||{};cfg.decisions.auto=dc.auto===true;cfg.decisions.intervalSec=DECISION_INTERVALS.includes(Number(dc.intervalSec))?Number(dc.intervalSec):base.decisions.intervalSec;cfg.decisions.sound=dc.sound===true;
+ if(Array.isArray(dc.categories))cfg.decisions.categories=[...new Set(dc.categories.filter(x=>Object.hasOwn(DECISION_CATS,x)))];
+ cfg.sound=raw.sound===true;cfg.pulse=raw.pulse!==false;cfg.trainingIntensity=['learning','consolidation','autonomy'].includes(raw.trainingIntensity)?raw.trainingIntensity:'learning';cfg.circuitSoundStyle=raw.circuitSoundStyle==='cycle'?'cycle':'step';return cfg;
+}
+function initProfileState(s,raw){const base=captureTrainingConfig(s);const incoming=raw?.profileState;
+ if(!incoming||typeof incoming!=='object'){s.profileState={active:'balanced',base,custom:[]};return;}
+ const allowed=new Set(PROFILE_IDS);const custom=[];
+ if(Array.isArray(incoming.custom))for(const c of incoming.custom.slice(0,12)){if(typeof c.id!=='string'||!/^custom-[a-z0-9-]{1,40}$/.test(c.id)||typeof c.name!=='string'||!c.name.trim()||custom.some(p=>p.id===c.id))continue;custom.push({id:c.id,name:c.name.trim().slice(0,40),config:normalizeTrainingConfig(c.config,base)});allowed.add(c.id);}
+ s.profileState={active:allowed.has(incoming.active)?incoming.active:'balanced',base:normalizeTrainingConfig(incoming.base,base),custom};
+}
+function applyProfileConfiguration(cfg){const safe=normalizeTrainingConfig(cfg,captureTrainingConfig(state));
+ state.coachView=safe.coachView;Object.assign(state.circuit,{variant:safe.circuit.variant,layout:safe.circuit.layout,stepSec:safe.circuit.stepSec,freeSec:safe.circuit.freeSec,tempoMode:safe.circuit.tempoMode,colors:cloneJson(safe.circuit.colors),profiles:cloneJson(safe.circuit.profiles)});
+ state.dialOrder=cloneJson(safe.dialOrder);for(const d of LIB){const prev=state.tasks[d.id];state.tasks[d.id]={...prev,...cloneJson(safe.tasks[d.id])};}
+ Object.assign(state.decisions,cloneJson(safe.decisions));state.sound=safe.sound;state.pulse=safe.pulse;state.trainingIntensity=safe.trainingIntensity;state.circuitSoundStyle=safe.circuitSoundStyle;
+}
+function makePresetConfig(id){const b=cloneJson(state.profileState.base);if(id==='balanced')return b;
+ if(id==='macro'){b.coachView='circuit';for(const age of AGES){const p=b.circuit.profiles[age];p.order=['villagers','economy','houses','production','map','scoutArmy'];p.enabled=age==='I'?['villagers','economy','houses','map','scoutArmy']:[...p.order];}
+ b.circuit.tempoMode='individual';for(const age of AGES){Object.assign(b.circuit.profiles[age].seconds,{villagers:4,economy:5,houses:3,production:5,map:4,scoutArmy:4});}
+ if(b.tasks.tc){b.tasks.tc.enabled=true;b.tasks.tc.priority=3;b.tasks.tc.seconds=25;}if(b.tasks.eco){b.tasks.eco.enabled=true;b.tasks.eco.priority=3;b.tasks.eco.seconds=60;}
+ b.decisions.categories=['finance','mission'];b.decisions.auto=false;
+ }else if(id==='scouting'){b.coachView='circuit';for(const age of AGES){const p=b.circuit.profiles[age];p.order=['map','scoutArmy','villagers','economy','houses','production'];p.enabled=age==='I'?['map','scoutArmy','villagers','economy','houses']:[...p.order];}
+ b.circuit.tempoMode='individual';for(const age of AGES){Object.assign(b.circuit.profiles[age].seconds,{map:6,scoutArmy:7,villagers:4,economy:4,houses:3,production:3});}
+ b.decisions.categories=['observe','anticipate','security'];b.decisions.auto=false;
+ if(b.tasks.scout){b.tasks.scout.enabled=true;b.tasks.scout.view='timer';b.tasks.scout.seconds=40;}
+ }else if(id==='decisions'){b.coachView='decisions';b.decisions.auto=true;b.decisions.intervalSec=120;b.decisions.sound=false;b.decisions.categories=['observe','anticipate','mission','composition','finance','consolidate'];
+ b.sound=false;
+ }return b;}
+function profileName(id){if(PROFILE_IDS.includes(id))return profileText(id);return state.profileState.custom.find(p=>p.id===id)?.name||profileText('custom');}
+function profileConfig(id){return PROFILE_IDS.includes(id)?makePresetConfig(id):cloneJson(state.profileState.custom.find(p=>p.id===id)?.config||state.profileState.base);}
+function resetProfileRuntime(){const n=now();state.events=[];state.transition=null;queue=[];notice=null;lastNoticeAt=-1e15;lastCircuitCue='';lastCardSignature='';
+ for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.lastAlertAt=0;t.notified=false;}
+ state.circuit.elapsedMs=0;state.circuit.startedAt=null;state.decisions.nextAt=null;
+ state.decisions.decks=defaultDecisions().decks;state.decisions.currentId=null;state.decisions.currentAge=state.age;state.decisions.paused=false;
+ state.sessionElapsed=0;state.sessionResumedAt=null;state.running=false;}
+function chooseProfile(id){if(!PROFILE_IDS.includes(id)&&!state.profileState.custom.some(p=>p.id===id))return false;
+ if(id===state.profileState.active)return true;
+ if((state.running||state.sessionElapsed>1000)&&!confirm(profileText('profileConfirm')))return false;
+ if(state.running)stopClock();
+ if(state.profileState.active==='balanced')state.profileState.base=captureTrainingConfig(state);
+ else{const old=state.profileState.custom.find(p=>p.id===state.profileState.active);if(old)old.config=captureTrainingConfig(state);}
+ const cfg=profileConfig(id);applyProfileConfiguration(cfg);state.profileState.active=id;resetProfileRuntime();
+ ensureDecisionQuestion();drawCards(true);applyLanguage();drawSettings();syncInputs();draw();save();return true;
+}
+function persistProfileConfig(){const ps=state.profileState;if(!ps)return;if(ps.active==='balanced')ps.base=captureTrainingConfig(state);else {const c=ps.custom.find(p=>p.id===ps.active);if(c)c.config=captureTrainingConfig(state);}}
+function renderProfilePicker(){if(!$('trainingProfileSelect'))return;const sel=$('trainingProfileSelect'),old=sel.value,items=[...PROFILE_IDS.map(id=>({id,name:profileText(id)})),...state.profileState.custom];
+ sel.innerHTML=items.map(x=>`<option value="${escapeHTML(x.id)}">${escapeHTML(x.name)}${state.profileState.active===x.id?' ✓':''}</option>`).join('');sel.value=items.some(x=>x.id===old)?old:state.profileState.active;drawProfilePreview();}
+function drawProfilePreview(){const id=$('trainingProfileSelect').value;if(!id)return;const cfg=profileConfig(id),desc=PROFILE_IDS.includes(id)?profileText('desc'+id[0].toUpperCase()+id.slice(1)):profileText('descCustom');
+ const count=cfg.circuit.profiles[state.age].enabled.length,mode=cfg.coachView==='decisions'?profileText('decisions'):cfg.coachView==='circuit'?'Circuit':'Timers';
+ const ordered=cfg.circuit.profiles[state.age].order.filter(x=>cfg.circuit.profiles[state.age].enabled.includes(x)).map(x=>CIRCUIT_STEPS.find(s=>s.id===x)?.[state.language]?.[0]||x);
+ $('trainingProfilePreview').innerHTML=`<strong>${escapeHTML(profileName(id))}${id===state.profileState.active?' · '+escapeHTML(profileText('active')):''}</strong>${escapeHTML(desc)}<small>${escapeHTML(profileText('mode'))}: ${escapeHTML(mode)} · ${escapeHTML(profileText('circuit'))}: ${count}/6 · ${escapeHTML(profileText('question'))}: ${cfg.decisions.auto?'auto':escapeHTML(profileText('questionManual'))} · ${escapeHTML(profileText('sound'))}: ${escapeHTML(cfg.sound?profileText('soundOn'):profileText('soundOff'))}</small><small>${state.age} · ${escapeHTML(ordered.join(' → '))}</small>`;
+ $('deleteCustomProfile').hidden=!id.startsWith('custom-');$('applyTrainingProfile').disabled=id===state.profileState.active;
+}
+function saveCurrentCustomProfile(){const name=prompt(profileText('profilePrompt'));if(name===null)return;const clean=name.trim();if(clean.length<1||clean.length>40||state.profileState.custom.some(p=>p.name.toLocaleLowerCase()===clean.toLocaleLowerCase())||state.profileState.custom.length>=12){alert(profileText('profileNameError'));return;}
+ const id='custom-'+Math.random().toString(36).slice(2,10);const cfg=captureTrainingConfig(state);state.profileState.custom.push({id,name:clean,config:cfg});state.profileState.active=id;save();renderProfilePicker();$('trainingProfileSelect').value=id;drawProfilePreview();}
+function deleteCustomProfile(){const id=$('trainingProfileSelect').value;if(!id.startsWith('custom-')||!confirm(profileText('profileDeleteConfirm')))return;
+ if(state.profileState.active===id){if(state.running)stopClock();const base=cloneJson(state.profileState.base);applyProfileConfiguration(base);state.profileState.active='balanced';resetProfileRuntime();ensureDecisionQuestion();drawCards(true);}
+ state.profileState.custom=state.profileState.custom.filter(p=>p.id!==id);save();renderProfilePicker();drawSettings();draw();}
+function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s;s.age=AGES.includes(raw.age)?raw.age:'I';s.mode='auto';s.running=raw.running===true;s.sessionElapsed=clamp(raw.sessionElapsed,0,1e11,0);s.sessionResumedAt=Number.isFinite(raw.sessionResumedAt)?raw.sessionResumedAt:now();s.wake=raw.wake!==false;s.pulse=raw.pulse!==false;s.sound=raw.sound===true;s.pauseOnHidden=raw.pauseOnHidden!==false;s.trainingIntensity=['learning','consolidation','autonomy'].includes(raw.trainingIntensity)?raw.trainingIntensity:'learning';s.circuitSoundStyle=raw.circuitSoundStyle==='cycle'?'cycle':'step';s.savedAt=Number.isFinite(raw.savedAt)?raw.savedAt:null;s.gameSpeed=clamp(raw.gameSpeed,.25,4,1.7);s.earlySec=clamp(raw.earlySec,0,15,5);s.gapSec=clamp(raw.gapSec,20,120,45);s.showSec=clamp(raw.showSec,3,10,5);s.merge=raw.merge!==false;s.language=['fr','en','es'].includes(raw.language)?raw.language:'fr';s.coachView=['timers','circuit','decisions'].includes(raw.coachView)?raw.coachView:'circuit';const rc=raw.circuit||{};s.circuit.variant=rc.variant==='free'?'free':'guided';s.circuit.layout=rc.layout==='six'?'six':'focus';s.circuit.stepSec=clamp(rc.stepSec,3,10,6);s.circuit.freeSec=clamp(rc.freeSec,12,120,25);s.circuit.elapsedMs=clamp(rc.elapsedMs,0,1e11,0);s.circuit.startedAt=Number.isFinite(rc.startedAt)?rc.startedAt:null;
  s.circuit.tempoMode=rc.tempoMode==='individual'?'individual':'global';
  for(const age of AGES){const p=rc.profiles?.[age];if(!p||typeof p!=='object')continue;
   const valid=x=>CIRCUIT_IDS.includes(x);
@@ -676,7 +817,7 @@ function restore(raw){const s=defaults();if(!raw||typeof raw!=='object')return s
  const r=raw.transition;s.transition={from:r.from,target:r.target,dueAt:Number.isFinite(r.dueAt)?r.dueAt:null,remainingMs:clamp(r.remainingMs,0,2e7,0)};
  }
  if(Array.isArray(raw.events)){s.events=raw.events.filter(e=>BY_ID[e.id]&&Number.isFinite(e.dueAt)||BY_ID[e.id]&&Number.isFinite(e.remainingMs)).slice(0,30).map(e=>({id:e.id,dueAt:Number.isFinite(e.dueAt)?e.dueAt:null,remainingMs:Number.isFinite(e.remainingMs)?clamp(e.remainingMs,-3e5,1e7,0):null,age:e.age}));}
- s.decisions=sanitizeDecisions(raw.decisions);if(s.running&&s.sessionResumedAt>now())s.sessionResumedAt=now();return s;}
+ s.decisions=sanitizeDecisions(raw.decisions);if(s.running&&s.sessionResumedAt>now())s.sessionResumedAt=now();initProfileState(s,raw);return s;}
 function migrateV13(){const s=defaults();try{const old=JSON.parse(localStorage.getItem(LEGACY_KEY));if(!old||typeof old!=='object')return s;
  s.age=AGES.includes(old.age)?old.age:'I';s.mode='auto';s.wake=old.wake!==false;s.pulse=old.pulse!==false;s.sound=old.sound===true;s.gameSpeed=clamp(old.gameSpeed,.25,4,1.7);
  const map={tc:'tc',scout:'scout',eco:'eco',army:'army',mission:'mission',wall:'exposed',relic:'relicMap'};
@@ -685,11 +826,21 @@ function migrateV13(){const s=defaults();try{const old=JSON.parse(localStorage.g
  if(old.eventOpts){if(typeof old.eventOpts.wallsII==='boolean')s.tasks.wallsII.enabled=old.eventOpts.wallsII;if(typeof old.eventOpts.tc2III==='boolean')s.tasks.tc2III.enabled=old.eventOpts.tc2III;if(typeof old.eventOpts.relicIII==='boolean'&&old.eventOpts.relicIII===true)s.tasks.relicMap.enabled=true;if(typeof old.eventOpts.siegeIV==='boolean')s.tasks.siegeIV.enabled=old.eventOpts.siegeIV;}
  return s;}catch(_){return s;}}
 function legacyDialOrder(s){const layout={};for(const age of AGES){layout[age]=LIB.filter(d=>d.kind==='periodic'&&s.tasks[d.id].enabled&&s.tasks[d.id].view==='timer'&&s.tasks[d.id].ages.includes(age)).sort((a,b)=>s.tasks[b.id].priority-s.tasks[a.id].priority||LIB.indexOf(a)-LIB.indexOf(b)).slice(0,4).sort((a,b)=>LIB.indexOf(a)-LIB.indexOf(b)).map(d=>d.id);}return layout;}
-function migrate(){try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=110;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v18'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=110;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v14'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=110;s.dialOrder=legacyDialOrder(s);return s;}}catch(_){}const s=migrateV13();s.dialOrder=legacyDialOrder(s);return s;}
+function migrate(){try{const old=JSON.parse(localStorage.getItem(PREV_KEY));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=1111;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v110'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=1111;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v18'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=1111;return s;}}catch(_){}try{const old=JSON.parse(localStorage.getItem('aoe2-field-coach-v14'));if(old&&typeof old==='object'&&old.tasks){const s=restore(old);s.v=1111;s.dialOrder=legacyDialOrder(s);return s;}}catch(_){}const s=migrateV13();s.dialOrder=legacyDialOrder(s);return s;}
 let state;try{const raw=localStorage.getItem(KEY);state=raw?restore(JSON.parse(raw)):migrate();}catch(_){state=defaults();}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){}}
+if(!state.profileState?.base)initProfileState(state,null);
+// Always restore a paused, frozen snapshot: time outside the web app is never game time.
+if(state.running){const anchor=Number.isFinite(state.savedAt)&&state.savedAt>0&&state.savedAt<=now()?state.savedAt:null;
+ if(anchor){state.sessionElapsed+=Math.max(0,anchor-(state.sessionResumedAt||anchor));state.circuit.elapsedMs+=Math.max(0,anchor-(state.circuit.startedAt||anchor));}
+ state.running=false;state.sessionResumedAt=null;state.circuit.startedAt=null;
+ for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(Number.isFinite(t.dueAt)&&anchor){const r=t.dueAt-anchor;t.remainingMs=r>0?Math.min(r,periodMs(t)):periodMs(t);}else t.remainingMs=periodMs(t);t.dueAt=null;t.lastAlertAt=0;t.notified=false;}
+ for(const e of state.events){e.remainingMs=anchor&&Number.isFinite(e.dueAt)?Math.max(0,e.dueAt-anchor):null;e.dueAt=null;}state.events=state.events.filter(e=>Number.isFinite(e.remainingMs)&&e.remainingMs>0);
+ if(state.transition){state.transition.remainingMs=anchor&&Number.isFinite(state.transition.dueAt)?Math.max(0,state.transition.dueAt-anchor):null;state.transition.dueAt=null;if(!Number.isFinite(state.transition.remainingMs)||state.transition.remainingMs<=0)state.transition=null;}
+ state.decisions.nextAt=null;
+}
+function save(){try{persistProfileConfig();state.savedAt=now();localStorage.setItem(KEY,JSON.stringify(state));}catch(_){}}
 const visible=()=>!document.hidden;
-const periodMs=(t)=>Math.max(1000,1000*t.seconds/(t.base==='game'?state.gameSpeed:1));
+function periodMs(t){return Math.max(1000,1000*t.seconds/(t.base==='game'?state.gameSpeed:1));}
 const active=d=>state.tasks[d.id].enabled&&(d.kind!=='periodic'||state.tasks[d.id].ages.includes(state.age));
 const periodic=d=>d.kind==='periodic'&&active(d);
 function eligibleDials(age){return LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].ages.includes(age)&&state.tasks[d.id].view==='timer');}
@@ -708,9 +859,9 @@ function syncCircuitCue(n=now()){
  if(state.coachView!=='circuit'||!state.running||!visible()||settingsOpen){lastCircuitCue='';return;}
  const frame=circuitFrame(n);if(!frame.steps.length)return;const key=state.age+':'+state.circuit.variant+':'+frame.index;
  if(!lastCircuitCue){lastCircuitCue=key;return;}
- if(key!==lastCircuitCue){lastCircuitCue=key;beep('circuit');}
+ if(key!==lastCircuitCue){lastCircuitCue=key;if(state.circuitSoundStyle==='step'||frame.free||frame.step===0)beep('circuit');}
 }
-function syncLayout(){document.body.classList.toggle('zen',landscape.matches&&!settingsOpen&&!controlsOpen);$('hideControls').hidden=!landscape.matches||settingsOpen;$('settingsBtn').hidden=settingsOpen;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b';}
+function syncLayout(){document.body.classList.toggle('zen',landscape.matches&&!settingsOpen&&!controlsOpen);for(const k of ['learning','consolidation','autonomy'])document.body.classList.toggle('assist-'+k,state.trainingIntensity===k);$('hideControls').hidden=!landscape.matches||settingsOpen;$('settingsBtn').hidden=settingsOpen;document.querySelector('meta[name="theme-color"]').content=landscape.matches?'#000000':'#0b111b';}
 function setControls(v){controlsOpen=Boolean(v);syncLayout();}
 function showSettings(v){if(v&&!settingsOpen)circuitAgeEditing=state.age;settingsOpen=Boolean(v);$('playPage').classList.toggle('active',!v);$('settingsPage').classList.toggle('active',v);if(v){drawSettings();syncInputs();}syncLayout();window.scrollTo(0,0);}
 async function wake(){if(!state.wake||!state.running||!visible()||wakeSentinel)return;if(!('wakeLock' in navigator)||!isSecureContext){if(!wakeWarned){console.info('Screen Wake Lock non disponible');wakeWarned=true;}return;}
@@ -729,6 +880,10 @@ function startClock(){if(state.running)return;const n=now();state.running=true;s
  if(state.transition){state.transition.dueAt=n+(Number.isFinite(state.transition.remainingMs)?state.transition.remainingMs:0);state.transition.remainingMs=null;}
  if(state.coachView==='decisions')armDecisionClock(n);wake();save();}
 function resetTask(id){const d=BY_ID[id];if(!d||d.kind!=='periodic')return;const t=state.tasks[id];t.remainingMs=periodMs(t);t.dueAt=state.running?now()+t.remainingMs:null;t.lastAlertAt=0;t.notified=false;save();draw();}
+function stopSession(){if(!confirm(profileText('profileStopConfirm')))return;stopClock();state.age='I';state.sessionElapsed=0;state.sessionResumedAt=null;state.transition=null;state.events=[];queue=[];notice=null;lastNoticeAt=-1e15;
+ for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.notified=false;t.lastAlertAt=0;}
+ state.circuit.elapsedMs=0;state.circuit.startedAt=null;lastCircuitCue='';state.decisions.nextAt=null;state.decisions.paused=false;state.decisions.currentId=null;state.decisions.currentAge='I';state.decisions.decks=defaultDecisions().decks;
+ ensureDecisionQuestion();setControls(false);drawCards(true);draw();save();}
 function resetTimers(){const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];t.remainingMs=periodMs(t);t.dueAt=state.running?n+t.remainingMs:null;t.lastAlertAt=0;t.notified=false;}resetCircuit();save();draw();}
 function newGame(){if(!confirm(tr('confirmNew')))return;stopClock();state.age='I';decisionAgeChanged();state.sessionElapsed=0;state.sessionResumedAt=null;state.circuit.elapsedMs=0;state.circuit.startedAt=null;lastCircuitCue='';state.events=[];state.transition=null;notice=null;queue=[];lastNoticeAt=-1e15;for(const d of LIB)if(d.kind==='periodic'){const t=state.tasks[d.id];t.dueAt=null;t.remainingMs=periodMs(t);t.lastAlertAt=0;t.notified=false;}startClock();setControls(false);drawCards(true);draw();save();}
 function modeChange(m){state.mode='auto';for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];let r=remaining(t);if(r<=0)r=periodMs(t);t.remainingMs=r;t.dueAt=state.running?now()+r:null;t.lastAlertAt=0;t.notified=false;}draw();save();}
@@ -806,7 +961,7 @@ function drawCards(force=false){const defs=activeDials();const ids=defs.map(d=>[
  </article>`;}).join('')||`<div class="no-cards">${escapeHTML(tr('noCards'))}</div>`;
  $('cardCount').textContent=String(defs.length);
 }
-function draw(){const n=now();tick(n);pump(n);drawCards();const circuitMode=state.coachView==='circuit',decisionMode=state.coachView==='decisions';document.body.classList.toggle('decisions-view',decisionMode);$('cards').hidden=circuitMode||decisionMode;$('circuit').hidden=!circuitMode;$('decisions').hidden=!decisionMode;document.querySelectorAll('[data-view]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===state.coachView)));if(circuitMode){drawCircuit(n);syncCircuitCue(n);}else{lastCircuitCue='';}if(decisionMode){decisionTick(n);drawDecisions();}const elapsed=elapsedTime();$('sessionTime').textContent=format(elapsed);$('runLabel').textContent=state.running?tr('running'):elapsed>0?tr('paused'):tr('ready');$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?tr('pause'):elapsed>0?tr('resume'):tr('start');
+function draw(){const n=now();tick(n);pump(n);drawCards();const circuitMode=state.coachView==='circuit',decisionMode=state.coachView==='decisions';document.body.classList.toggle('decisions-view',decisionMode);$('cards').hidden=circuitMode||decisionMode;$('circuit').hidden=!circuitMode;$('decisions').hidden=!decisionMode;document.querySelectorAll('[data-view]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.view===state.coachView)));if(circuitMode){drawCircuit(n);syncCircuitCue(n);}else{lastCircuitCue='';}if(decisionMode){decisionTick(n);drawDecisions();}const elapsed=elapsedTime();$('sessionTime').textContent=format(elapsed);$('activeProfileBadge').textContent=profileName(state.profileState.active);$('runLabel').textContent=state.running?tr('running'):elapsed>0?tr('paused'):tr('ready');$('runLabel').classList.toggle('running',state.running);$('playPause').textContent=state.running?tr('pause'):elapsed>0?tr('resume'):tr('start');
  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));if($('modeHelp'))$('modeHelp').textContent=tr('modeAuto');
  document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.age===state.age)));
  for(const d of activeDials()){const t=state.tasks[d.id],card=$(`card-${d.id}`);if(!card)continue;const left=remaining(t,n),overdue=state.running&&left<=0&&state.mode!=='auto',flashing=state.running&&state.mode==='auto'&&t.lastAlertAt>0&&n-t.lastAlertAt<4800,alert=overdue||flashing;
@@ -838,7 +993,7 @@ function syncInputs(){$('decisionAuto').checked=state.decisions.auto;$('decision
  card.querySelectorAll('[data-agefield]').forEach(input=>input.checked=t.ages.includes(input.dataset.agevalue));
  const colorSection=$(`colors-${d.id}`);if(colorSection)colorSection.hidden=t.view!=='timer';
  }
- $('gapSec').value=String(state.gapSec);$('showSec').value=String(state.showSec);$('mergeToggle').checked=state.merge;$('gameSpeed').value=String(state.gameSpeed);$('earlySec').value=String(state.earlySec);$('wakeToggle').checked=state.wake;$('pulseToggle').checked=state.pulse;$('soundToggle').checked=state.sound;
+ $('gapSec').value=String(state.gapSec);$('showSec').value=String(state.showSec);$('mergeToggle').checked=state.merge;$('gameSpeed').value=String(state.gameSpeed);$('earlySec').value=String(state.earlySec);$('wakeToggle').checked=state.wake;$('pulseToggle').checked=state.pulse;$('soundToggle').checked=state.sound;$('pauseOnHidden').checked=state.pauseOnHidden;$('circuitSoundStyle').value=state.circuitSoundStyle;$('trainingIntensity').value=state.trainingIntensity;renderProfilePicker();
  const excess=AGES.map(age=>{const count=LIB.filter(d=>d.kind==='periodic'&&state.tasks[d.id].enabled&&state.tasks[d.id].view==='timer'&&state.tasks[d.id].ages.includes(age)).length;return count>4?`${age} : ${count} ${tr('excess')}`:null;}).filter(Boolean);
  renderLayoutSettings();
  $('limitWarning').hidden=!excess.length;if(excess.length)$('limitWarning').textContent=`${tr('limit')} ${excess.join(' · ')}. ${tr('excessEnd')}`;
@@ -872,11 +1027,12 @@ function saveSettingsField(target){const id=target.dataset.id,d=BY_ID[id];if(!d)
  else{const field=target.dataset.field;if(!field)return;patch[field]=target.type==='checkbox'?target.checked:target.value;}
  updateTask(id,patch);syncInputs();}
 function wire(){
+ $('trainingProfileSelect').addEventListener('change',drawProfilePreview);$('applyTrainingProfile').addEventListener('click',()=>chooseProfile($('trainingProfileSelect').value));$('saveCustomProfile').addEventListener('click',saveCurrentCustomProfile);$('deleteCustomProfile').addEventListener('click',deleteCustomProfile);
 
  $('decisionNext').addEventListener('click',()=>{audioUnlock();nextDecision({manual:true,silent:true});draw();});
  $('decisionPause').addEventListener('click',()=>{state.decisions.paused=!state.decisions.paused;armDecisionClock();save();draw();});
  $('decisionAuto').addEventListener('change',e=>{state.decisions.auto=e.target.checked;armDecisionClock();save();draw();});
- $('decisionInterval').addEventListener('change',e=>{state.decisions.intervalSec=[90,105,120,150,180,240].includes(Number(e.target.value))?Number(e.target.value):105;armDecisionClock();save();draw();});
+ $('decisionInterval').addEventListener('change',e=>{state.decisions.intervalSec=DECISION_INTERVALS.includes(Number(e.target.value))?Number(e.target.value):105;armDecisionClock();save();draw();});
  $('decisionSound').addEventListener('change',e=>{state.decisions.sound=e.target.checked;audioUnlock();save();});
  $('decisionCategories').addEventListener('change',e=>{const id=e.target.dataset.decisionCategory;if(!Object.hasOwn(DECISION_CATS,id))return;const set=new Set(state.decisions.categories);if(e.target.checked)set.add(id);else set.delete(id);state.decisions.categories=[...set];for(const a of AGES){state.decisions.decks[a].order=[];state.decisions.decks[a].index=0;}ensureDecisionQuestion();armDecisionClock();save();draw();});
 
@@ -901,7 +1057,7 @@ function wire(){
  $('cards').addEventListener('click',e=>{const reset=e.target.closest('[data-reset]');if(reset){resetTask(reset.dataset.reset);return;}if(landscape.matches&&!settingsOpen)setControls(!controlsOpen);});
  document.addEventListener('click',e=>{if(settingsOpen||!landscape.matches)return;if(e.target.closest('button,input,select,label,.cards,.age-strip,.header,.toolbar,.controls,.quick-actions,.notification'))return;setControls(!controlsOpen);});
  $('settingsBtn').addEventListener('click',()=>showSettings(true));$('backBtn').addEventListener('click',()=>showSettings(false));$('saveBack').addEventListener('click',()=>showSettings(false));$('doneBtn').addEventListener('click',()=>showSettings(false));$('hideControls').addEventListener('click',()=>setControls(false));
- $('playPause').addEventListener('click',()=>{audioUnlock();if(state.running)stopClock();else startClock();draw();});$('resetTimers').addEventListener('click',resetTimers);$('newGame').addEventListener('click',newGame);
+ $('playPause').addEventListener('click',()=>{audioUnlock();if(state.running)stopClock();else startClock();draw();});$('stopSession').addEventListener('click',stopSession);$('resetTimers').addEventListener('click',resetTimers);$('newGame').addEventListener('click',newGame);
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{audioUnlock();modeChange(b.dataset.mode); }));
  document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>{if(state.transition&&b.dataset.age===state.age){cancelTransition();return;}setAge(b.dataset.age);draw();}));
  $('nextAge').addEventListener('click',()=>{audioUnlock();beginTransition();});$('cancelTransition').addEventListener('click',cancelTransition);
@@ -919,13 +1075,16 @@ function wire(){
  $('wakeToggle').addEventListener('change',e=>{state.wake=e.target.checked;save();if(state.wake)wake();else releaseWake();});
  $('pulseToggle').addEventListener('change',e=>{state.pulse=e.target.checked;save();draw();});
  $('soundToggle').addEventListener('change',e=>{state.sound=e.target.checked;audioUnlock();save();});
- $('defaultsBtn').addEventListener('click',()=>{if(!confirm(tr('confirmReset')))return;stopClock();state=defaults();queue=[];notice=null;lastNoticeAt=-1e15;lastCardSignature='';drawSettings();drawCards(true);draw();save();});
+ $('pauseOnHidden').addEventListener('change',e=>{state.pauseOnHidden=e.target.checked;save();});
+ $('trainingIntensity').addEventListener('change',e=>{state.trainingIntensity=['learning','consolidation','autonomy'].includes(e.target.value)?e.target.value:'learning';syncLayout();draw();save();});
+ $('circuitSoundStyle').addEventListener('change',e=>{state.circuitSoundStyle=e.target.value==='cycle'?'cycle':'step';save();});
+ $('defaultsBtn').addEventListener('click',()=>{if(!confirm(tr('confirmReset')))return;stopClock();state=defaults();initProfileState(state,null);queue=[];notice=null;lastNoticeAt=-1e15;lastCardSignature='';drawSettings();drawCards(true);draw();save();});
  const rotation=()=>{controlsOpen=false;syncLayout();draw();};if(landscape.addEventListener)landscape.addEventListener('change',rotation);else landscape.addListener(rotation);
- document.addEventListener('visibilitychange',()=>{if(document.hidden){backFromHidden=true;notice=null;queue=[];}else{if(backFromHidden&&state.running){const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(Number.isFinite(t.dueAt)&&t.dueAt<n&&state.mode==='auto'){t.dueAt=n+periodMs(t);t.lastAlertAt=0;}else if(Number.isFinite(t.dueAt)&&t.dueAt<n&&!isDial(d)){t.dueAt=n+periodMs(t);}}
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){backFromHidden=true;notice=null;queue=[];if(state.pauseOnHidden)stopClock();}else{if(backFromHidden&&state.running){const n=now();for(const d of LIB){if(d.kind!=='periodic')continue;const t=state.tasks[d.id];if(Number.isFinite(t.dueAt)&&t.dueAt<n&&state.mode==='auto'){t.dueAt=n+periodMs(t);t.lastAlertAt=0;}else if(Number.isFinite(t.dueAt)&&t.dueAt<n&&!isDial(d)){t.dueAt=n+periodMs(t);}}
   // Les événements manqués en arrière-plan sont abandonnés, sans rafale.
   state.events=state.events.filter(e=>!Number.isFinite(e.dueAt)||e.dueAt>n);backFromHidden=false;
  }if(state.coachView==='decisions')armDecisionClock();wake();}draw();save();});
- window.addEventListener('pagehide',save);
+ window.addEventListener('pagehide',()=>{if(state.running)stopClock();save();});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(settingsOpen)showSettings(false);else if(landscape.matches)setControls(false);}});
 }
 // Initialisation : migration des réglages précédents et conservation des dispositions par âge.
